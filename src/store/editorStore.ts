@@ -1,7 +1,7 @@
 import { Canvas as FabricCanvas } from 'fabric'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
-import type { EditorState, LayerItem, CanvasSize, HistoryState, ToolType } from '@/types'
+import type { EditorState, LayerItem, CanvasSize, HistoryState, ToolType, UserProfile } from '@/types'
 import { CANVAS_PRESETS } from '@/types'
 
 const MAX_HISTORY = 50
@@ -11,6 +11,13 @@ let snapTimer: ReturnType<typeof setTimeout> | undefined
 
 export const useEditorStore = create<EditorState>()(
   subscribeWithSelector((set, get) => ({
+    // Navigation & Auth Session
+    currentView: 'landing',
+    setCurrentView: (view: 'landing' | 'studio') => set({ currentView: view }),
+    user: null,
+    setUser: (user: UserProfile | null) => set({ user, currentView: user ? 'studio' : get().currentView }),
+    logout: () => set({ user: null, currentView: 'landing' }),
+
     // Canvas instance
     fabricCanvas: null,
     setFabricCanvas: (canvas: FabricCanvas | null) => set({ fabricCanvas: canvas }),
@@ -39,7 +46,7 @@ export const useEditorStore = create<EditorState>()(
         .reverse()
         .map((obj, idx) => ({
           id: (obj as any).__uid || `obj-${idx}`,
-          name: (obj as any).craftName || getDefaultName(obj.type || 'object', idx),
+          name: (obj as any).corexLabel || (obj as any).craftName || getDefaultName(obj.type || 'object', idx),
           type: obj.type || 'object',
           visible: obj.visible ?? true,
           locked: !(obj.selectable ?? true),

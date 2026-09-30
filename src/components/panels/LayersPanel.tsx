@@ -8,13 +8,14 @@ import {
   useSortable, arrayMove
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Eye, EyeOff, Lock, Unlock, Trash2, GripVertical, Square, Circle, Triangle, Type, Image, Minus, Pencil } from 'lucide-react'
+import { Eye, EyeOff, Lock, Unlock, Trash2, GripVertical, Square, Circle, Triangle, Type, Image, Minus, Pencil, Copy } from 'lucide-react'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { useEditorStore } from '@/store/editorStore'
 import type { LayerItem } from '@/types'
 import { cn } from '@/lib/cn'
 import { motion } from 'framer-motion'
 import { staggerContainerVariants, staggerItemVariants } from '@/lib/motion'
+import { nanoid } from 'nanoid'
 
 function typeIcon(type: string) {
   const props = { size: 12, strokeWidth: 1.5 }
@@ -67,6 +68,23 @@ function SortableLayer({ layer, isActive }: { layer: LayerItem; isActive: boolea
     syncLayersFromCanvas()
   }
 
+  const duplicateLayer = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!canvas) return
+    layer.fabricObject.clone().then((cloned: any) => {
+      cloned.set({
+        left: (layer.fabricObject.left || 0) + 20,
+        top: (layer.fabricObject.top || 0) + 20,
+      })
+      cloned.__uid = nanoid(8)
+      cloned.corexLabel = `${layer.name} Copy`
+      canvas.add(cloned)
+      canvas.setActiveObject(cloned)
+      canvas.requestRenderAll()
+      syncLayersFromCanvas()
+    })
+  }
+
   return (
     <motion.div
       ref={setNodeRef}
@@ -101,7 +119,7 @@ function SortableLayer({ layer, isActive }: { layer: LayerItem; isActive: boolea
           value={name}
           onChange={(e) => setName(e.target.value)}
           onBlur={() => {
-            ;(layer.fabricObject as any).craftName = name
+            ;(layer.fabricObject as any).corexLabel = name
             syncLayersFromCanvas()
             setEditing(false)
           }}
@@ -118,13 +136,16 @@ function SortableLayer({ layer, isActive }: { layer: LayerItem; isActive: boolea
         </span>
       )}
 
-      <button onClick={toggleVisible} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Toggle visibility">
+      <button onClick={duplicateLayer} title="Duplicate Layer" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Duplicate layer">
+        <Copy size={11} />
+      </button>
+      <button onClick={toggleVisible} title="Toggle Visibility" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Toggle visibility">
         {layer.visible ? <Eye size={12} /> : <EyeOff size={12} />}
       </button>
-      <button onClick={toggleLock} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Toggle lock">
+      <button onClick={toggleLock} title="Lock / Unlock Layer" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Toggle lock">
         {layer.locked ? <Lock size={12} /> : <Unlock size={12} />}
       </button>
-      <button onClick={deleteLayer} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Delete layer">
+      <button onClick={deleteLayer} title="Delete Layer" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2, flexShrink: 0 }} aria-label="Delete layer">
         <Trash2 size={12} />
       </button>
     </motion.div>

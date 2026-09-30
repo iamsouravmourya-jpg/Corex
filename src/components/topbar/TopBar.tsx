@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Undo2, Redo2, Download, ChevronDown, Sparkles } from 'lucide-react'
+import { Undo2, Redo2, Download, ChevronDown, Sparkles, LogOut, Home } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ExportModal } from '@/components/export/ExportModal'
@@ -29,15 +29,69 @@ function Logo() {
           fill="none"
         />
       </svg>
-      <span style={{
-        fontFamily: "'Sora','Inter',sans-serif",
-        fontWeight: 700, fontSize: 15,
-        letterSpacing: '-0.04em', lineHeight: 1,
-      }}>
-        <span style={{ color: '#E8E8F0' }}>Core</span>
-        <span style={{ color: '#F43F5E' }}>x</span>
-      </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <span style={{
+          fontFamily: "'Sora','Inter',sans-serif",
+          fontWeight: 700, fontSize: 15,
+          letterSpacing: '-0.04em', lineHeight: 1,
+        }}>
+          <span style={{ color: '#E8E8F0' }}>Core</span>
+          <span style={{ color: '#F43F5E' }}>x</span>
+        </span>
+        <span style={{ fontSize: 8.5, color: 'var(--color-base-500)', letterSpacing: '0.06em', textTransform: 'uppercase', lineHeight: 1 }}>
+          by LernexAI
+        </span>
+      </div>
     </div>
+  )
+}
+
+// ─── Editable Project Title ──────────────────────────────────────────────────
+function ProjectTitle() {
+  const { currentProjectName, setCurrentProjectName } = useEditorStore()
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(currentProjectName)
+
+  const commit = () => {
+    const trimmed = draft.trim() || 'Untitled Design'
+    setCurrentProjectName(trimmed)
+    setEditing(false)
+  }
+
+  return editing ? (
+    <input
+      autoFocus
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => e.key === 'Enter' && commit()}
+      className="input-base"
+      style={{ width: 160, height: 26, fontSize: 11.5 }}
+    />
+  ) : (
+    <button
+      onClick={() => {
+        setDraft(currentProjectName)
+        setEditing(true)
+      }}
+      title="Click to rename design"
+      style={{
+        background: 'transparent',
+        border: '1px solid transparent',
+        borderRadius: 6,
+        padding: '3px 8px',
+        fontSize: 11.5,
+        fontWeight: 500,
+        color: 'var(--color-base-300)',
+        cursor: 'pointer',
+        maxWidth: 180,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {currentProjectName}
+    </button>
   )
 }
 
@@ -101,6 +155,146 @@ function PageSizePicker() {
   )
 }
 
+// ─── User Profile Menu ────────────────────────────────────────────────────────
+function UserProfileMenu() {
+  const { user, setCurrentView, logout } = useEditorStore()
+  const [open, setOpen] = useState(false)
+
+  const displayName = user?.name || 'Sourav Maurya'
+  const displayEmail = user?.email || 'iamsouravmaurya@gmail.com'
+  const initials = displayName
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(!open)}
+        title={`${displayName} (${displayEmail})`}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 7,
+          height: 30,
+          padding: '0 8px 0 5px',
+          borderRadius: 7,
+          background: 'var(--color-base-800)',
+          border: '1px solid var(--color-base-600)',
+          cursor: 'pointer',
+          color: 'var(--color-base-200)',
+        }}
+      >
+        <div
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%)',
+            color: '#fff',
+            fontSize: 9.5,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {initials}
+        </div>
+        <span style={{ fontSize: 11, fontWeight: 500, maxWidth: 96, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {displayName.split(' ')[0]}
+        </span>
+        <ChevronDown size={10} style={{ color: 'var(--color-base-500)' }} />
+      </button>
+
+      {open && (
+        <>
+          <div
+            onClick={() => setOpen(false)}
+            style={{ position: 'fixed', inset: 0, zIndex: 250 }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              position: 'absolute',
+              top: 36,
+              right: 0,
+              zIndex: 300,
+              width: 210,
+              background: 'var(--color-base-850)',
+              border: '1px solid var(--color-base-600)',
+              borderRadius: 10,
+              boxShadow: 'var(--shadow-float)',
+              padding: 6,
+            }}
+          >
+            <div style={{ padding: '8px 10px', borderBottom: '1px solid var(--color-base-700)', marginBottom: 4 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-base-100)' }}>{displayName}</div>
+              <div style={{ fontSize: 10.5, color: 'var(--color-base-500)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {displayEmail}
+              </div>
+              <div style={{ fontSize: 9.5, color: '#F43F5E', marginTop: 3, fontFamily: 'var(--font-mono)' }}>
+                {user?.plan || 'Corex Pro · LernexAI'}
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setOpen(false)
+                setCurrentView('landing')
+              }}
+              style={{
+                width: '100%',
+                padding: '7px 10px',
+                borderRadius: 6,
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--color-base-200)',
+                fontSize: 11.5,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              <Home size={13} color="var(--color-base-400)" />
+              <span>Landing Page</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setOpen(false)
+                logout()
+              }}
+              style={{
+                width: '100%',
+                padding: '7px 10px',
+                borderRadius: 6,
+                background: 'transparent',
+                border: 'none',
+                color: '#FB7185',
+                fontSize: 11.5,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              <LogOut size={13} color="#FB7185" />
+              <span>Sign Out</span>
+            </button>
+          </motion.div>
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── TopBar ───────────────────────────────────────────────────────────────────
 export function TopBar() {
   const { canUndo, canRedo, undo, redo, isAiModeOpen, toggleAiMode } = useEditorStore()
@@ -120,6 +314,8 @@ export function TopBar() {
         <Logo />
         <div style={{ width: 1, height: 20, background: 'var(--color-base-600)', margin: '0 2px' }} />
         <PageSizePicker />
+        <div style={{ width: 1, height: 16, background: 'var(--color-base-700)', margin: '0 2px' }} />
+        <ProjectTitle />
         <div style={{ flex: 1 }} />
 
         {/* AI Mode Button */}
@@ -186,6 +382,8 @@ export function TopBar() {
             Export
           </motion.button>
         </Tooltip>
+
+        <UserProfileMenu />
       </motion.header>
       {showExport && <ExportModal onClose={() => setShowExport(false)} />}
     </>

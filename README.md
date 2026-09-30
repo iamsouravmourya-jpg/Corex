@@ -63,20 +63,25 @@
 * **Layer Composite Shaders**: 16 hardware-accelerated canvas blend modes (`multiply`, `screen`, `overlay`, `difference`, `hard-light`, etc.).
 * **Live Shader Filter Pipelines**: Convolutions and color transforms for real-time adjustments to brightness, contrast, saturation, and Gaussian blur.
 
-### 2. 🤖 Autonomous Gemini 3.8 Flash AI Engine (`server.ts` & `src/components/ai/`)
+### 2. 🤖 Autonomous Gemini 3.8 & 3.1 Flash AI Engine (`server.ts` & `src/components/ai/`)
 * **Text-to-Design Autonomous Layout**: Translates natural language prompts into balanced JSON geometry schemas, injecting coordinated cards, badge accents, background colors, and structured typography hierarchy in under 2 seconds.
+* **AI Image Creation & Editing (`gemini-3.1-flash-image-preview`)**: Generates bespoke visual assets or edits active canvas artwork directly from text prompts via `/api/ai/generate-image`.
 * **Design Doctor (Multimodal Vision Analysis)**: Rasterizes the active canvas viewport into Base64 PNG payloads and streams it to Gemini Vision for holistic critique on visual weight, contrast ratios, typography balance, and alignment.
 * **Design Copilot**: Context-aware design advisor capable of extracting hex color palettes (`#RRGGBB`) and instant 1-click text insertion.
 
-### 3. ⚡ State Management & History Stack (`src/store/editorStore.ts`)
+### 3. 🚀 Interactive Landing Page & Demo Auth Flow (`src/components/landing/` & `src/components/auth/`)
+* **Editorial Landing Experience (`LandingPage.tsx`)**: Full-viewport scrollable showcase featuring an interactive 3-column live studio preview, 6-card architectural Bento grid, performance benchmark matrix, and keyboard ergonomics guide.
+* **Google OAuth Demo & Sign-Up Flow (`AuthModal.tsx`)**: Realistic Google Account chooser (`iamsouravmaurya@gmail.com` / `lernexai.com`) and email sign-up/sign-in flow that transitions directly into the authenticated Studio Dashboard.
+
+### 4. ⚡ State Management & History Stack (`src/store/editorStore.ts`)
 * **Zustand 5 with `subscribeWithSelector`**: Granular slice subscriptions eliminate unnecessary React component re-renders during 60FPS pointer events.
 * **50-Step Delta History Stack**: High-efficiency JSON snapshots with debounced batching for undo (`⌘Z`) and redo (`⌘⇧Z`) states.
 
-### 4. 🗂️ Figma-Grade Layer & Grouping Hierarchy (`src/components/panels/LayersPanel.tsx`)
+### 5. 🗂️ Figma-Grade Layer & Grouping Hierarchy (`src/components/panels/LayersPanel.tsx`)
 * **@dnd-kit Drag-and-Drop Reordering**: Direct z-index manipulation on Fabric.js canvas stack.
-* **Layer Property Controls**: Visibility toggle (`eye`), locking toggle (`padlock`), duplicate, delete, and inline layer renaming.
+* **Layer Property Controls**: 1-click layer duplication, visibility toggle (`eye`), locking toggle (`padlock`), delete, and inline `corexLabel` layer renaming.
 
-### 5. 📦 High-Fidelity Export Compilers (`src/components/export/ExportModal.tsx`)
+### 6. 📦 High-Fidelity Export Compilers (`src/components/export/ExportModal.tsx`)
 * **High-DPI Raster Engine**: Canvas supersampling at `1x`, `2x`, and `3x` resolution multipliers with optional alpha transparency channel.
 * **Vector SVG Compiler**: Exports scalable SVG with embedded font references and vector paths.
 * **jsPDF Engine**: Compiles precise vector coordinates directly into PDF documents for print workflows.
@@ -88,47 +93,60 @@
 
 ```
 .
+├── LICENSE                        # LernexAI Proprietary Software License
 ├── server.ts                      # Express backend proxy with @google/genai routes
 ├── vercel.json                    # Edge & production routing configuration
+├── public/
+│   ├── corex-icon.svg             # Custom Corex Studio by LernexAI vector emblem
+│   └── favicon.svg                # Browser tab vector icon
 ├── src/
 │   ├── main.tsx                   # React 19 application root entry
-│   ├── App.tsx                    # Top-level workspace layout orchestrator
+│   ├── App.tsx                    # View router (LandingPage <-> EditorLayout)
 │   ├── index.css                  # Tailwind CSS v4 design token definitions
 │   │
 │   ├── components/
+│   │   ├── landing/               # 🌐 Product Showcase & Entry
+│   │   │   └── LandingPage.tsx    # Interactive studio preview, Bento grid & benchmarks
+│   │   ├── auth/                  # 🔐 Authentication & Session
+│   │   │   └── AuthModal.tsx      # Google Demo Auth chooser & Email Sign Up/Sign In
 │   │   ├── ai/                    # 🤖 AI Mode & Gemini Assistant
-│   │   │   └── AiChatPanel.tsx    # Text-to-design, Vision critique & Copilot UI
+│   │   │   └── AiChatPanel.tsx    # Copilot, Text-to-Design, Image AI & Vision Doctor
 │   │   ├── canvas/                # 🎨 Canvas rendering & interaction
-│   │   │   ├── CanvasBoard.tsx    # Fabric.js viewport & coordinate sync
-│   │   │   └── SnappingGuides.ts  # Alignment snapping math algorithms
+│   │   │   └── CanvasBoard.tsx    # Fabric.js viewport, zoom/pan & coordinate sync
 │   │   ├── toolbar/               # 🛠️ Left tool palette
 │   │   │   └── Toolbar.tsx        # Vector tool selection (Select, Shapes, Text, Pen)
 │   │   ├── topbar/                # ⚡ Header controls
-│   │   │   └── TopBar.tsx         # AI Mode trigger, undo/redo, size picker, export
+│   │   │   └── TopBar.tsx         # Brand lockup, inline project title, AI trigger, profile
 │   │   ├── panels/                # 🎛️ Right inspector panels
 │   │   │   ├── PropertiesPanel.tsx# Fill, stroke, shadows, blend modes, filters
-│   │   │   ├── LayersPanel.tsx    # Drag-and-drop layer reordering tree
-│   │   │   ├── TemplatePanel.tsx  # Ready-to-use marketing & social templates
+│   │   │   ├── LayersPanel.tsx    # Drag-and-drop layer reordering & duplication
+│   │   │   ├── TemplatePanel.tsx  # Multi-layer Corex Studio layout templates
 │   │   │   ├── StickerPanel.tsx   # 310+ offline categorized vector emoji
 │   │   │   ├── ProjectsPanel.tsx  # IndexedDB saved project manager
 │   │   │   └── RightPanel.tsx     # Tabbed inspector container & AI overlay
 │   │   ├── export/                # ⬇️ File compilers
 │   │   │   └── ExportModal.tsx    # PNG, JPEG, SVG, PDF, PPTX export pipeline
 │   │   ├── statusbar/             # 📊 Bottom workspace status & zoom
+│   │   │   └── StatusBar.tsx      # Live X/Y coordinates, layer count & zoom controls
 │   │   └── ui/                    # 🧩 Accessible Radix UI primitives
 │   │
 │   ├── store/
-│   │   └── editorStore.ts         # Zustand global state & history manager
+│   │   └── editorStore.ts         # Zustand global state, user session & history stack
 │   ├── db/
-│   │   └── index.ts               # Dexie.js IndexedDB schema & CRUD operations
+│   │   └── db.ts                  # CorexDB Dexie.js IndexedDB schema
 │   ├── hooks/
 │   │   ├── useFabricCanvas.ts     # Fabric.js lifecycle & hook integration
-│   │   └── useKeyboardShortcuts.ts# Global hotkeys listener
+│   │   ├── useKeyboardShortcuts.ts# Global hotkeys listener
+│   │   └── useProjects.ts         # Live IndexedDB project queries
 │   ├── lib/
-│   │   ├── shapes.ts              # Shape & text instantiation helpers
-│   │   ├── templates.ts           # Pre-built design templates
+│   │   ├── appearance.ts          # Linear/radial gradients, shadows & 16 blend modes
+│   │   ├── clipboard.ts           # Object copy/cut/paste & Z-order operations
+│   │   ├── export.ts              # High-DPI raster, SVG, PDF & PPTX compilers
+│   │   ├── imageFilters.ts        # Live WebGL/Canvas brightness, contrast, blur shaders
 │   │   ├── motion.ts              # Framer Motion spring physics curves
-│   │   └── fonts.ts               # Google Fonts dynamic loader
+│   │   ├── shapes.ts              # Vector shape & IText instantiation helpers
+│   │   ├── snapping.ts            # Smart edge & center alignment guide math
+│   │   └── style.ts               # Object appearance copy/paste engine
 │   └── types/
 │       └── index.ts               # Strict TypeScript interface declarations
 ```
@@ -170,8 +188,8 @@
 
 ```bash
 # 1. Clone the project repository
-git clone https://github.com/shreyansh001boy-tech/craftora.git
-cd craftora
+git clone https://github.com/lernexai/corex-studio.git
+cd corex-studio
 
 # 2. Install all dependencies with legacy peer dependency resolution
 npm install --legacy-peer-deps

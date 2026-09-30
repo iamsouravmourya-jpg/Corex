@@ -15,10 +15,11 @@ import {
   CheckCircle2,
   Layers,
   ArrowRight,
+  Image as ImageIcon,
 } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
-import { addIText, addRect, addCircle, addTriangle } from '@/lib/shapes'
+import { addIText, addRect, addCircle, addTriangle, addImageFromDataUrl } from '@/lib/shapes'
 import { Rect, Circle, Triangle, IText } from 'fabric'
 
 interface ChatMessage {
@@ -30,7 +31,7 @@ interface ChatMessage {
   timestamp: string
 }
 
-type AiTab = 'chat' | 'generate' | 'critique'
+type AiTab = 'chat' | 'generate' | 'image' | 'critique'
 
 export function AiChatPanel() {
   const { setIsAiModeOpen, canvasSize, snapshot, bumpBgNonce, syncLayersFromCanvas } = useEditorStore()
@@ -41,6 +42,10 @@ export function AiChatPanel() {
   const [isTyping, setIsTyping] = useState(false)
   const [designPrompt, setDesignPrompt] = useState('')
   const [isGeneratingDesign, setIsGeneratingDesign] = useState(false)
+  const [imagePrompt, setImagePrompt] = useState('')
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null)
+  const [useCanvasReference, setUseCanvasReference] = useState(false)
   const [critiqueResult, setCritiqueResult] = useState<string | null>(null)
   const [critiqueColors, setCritiqueColors] = useState<string[]>([])
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -191,7 +196,7 @@ export function AiChatPanel() {
                 textAlign: el.textAlign || 'left',
                 opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
               })
-              ;(textObj as any).craftName = el.text.slice(0, 16)
+              ;(textObj as any).corexLabel = el.text.slice(0, 16)
               canvas.add(textObj)
             } else if (el.type === 'rect') {
               const rectObj = new Rect({
@@ -206,7 +211,7 @@ export function AiChatPanel() {
                 ry: 12,
                 opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
               })
-              ;(rectObj as any).craftName = 'AI Shape'
+              ;(rectObj as any).corexLabel = 'AI Shape'
               canvas.add(rectObj)
             } else if (el.type === 'circle') {
               const circleObj = new Circle({
@@ -216,7 +221,7 @@ export function AiChatPanel() {
                 fill: el.fill || '#8B5CF6',
                 opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
               })
-              ;(circleObj as any).craftName = 'AI Circle'
+              ;(circleObj as any).corexLabel = 'AI Circle'
               canvas.add(circleObj)
             }
           })
@@ -273,6 +278,43 @@ export function AiChatPanel() {
       setCritiqueResult(`Unable to critique canvas: ${err.message || 'Check GEMINI_API_KEY'}`)
     } finally {
       setIsAnalyzing(false)
+    }
+  }
+
+  // 4. Create & Edit Images (gemini-3.1-flash-image-preview)
+  const handleGenerateImage = async (customPrompt?: string) => {
+    const prompt = (customPrompt || imagePrompt).trim()
+    if (!prompt || isGeneratingImage || !canvas) return
+
+    setIsGeneratingImage(true)
+    showToast('Generating image with Gemini 3.1 Flash Image...')
+
+    try {
+      let sourceImageBase64: string | undefined
+      if (useCanvasReference) {
+        sourceImageBase64 = canvas.toDataURL({ format: 'png', quality: 0.8, multiplier: 0.5 })
+      }
+
+      const res = await fetch('/api/ai/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, sourceImageBase64 }),
+      })
+
+      const data = await res.json()
+      if (res.ok && data.imageUrl) {
+        setGeneratedImageUrl(data.imageUrl)
+        await addImageFromDataUrl(canvas, data.imageUrl)
+        snapshot()
+        syncLayersFromCanvas()
+        showToast('✨ AI Image added to canvas!')
+      } else {
+        throw new Error(data.error || 'Image generation failed')
+      }
+    } catch (err: any) {
+      showToast(`Image error: ${err.message || 'Failed'}`)
+    } finally {
+      setIsGeneratingImage(false)
     }
   }
 
@@ -381,7 +423,7 @@ export function AiChatPanel() {
             height: 28,
             borderRadius: 5,
             border: 'none',
-            fontSize: 10.5,
+            fontSize: 10,
             fontWeight: activeTab === 'generate' ? 600 : 400,
             background: activeTab === 'generate' ? 'var(--color-base-750)' : 'transparent',
             color: activeTab === 'generate' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
@@ -389,11 +431,33 @@ export function AiChatPanel() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 4,
+            gap: 3,
           }}
         >
-          <Wand2 size={12} />
-          <span>Text-to-Design</span>
+          <Wand2 size={11} />
+          <span>Layout</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('image')}
+          style={{
+            flex: 1,
+            height: 28,
+            borderRadius: 5,
+            border: 'none',
+            fontSize: 10,
+            fontWeight: activeTab === 'image' ? 600 : 400,
+            background: activeTab === 'image' ? 'var(--color-base-750)' : 'transparent',
+            color: activeTab === 'image' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 3,
+          }}
+        >
+          <ImageIcon size={11} />
+          <span>Image AI</span>
         </button>
 
         <button
@@ -403,7 +467,7 @@ export function AiChatPanel() {
             height: 28,
             borderRadius: 5,
             border: 'none',
-            fontSize: 10.5,
+            fontSize: 10,
             fontWeight: activeTab === 'critique' ? 600 : 400,
             background: activeTab === 'critique' ? 'var(--color-base-750)' : 'transparent',
             color: activeTab === 'critique' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
@@ -411,11 +475,11 @@ export function AiChatPanel() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 4,
+            gap: 3,
           }}
         >
-          <ScanEye size={12} />
-          <span>Design Doctor</span>
+          <ScanEye size={11} />
+          <span>Doctor</span>
         </button>
       </div>
 
@@ -735,6 +799,102 @@ export function AiChatPanel() {
                   }}
                 >
                   <span>{tmpl}</span>
+                  <ArrowRight size={12} color="var(--color-base-400)" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2.5: Create & Edit Images (gemini-3.1-flash-image-preview) */}
+      {activeTab === 'image' && (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ padding: '10px', background: 'var(--color-base-800)', borderRadius: 8, border: '1px solid var(--color-base-600)' }}>
+            <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--color-base-100)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <ImageIcon size={13} color="#F43F5E" />
+              <span>Create & Edit Images</span>
+            </div>
+            <div style={{ fontSize: 10.5, color: 'var(--color-base-400)', lineHeight: 1.4 }}>
+              Powered by <code>gemini-3.1-flash-image-preview</code>. Generate new visual assets or edit your active canvas artwork using text prompts.
+            </div>
+          </div>
+
+          <div>
+            <label style={{ fontSize: 10.5, color: 'var(--color-base-300)', fontWeight: 600, display: 'block', marginBottom: 6 }}>
+              Image Prompt
+            </label>
+            <textarea
+              value={imagePrompt}
+              onChange={(e) => setImagePrompt(e.target.value)}
+              placeholder="e.g. Futuristic 3D glass sphere with neon rose and violet reflections on dark studio backdrop"
+              className="input-base"
+              style={{ width: '100%', height: 72, resize: 'none', fontSize: 11, padding: '8px' }}
+            />
+          </div>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 10.5, color: 'var(--color-base-300)', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={useCanvasReference}
+              onChange={(e) => setUseCanvasReference(e.target.checked)}
+            />
+            <span>Use current canvas as reference image to edit</span>
+          </label>
+
+          <button
+            onClick={() => handleGenerateImage()}
+            disabled={!imagePrompt.trim() || isGeneratingImage}
+            className="btn-primary btn-base"
+            style={{ height: 34, gap: 6, fontWeight: 600, fontSize: 11.5 }}
+          >
+            <Sparkles size={14} />
+            <span>{isGeneratingImage ? 'Synthesizing Image...' : 'Generate & Add to Canvas'}</span>
+          </button>
+
+          {generatedImageUrl && (
+            <div style={{ padding: 8, borderRadius: 8, background: 'var(--color-base-800)', border: '1px solid var(--color-base-600)' }}>
+              <div style={{ fontSize: 10, color: 'var(--color-base-400)', marginBottom: 6 }}>Latest Generated Asset:</div>
+              <img
+                src={generatedImageUrl}
+                alt="AI Generated"
+                referrerPolicy="no-referrer"
+                style={{ width: '100%', borderRadius: 6, display: 'block' }}
+              />
+            </div>
+          )}
+
+          <div>
+            <div style={{ fontSize: 10, color: 'var(--color-base-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+              Quick Image Prompts
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                '3D Holographic Abstract Crystal Icon',
+                'Cyberpunk Neon Grid Horizon Illustration',
+                'Minimalist Geometric Luxury Brand Emblem',
+              ].map((preset, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setImagePrompt(preset)
+                    handleGenerateImage(preset)
+                  }}
+                  style={{
+                    padding: '8px',
+                    borderRadius: 6,
+                    background: 'var(--color-base-800)',
+                    border: '1px solid var(--color-base-600)',
+                    color: 'var(--color-base-200)',
+                    fontSize: 10.5,
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span>{preset}</span>
                   <ArrowRight size={12} color="var(--color-base-400)" />
                 </button>
               ))}

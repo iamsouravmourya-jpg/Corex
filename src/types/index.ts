@@ -52,7 +52,22 @@ export interface HistoryState {
   background: string
 }
 
+export interface UserProfile {
+  name: string
+  email: string
+  avatar?: string
+  plan: string
+  provider: 'google' | 'email' | 'demo'
+}
+
 export interface EditorState {
+  // Navigation & Auth Session
+  currentView: 'landing' | 'studio'
+  setCurrentView: (view: 'landing' | 'studio') => void
+  user: UserProfile | null
+  setUser: (user: UserProfile | null) => void
+  logout: () => void
+
   // Canvas
   fabricCanvas: FabricCanvas | null
   setFabricCanvas: (canvas: FabricCanvas | null) => void
