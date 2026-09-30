@@ -6,12 +6,14 @@ import { LayersPanel } from './LayersPanel'
 import { TemplatePanel } from './TemplatePanel'
 import { ProjectsPanel } from './ProjectsPanel'
 import { StickerPanel } from './StickerPanel'
+import { QuantumLabPanel } from './QuantumLabPanel'
 import { AiChatPanel } from '@/components/ai/AiChatPanel'
 import { useEditorStore } from '@/store/editorStore'
 import { panelVariants } from '@/lib/motion'
 
 const STUDIO_INSPECTOR_TABS = [
   { id: 'properties', label: 'Inspector' },
+  { id: 'quantum',    label: '⚡ Quantum' },
   { id: 'layers',     label: 'Hierarchy' },
   { id: 'templates',  label: 'Blueprints' },
   { id: 'emoji',      label: 'Vectors' },
@@ -28,7 +30,7 @@ export function RightPanel() {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.25, ease: [0, 0, 0.2, 1] }}
       style={{
-        width: 276,
+        width: 288,
         background: 'var(--color-base-875)',
         borderLeft: '1px solid var(--color-base-600)',
         display: 'flex',
@@ -61,7 +63,7 @@ export function RightPanel() {
                 flex: 1,
                 minWidth: 0,
                 height: 38,
-                fontSize: 10.5,
+                fontSize: 10,
                 fontWeight: activeTab === tab.id ? 700 : 500,
                 color: activeTab === tab.id ? 'var(--color-accent-cyan)' : 'var(--color-base-500)',
                 background: activeTab === tab.id ? 'rgba(6, 182, 212, 0.06)' : 'transparent',
@@ -71,7 +73,7 @@ export function RightPanel() {
                   : '2px solid transparent',
                 cursor: 'pointer',
                 transition: 'all 150ms',
-                padding: '0 4px',
+                padding: '0 3px',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -94,6 +96,9 @@ export function RightPanel() {
             >
               <Tabs.Content value="properties" forceMount style={{ display: activeTab === 'properties' ? 'block' : 'none', height: '100%' }}>
                 <PropertiesPanel />
+              </Tabs.Content>
+              <Tabs.Content value="quantum" forceMount style={{ display: activeTab === 'quantum' ? 'block' : 'none', height: '100%' }}>
+                <QuantumLabPanel />
               </Tabs.Content>
               <Tabs.Content value="layers" forceMount style={{ display: activeTab === 'layers' ? 'block' : 'none', height: '100%' }}>
                 <LayersPanel />

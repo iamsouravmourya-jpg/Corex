@@ -4,6 +4,7 @@ import { useEditorStore } from '@/store/editorStore'
 import { nanoid } from 'nanoid'
 import { addImageFromDataUrl } from '@/lib/shapes'
 import { attachAlignmentGuides } from '@/lib/snapping'
+import { crdtMesh } from '@/lib/crdtSync'
 
 const STAGE_MARGIN_PX = 80
 
@@ -61,15 +62,23 @@ export function CanvasBoard() {
 
     setFabricCanvas(stage)
     stage.renderAll()
+    crdtMesh.attach(stage)
 
     stage.on('object:added', (ev) => {
       if (!(ev.target as any).__uid) {
         ;(ev.target as any).__uid = nanoid(8)
       }
       snapshot()
+      crdtMesh.broadcastDelta(stage)
     })
-    stage.on('object:removed', snapshot)
-    stage.on('object:modified', snapshot)
+    stage.on('object:removed', () => {
+      snapshot()
+      crdtMesh.broadcastDelta(stage)
+    })
+    stage.on('object:modified', () => {
+      snapshot()
+      crdtMesh.broadcastDelta(stage)
+    })
 
     const syncSelection = (ev: any) => {
       setActiveObjectId((ev.selected?.[0] as any)?.__uid || null)
@@ -81,6 +90,7 @@ export function CanvasBoard() {
     snapshot()
 
     return () => {
+      crdtMesh.detach()
       stage.dispose()
       setFabricCanvas(null)
     }

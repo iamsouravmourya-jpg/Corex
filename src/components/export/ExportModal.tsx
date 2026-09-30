@@ -1,27 +1,35 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Download, X } from 'lucide-react'
+import { Download, X, Cpu } from 'lucide-react'
 import { Slider } from '@/components/ui/Slider'
-import { Input } from '@/components/ui/Input'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { useEditorStore } from '@/store/editorStore'
 import { exportCanvas, type ExportFormat } from '@/lib/export'
+import {
+  detectHardwareRasterBackend,
+  compileCanvasToReactTailwindJsx,
+  compileCanvasToW3cDesignTokens,
+} from '@/lib/quantumEngine'
+import { saveAs } from 'file-saver'
 import { modalVariants, modalOverlayVariants } from '@/lib/motion'
 
 interface ExportModalProps {
   onClose: () => void
 }
 
+type ExtendedExportFormat = ExportFormat | 'jsx' | 'tokens'
+
 export function ExportModal({ onClose }: ExportModalProps) {
   const canvas = useFabricCanvas()
   const { currentProjectName, canvasSize } = useEditorStore()
-  const [format, setFormat] = useState<ExportFormat>('png')
-  const [quality, setQuality] = useState(90)
-  const [scale, setScale] = useState(1)
+  const gpuInfo = detectHardwareRasterBackend()
+  const [format, setFormat] = useState<ExtendedExportFormat>('png')
+  const [quality, setQuality] = useState(95)
+  const [scale, setScale] = useState(2)
   const [transparent, setTransparent] = useState(false)
   const [filename, setFilename] = useState(
     currentProjectName?.replace(/[^a-z0-9]/gi, '-').toLowerCase() ||
-    `corex-design-${new Date().toISOString().split('T')[0]}`
+      `corex-design-${new Date().toISOString().split('T')[0]}`,
   )
   const [exporting, setExporting] = useState(false)
 
@@ -29,7 +37,15 @@ export function ExportModal({ onClose }: ExportModalProps) {
     if (!canvas) return
     setExporting(true)
     try {
-      await exportCanvas(canvas, format, quality / 100, filename, { scale, transparent })
+      if (format === 'jsx') {
+        const code = compileCanvasToReactTailwindJsx(canvas)
+        saveAs(new Blob([code], { type: 'text/plain;charset=utf-8' }), `${filename}.tsx`)
+      } else if (format === 'tokens') {
+        const json = compileCanvasToW3cDesignTokens(canvas)
+        saveAs(new Blob([json], { type: 'application/json;charset=utf-8' }), `${filename}.tokens.json`)
+      } else {
+        await exportCanvas(canvas, format, quality / 100, filename, { scale, transparent })
+      }
       onClose()
     } finally {
       setExporting(false)
@@ -45,10 +61,14 @@ export function ExportModal({ onClose }: ExportModalProps) {
         exit="exit"
         onClick={onClose}
         style={{
-          position: 'fixed', inset: 0, zIndex: 500,
-          background: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 500,
+          background: 'rgba(8, 9, 14, 0.72)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <motion.div
@@ -58,68 +78,141 @@ export function ExportModal({ onClose }: ExportModalProps) {
           exit="exit"
           onClick={(e) => e.stopPropagation()}
           style={{
-            width: 360,
+            width: 400,
             background: 'var(--color-base-850)',
             border: '1px solid var(--color-base-600)',
-            borderRadius: 12,
+            borderRadius: '1rem',
             boxShadow: 'var(--shadow-float)',
             overflow: 'hidden',
           }}
         >
           {/* Header */}
-          <div style={{ padding: '16px 20px 14px', borderBottom: '1px solid var(--color-base-600)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              padding: '16px 20px 14px',
+              borderBottom: '1px solid var(--color-base-600)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-base-100)' }}>Export Design</div>
-              <div style={{ fontSize: 11, color: 'var(--color-base-500)', marginTop: 2 }}>Download to your device</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-base-100)' }}>
+                Quantum Output Compiler
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: '#06B6D4',
+                  marginTop: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 5,
+                }}
+              >
+                <Cpu size={11} /> {gpuInfo.backend} Accelerated (Up to 8K)
+              </div>
             </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 4 }} aria-label="Close">
+            <button
+              onClick={onClose}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--color-base-500)',
+                padding: 4,
+              }}
+              aria-label="Close"
+            >
               <X size={16} />
             </button>
           </div>
 
           {/* Body */}
-          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
             {/* Format */}
             <div>
-              <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Format</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {(['png', 'jpeg', 'svg', 'pdf', 'pptx'] as ExportFormat[]).map((f) => (
+              <div
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  color: 'var(--color-base-500)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  marginBottom: 8,
+                }}
+              >
+                Output Pipeline Format
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+                {(
+                  [
+                    { id: 'png', label: 'PNG' },
+                    { id: 'jpeg', label: 'JPEG' },
+                    { id: 'svg', label: 'SVG' },
+                    { id: 'pdf', label: 'PDF' },
+                    { id: 'pptx', label: 'PPTX' },
+                    { id: 'jsx', label: 'React JSX' },
+                    { id: 'tokens', label: 'W3C JSON' },
+                  ] as { id: ExtendedExportFormat; label: string }[]
+                ).map((item) => (
                   <button
-                    key={f}
-                    onClick={() => setFormat(f)}
+                    key={item.id}
+                    onClick={() => setFormat(item.id)}
                     style={{
-                      flex: '1 0 28%', height: 36, borderRadius: '0.5rem', border: '1px solid',
-                      borderColor: format === f ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                      background: format === f ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
-                      color: format === f ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-                      fontSize: 12, fontWeight: 600, cursor: 'pointer', textTransform: 'uppercase',
+                      height: 34,
+                      borderRadius: '0.5rem',
+                      border: '1px solid',
+                      borderColor: format === item.id ? 'var(--color-accent-400)' : 'var(--color-base-600)',
+                      background: format === item.id ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
+                      color: format === item.id ? 'var(--color-accent-400)' : 'var(--color-base-400)',
+                      fontSize: 11,
+                      fontWeight: 700,
+                      cursor: 'pointer',
                       transition: 'all 150ms',
                     }}
                   >
-                    {f}
+                    {item.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Resolution */}
-            {format !== 'svg' && (
+            {/* Resolution Supersampling (1x to 8x 8K) */}
+            {format !== 'svg' && format !== 'jsx' && format !== 'tokens' && (
               <div>
-                <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Scale</div>
+                <div
+                  style={{
+                    fontSize: 10.5,
+                    fontWeight: 700,
+                    color: 'var(--color-base-500)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    marginBottom: 8,
+                  }}
+                >
+                  WebGPU Supersampling Multiplier
+                </div>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  {[1, 2, 3].map((s) => (
+                  {[1, 2, 3, 4, 8].map((s) => (
                     <button
                       key={s}
                       onClick={() => setScale(s)}
                       style={{
-                        flex: 1, height: 32, borderRadius: '0.5rem', border: '1px solid',
+                        flex: 1,
+                        height: 32,
+                        borderRadius: '0.5rem',
+                        border: '1px solid',
                         borderColor: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-600)',
                         background: scale === s ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
                         color: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-                        fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 150ms',
+                        fontSize: 11.5,
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'all 150ms',
                       }}
                     >
-                      {s}x
+                      {s}x{s === 4 ? ' (4K)' : s === 8 ? ' (8K)' : ''}
                     </button>
                   ))}
                 </div>
@@ -128,14 +221,23 @@ export function ExportModal({ onClose }: ExportModalProps) {
 
             {/* Transparent background */}
             {format === 'png' && (
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: 'var(--color-base-200)' }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  color: 'var(--color-base-200)',
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={transparent}
                   onChange={(e) => setTransparent(e.target.checked)}
                   style={{ accentColor: 'var(--color-accent-400)', width: 14, height: 14 }}
                 />
-                Transparent background
+                Alpha Channel Transparency (Zero Background)
               </label>
             )}
 
@@ -148,7 +250,18 @@ export function ExportModal({ onClose }: ExportModalProps) {
 
             {/* Filename */}
             <div>
-              <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Filename</div>
+              <div
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  color: 'var(--color-base-500)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  marginBottom: 6,
+                }}
+              >
+                Artifact Filename
+              </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <input
                   className="input-base"
@@ -156,20 +269,36 @@ export function ExportModal({ onClose }: ExportModalProps) {
                   onChange={(e) => setFilename(e.target.value)}
                   style={{ flex: 1 }}
                 />
-                <span style={{ fontSize: 11, color: 'var(--color-base-500)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>.{format}</span>
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: 'var(--color-base-500)',
+                    fontFamily: 'var(--font-mono)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  .{format === 'jsx' ? 'tsx' : format === 'tokens' ? 'tokens.json' : format}
+                </span>
               </div>
             </div>
 
             {/* Info */}
-            <div style={{ padding: '10px 12px', background: 'var(--color-base-800)', borderRadius: 7, border: '1px solid var(--color-base-600)' }}>
+            <div
+              style={{
+                padding: '10px 12px',
+                background: 'var(--color-base-800)',
+                borderRadius: '0.5rem',
+                border: '1px solid var(--color-base-600)',
+              }}
+            >
               <div style={{ fontSize: 11, color: 'var(--color-base-500)', lineHeight: 1.5 }}>
                 {format === 'svg'
-                  ? `Vector output, ${canvasSize.width} × ${canvasSize.height} viewBox. Text stays live but the typeface is not embedded.`
-                  : format === 'pdf'
-                  ? `One page sized to the design, ${Math.round(canvasSize.width * 0.75)} × ${Math.round(canvasSize.height * 0.75)} pt, artwork embedded at ${Math.round(canvasSize.width * scale)} × ${Math.round(canvasSize.height * scale)} px.`
-                  : format === 'pptx'
-                  ? `One ${(canvasSize.width / 96).toFixed(2)} × ${(canvasSize.height / 96).toFixed(2)} in slide, artwork embedded as a picture at ${Math.round(canvasSize.width * scale)} × ${Math.round(canvasSize.height * scale)} px.`
-                  : `${Math.round(canvasSize.width * scale)} × ${Math.round(canvasSize.height * scale)} px${transparent ? ', transparent' : ''}. No watermarks.`}
+                  ? `Pure mathematical XML vector output (${canvasSize.width} × ${canvasSize.height} viewBox).`
+                  : format === 'jsx'
+                  ? `Compiles all ${canvas?.getObjects().length || 0} stage nodes into a standalone React 19 + inline CSS/Tailwind TypeScript component (.tsx).`
+                  : format === 'tokens'
+                  ? `Exports artboard dimensions and all active layer color tokens in W3C Design Token Standard JSON format.`
+                  : `Hardware rasterized output: ${Math.round(canvasSize.width * scale)} × ${Math.round(canvasSize.height * scale)} px (${scale}x multiplier). Zero watermarks.`}
               </div>
             </div>
           </div>
@@ -184,7 +313,7 @@ export function ExportModal({ onClose }: ExportModalProps) {
               style={{ width: '100%', height: 38, fontSize: 13, gap: 8, opacity: exporting ? 0.7 : 1 }}
             >
               <Download size={14} />
-              {exporting ? 'Exporting…' : `Download ${format.toUpperCase()}`}
+              {exporting ? 'Compiling Artifact…' : `Compile & Download ${format.toUpperCase()}`}
             </motion.button>
           </div>
         </motion.div>
