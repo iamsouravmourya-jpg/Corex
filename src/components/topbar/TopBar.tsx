@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Undo2, Redo2, Download, ChevronDown, Sparkles, LogOut, Home } from 'lucide-react'
+import { Undo2, Redo2, Download, ChevronDown, Sparkles, LogOut, Home, Command } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ExportModal } from '@/components/export/ExportModal'
+import { CommandPalette } from '@/components/command/CommandPalette'
 import { CANVAS_PRESETS } from '@/types'
 import type { CanvasSize } from '@/types'
 
@@ -299,6 +300,18 @@ function UserProfileMenu() {
 export function TopBar() {
   const { canUndo, canRedo, undo, redo, isAiModeOpen, toggleAiMode } = useEditorStore()
   const [showExport, setShowExport] = useState(false)
+  const [showCommandPalette, setShowCommandPalette] = useState(false)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setShowCommandPalette((v) => !v)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <>
@@ -317,6 +330,44 @@ export function TopBar() {
         <div style={{ width: 1, height: 16, background: 'var(--color-base-700)', margin: '0 2px' }} />
         <ProjectTitle />
         <div style={{ flex: 1 }} />
+
+        {/* ⌘K Omnibar Command Trigger */}
+        <Tooltip content="Omnibar Command Palette" shortcut="⌘K" side="bottom">
+          <motion.button
+            whileTap={{ scale: 0.94 }}
+            onClick={() => setShowCommandPalette(true)}
+            aria-label="Open Command Palette"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              height: 30,
+              padding: '0 10px',
+              background: 'var(--color-base-800)',
+              border: '1px solid var(--color-base-600)',
+              borderRadius: '0.5rem',
+              color: 'var(--color-base-200)',
+              fontSize: 11.5,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            <Command size={12} color="#06B6D4" />
+            <span>Commands</span>
+            <span
+              style={{
+                fontSize: 9.5,
+                fontFamily: 'var(--font-mono)',
+                color: '#06B6D4',
+                background: 'rgba(6, 182, 212, 0.12)',
+                padding: '1px 5px',
+                borderRadius: 4,
+              }}
+            >
+              ⌘K
+            </span>
+          </motion.button>
+        </Tooltip>
 
         {/* AI Mode Button */}
         <Tooltip content={isAiModeOpen ? "Close AI Assistant" : "Open AI Assistant"} side="bottom">
@@ -386,6 +437,7 @@ export function TopBar() {
         <UserProfileMenu />
       </motion.header>
       {showExport && <ExportModal onClose={() => setShowExport(false)} />}
+      <CommandPalette open={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
     </>
   )
 }

@@ -17,11 +17,19 @@ import {
 } from '@/lib/appearance'
 import { copyStyle, pasteStyle } from '@/lib/style'
 import {
+  distributeSelection,
+  removeImageBackgroundClient,
+  applyImageLutPreset,
+  generateDevModeCss,
+} from '@/lib/vectorStudio'
+import {
   AlignLeft, AlignCenter, AlignRight,
   AlignStartVertical, AlignCenterVertical, AlignEndVertical,
+  AlignHorizontalSpaceAround, AlignVerticalSpaceAround,
   BringToFront, SendToBack, MoveUp, MoveDown,
   Copy, Trash2, Group as GroupIcon, Ungroup,
   Bold, Italic, Underline, FlipHorizontal, FlipVertical, RotateCcw, Pipette, Paintbrush,
+  Scissors, Code2, Check,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
@@ -79,9 +87,9 @@ function IconBtn({ icon, label, onClick, active }: { icon: React.ReactNode; labe
       title={label}
       aria-label={label}
       onClick={onClick}
-      style={{ width: 28, height: 28, borderRadius: 5, border: '1px solid',
+      style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid',
         borderColor: active ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-        background: active ? 'rgba(244,63,94,0.12)' : 'var(--color-base-750)',
+        background: active ? 'rgba(6,182,212,0.14)' : 'var(--color-base-750)',
         color: active ? 'var(--color-accent-400)' : 'var(--color-base-400)',
         cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 80ms' }}
@@ -109,10 +117,10 @@ function Segmented<T extends string>({ value, options, onChange }: {
     <div style={{ display: 'flex', gap: 4 }}>
       {options.map(o => (
         <button key={o.value} onClick={() => onChange(o.value)}
-          style={{ flex: 1, height: 26, borderRadius: 5, fontSize: 11, cursor: 'pointer',
+          style={{ flex: 1, height: 26, borderRadius: 6, fontSize: 11, cursor: 'pointer',
             border: '1px solid', transition: 'all 80ms',
             borderColor: value === o.value ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-            background: value === o.value ? 'rgba(244,63,94,0.12)' : 'var(--color-base-750)',
+            background: value === o.value ? 'rgba(6,182,212,0.14)' : 'var(--color-base-750)',
             color: value === o.value ? 'var(--color-accent-400)' : 'var(--color-base-400)' }}>
           {o.label}
         </button>
@@ -539,8 +547,8 @@ export function PropertiesPanel() {
             </div>
           </div>
 
-          {/* ── Alignment ── */}
-          <SectionHead>Align to Canvas</SectionHead>
+          {/* ── Alignment & Distribution ── */}
+          <SectionHead>Align & Distribute</SectionHead>
           <BtnRow>
             <IconBtn icon={<AlignLeft size={13} />} label="Align Left" onClick={() => alignH('left')} />
             <IconBtn icon={<AlignCenter size={13} />} label="Align Center H" onClick={() => alignH('center')} />
@@ -548,6 +556,8 @@ export function PropertiesPanel() {
             <IconBtn icon={<AlignStartVertical size={13} />} label="Align Top" onClick={() => alignV('top')} />
             <IconBtn icon={<AlignCenterVertical size={13} />} label="Align Middle" onClick={() => alignV('middle')} />
             <IconBtn icon={<AlignEndVertical size={13} />} label="Align Bottom" onClick={() => alignV('bottom')} />
+            <IconBtn icon={<AlignHorizontalSpaceAround size={13} />} label="Distribute Horizontally" onClick={() => canvas && distributeSelection(canvas, 'horizontal')} />
+            <IconBtn icon={<AlignVerticalSpaceAround size={13} />} label="Distribute Vertically" onClick={() => canvas && distributeSelection(canvas, 'vertical')} />
           </BtnRow>
 
           {/* ── Z-Order ── */}
@@ -697,9 +707,53 @@ export function PropertiesPanel() {
             )}
           </div>
 
-          {/* ── Image adjustments ── */}
+          {/* ── Image adjustments, Chroma Cutout & LUT Shaders ── */}
           {isImage && (
             <>
+              <SectionHead>Smart Chroma Cutout (Client-Side)</SectionHead>
+              <div style={{ padding: '4px 12px 8px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5 }}>
+                <button
+                  onClick={() => canvas && void removeImageBackgroundClient(canvas, 'corner', 48)}
+                  className="btn-base"
+                  style={{ height: 28, fontSize: 10.5 }}
+                  title="Sample corner pixel & remove background"
+                >
+                  <Scissors size={11} color="#06B6D4" /> Auto BG
+                </button>
+                <button
+                  onClick={() => canvas && void removeImageBackgroundClient(canvas, 'light', 52)}
+                  className="btn-base"
+                  style={{ height: 28, fontSize: 10.5 }}
+                  title="Remove white/light background"
+                >
+                  Cut White
+                </button>
+                <button
+                  onClick={() => canvas && void removeImageBackgroundClient(canvas, 'dark', 52)}
+                  className="btn-base"
+                  style={{ height: 28, fontSize: 10.5 }}
+                  title="Remove dark/black background"
+                >
+                  Cut Dark
+                </button>
+              </div>
+
+              <SectionHead>Studio LUT Color Grading</SectionHead>
+              <div style={{ padding: '4px 12px 8px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 5 }}>
+                <button onClick={() => canvas && applyImageLutPreset(canvas, 'cyberpunk')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
+                  ⚡ Cyberpunk
+                </button>
+                <button onClick={() => canvas && applyImageLutPreset(canvas, 'noir')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
+                  🎬 Noir Mono
+                </button>
+                <button onClick={() => canvas && applyImageLutPreset(canvas, 'cinema-gold')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
+                  ✨ Cinema Gold
+                </button>
+                <button onClick={() => canvas && applyImageLutPreset(canvas, 'arctic')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
+                  ❄️ Arctic Cool
+                </button>
+              </div>
+
               <SectionHead>Image Adjustments</SectionHead>
               <div style={{ padding: '6px 12px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <Slider label="Brightness" value={Math.round(adj.brightness * 100)} min={-100} max={100} step={1}
@@ -718,6 +772,37 @@ export function PropertiesPanel() {
               </div>
             </>
           )}
+
+          {/* ── Figma Dev Mode Live CSS Inspector ── */}
+          <SectionHead>Dev Mode · CSS Inspector</SectionHead>
+          <div style={{ padding: '6px 12px 14px' }}>
+            <pre
+              style={{
+                margin: 0,
+                padding: '10px',
+                borderRadius: '0.5rem',
+                background: 'var(--color-ink-950)',
+                border: '1px solid var(--color-base-600)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                color: '#A5F3FC',
+                overflowX: 'auto',
+                lineHeight: 1.55,
+              }}
+            >
+              {generateDevModeCss(obj)}
+            </pre>
+            <button
+              onClick={() => {
+                void navigator.clipboard?.writeText(generateDevModeCss(obj))
+              }}
+              className="btn-base"
+              style={{ width: '100%', height: 28, marginTop: 6, fontSize: 11 }}
+            >
+              <Code2 size={12} color="#06B6D4" />
+              <span>Copy Layer CSS</span>
+            </button>
+          </div>
         </>
       )}
     </div>

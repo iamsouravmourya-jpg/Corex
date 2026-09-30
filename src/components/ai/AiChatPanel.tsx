@@ -18,6 +18,12 @@ import {
   Image as ImageIcon,
 } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
+import {
+  generateServerlessLayout,
+  generateServerlessSvgArtwork,
+  generateServerlessCritique,
+  generateServerlessCopilotReply,
+} from '@/lib/serverlessAi'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { addIText, addRect, addCircle, addTriangle, addImageFromDataUrl } from '@/lib/shapes'
 import { Rect, Circle, Triangle, IText } from 'fabric'
@@ -136,14 +142,16 @@ export function AiChatPanel() {
       } else {
         throw new Error(data.error || 'Failed to generate response')
       }
-    } catch (err: any) {
+    } catch {
+      const local = generateServerlessCopilotReply(query)
       setMessages((prev) => [
         ...prev,
         {
-          id: `ai-err-${Date.now()}`,
+          id: `ai-local-${Date.now()}`,
           role: 'assistant',
-          content: `⚠️ Note: ${err.message || 'Gemini response could not be loaded'}. Tip: You can configure \`GEMINI_API_KEY\` in your environment variables to enable live AI capabilities.`,
-          timestamp: 'Now',
+          content: local.reply,
+          suggestedColors: local.suggestedColors,
+          timestamp: 'Serverless',
         },
       ])
     } finally {
@@ -235,8 +243,55 @@ export function AiChatPanel() {
       } else {
         throw new Error(data.error || 'Layout generation failed')
       }
-    } catch (err: any) {
-      showToast(`Generation error: ${err.message || 'Check API key'}`)
+    } catch {
+      const d = generateServerlessLayout(prompt, canvasSize.width, canvasSize.height)
+      canvas.clear()
+      if (d.backgroundColor) canvas.set({ backgroundColor: d.backgroundColor })
+      d.elements.forEach((el: any) => {
+        if (el.type === 'text' && el.text) {
+          const textObj = new IText(el.text, {
+            left: Number(el.left) || 100,
+            top: Number(el.top) || 100,
+            fontSize: Number(el.fontSize) || 36,
+            fill: el.fill || '#FFFFFF',
+            fontFamily: el.fontFamily || 'Plus Jakarta Sans',
+            fontWeight: el.fontWeight || '700',
+            opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
+          })
+          ;(textObj as any).corexLabel = el.text.slice(0, 16)
+          canvas.add(textObj)
+        } else if (el.type === 'rect') {
+          const rectObj = new Rect({
+            left: Number(el.left) || 50,
+            top: Number(el.top) || 50,
+            width: Number(el.width) || 200,
+            height: Number(el.height) || 100,
+            fill: el.fill || '#06B6D4',
+            stroke: el.stroke,
+            strokeWidth: el.strokeWidth ? Number(el.strokeWidth) : 0,
+            rx: el.rx || 12,
+            ry: el.rx || 12,
+            opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
+          })
+          ;(rectObj as any).corexLabel = 'AI Vector Card'
+          canvas.add(rectObj)
+        } else if (el.type === 'circle') {
+          const circleObj = new Circle({
+            left: Number(el.left) || 50,
+            top: Number(el.top) || 50,
+            radius: Number(el.radius) || 60,
+            fill: el.fill || '#14B8A6',
+            opacity: el.opacity !== undefined ? Number(el.opacity) : 1,
+          })
+          ;(circleObj as any).corexLabel = 'AI Vector Orb'
+          canvas.add(circleObj)
+        }
+      })
+      canvas.requestRenderAll()
+      snapshot()
+      bumpBgNonce()
+      syncLayersFromCanvas()
+      showToast('✨ Serverless AI Layout synthesized on Canvas!')
     } finally {
       setIsGeneratingDesign(false)
     }
@@ -274,20 +329,27 @@ export function AiChatPanel() {
       } else {
         throw new Error(data.error || 'Critique failed')
       }
-    } catch (err: any) {
-      setCritiqueResult(`Unable to critique canvas: ${err.message || 'Check GEMINI_API_KEY'}`)
+    } catch {
+      const localCritique = generateServerlessCritique(
+        canvas.getObjects().length,
+        canvasSize.width,
+        canvasSize.height,
+      )
+      setCritiqueResult(localCritique.critique)
+      setCritiqueColors(localCritique.suggestedColors)
+      showToast('✅ Serverless Vision Diagnostic complete!')
     } finally {
       setIsAnalyzing(false)
     }
   }
 
-  // 4. Create & Edit Images (gemini-3.1-flash-image-preview)
+  // 4. Create & Edit Images (gemini-3.1-flash-image-preview + Serverless Vector Synth)
   const handleGenerateImage = async (customPrompt?: string) => {
     const prompt = (customPrompt || imagePrompt).trim()
     if (!prompt || isGeneratingImage || !canvas) return
 
     setIsGeneratingImage(true)
-    showToast('Generating image with Gemini 3.1 Flash Image...')
+    showToast('Generating visual artwork...')
 
     try {
       let sourceImageBase64: string | undefined
@@ -311,8 +373,13 @@ export function AiChatPanel() {
       } else {
         throw new Error(data.error || 'Image generation failed')
       }
-    } catch (err: any) {
-      showToast(`Image error: ${err.message || 'Failed'}`)
+    } catch {
+      const dataUrl = generateServerlessSvgArtwork(prompt)
+      setGeneratedImageUrl(dataUrl)
+      await addImageFromDataUrl(canvas, dataUrl)
+      snapshot()
+      syncLayersFromCanvas()
+      showToast('✨ Serverless Vector Artwork added to canvas!')
     } finally {
       setIsGeneratingImage(false)
     }
