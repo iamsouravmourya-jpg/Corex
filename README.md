@@ -57,7 +57,13 @@
 
 ## 💎 Core Subsystems & Engineering Breakdown
 
-### 1. 🎨 The Canvas Subsystem (`src/components/canvas/`)
+### 1. 🎨 LernexAI Deep Ink & Cyan/Teal Design System (`src/index.css`)
+* **Deep Ink Surface Scale**: Built upon `#08090E` (ink-950), `#0D0F17` (ink-900), `#11141C` (ink-800), and `#1A1E2A` (ink-700) for a rich, low-fatigue creator environment.
+* **Electric Cyan & Teal Accents**: Primary interactive highlights powered by `#06B6D4` (Cyan) and `#14B8A6` (Teal), backed by `#10B981` (Emerald), `#F59E0B` (Amber), and `#F43F5E` (Rose).
+* **Dual Typography Engine**: **Plus Jakarta Sans** for crisp UI reading and **Playfair Display** (italic serif) for high-end editorial headings.
+* **Component Radii & Hover Shadows**: 0.5rem to 1.5rem rounded card systems with `0 6px 16px rgba(6, 182, 212, 0.12)` cyan hover glows.
+
+### 2. 🎨 The Canvas Subsystem (`src/components/canvas/`)
 * **Coordinate Space & Matrix Transformation**: Supports dynamic viewport scaling from `0.25x` to `4.0x` with center-locked zoom anchors and coordinate translation matrices.
 * **Smart Alignment & Snapping Engine**: Real-time bounding box intersection algorithms calculate nearest center and edge guide thresholds with dynamic red overlay guides.
 * **Layer Composite Shaders**: 16 hardware-accelerated canvas blend modes (`multiply`, `screen`, `overlay`, `difference`, `hard-light`, etc.).

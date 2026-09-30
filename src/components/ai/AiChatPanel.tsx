@@ -59,7 +59,7 @@ export function AiChatPanel() {
       role: 'assistant',
       content:
         '✨ **Corex AI Activated!**\n\nI am powered by Google Gemini. I can help you design faster, generate complete layouts, suggest aesthetic color palettes, write high-converting copy, or critique your current canvas composition.',
-      suggestedColors: ['#0F172A', '#F43F5E', '#8B5CF6', '#38BDF8', '#10B981', '#F59E0B'],
+      suggestedColors: ['#08090E', '#06B6D4', '#14B8A6', '#10B981', '#F59E0B', '#F43F5E'],
       timestamp: 'Active',
     },
   ])
@@ -350,15 +350,15 @@ export function AiChatPanel() {
             style={{
               width: 26,
               height: 26,
-              borderRadius: 6,
-              background: 'linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%)',
+              borderRadius: '0.5rem',
+              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(244,63,94,0.3)',
+              boxShadow: '0 6px 16px rgba(6,182,212,0.22)',
             }}
           >
-            <Sparkles size={14} color="#fff" />
+            <Sparkles size={14} color="#08090E" />
           </div>
           <div>
             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-base-100)', lineHeight: 1.2 }}>

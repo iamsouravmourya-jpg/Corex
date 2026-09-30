@@ -88,9 +88,9 @@ export function ExportModal({ onClose }: ExportModalProps) {
                     key={f}
                     onClick={() => setFormat(f)}
                     style={{
-                      flex: '1 0 28%', height: 36, borderRadius: 7, border: '1px solid',
+                      flex: '1 0 28%', height: 36, borderRadius: '0.5rem', border: '1px solid',
                       borderColor: format === f ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                      background: format === f ? 'rgba(244,63,94,0.12)' : 'var(--color-base-800)',
+                      background: format === f ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
                       color: format === f ? 'var(--color-accent-400)' : 'var(--color-base-400)',
                       fontSize: 12, fontWeight: 600, cursor: 'pointer', textTransform: 'uppercase',
                       transition: 'all 150ms',
@@ -112,9 +112,9 @@ export function ExportModal({ onClose }: ExportModalProps) {
                       key={s}
                       onClick={() => setScale(s)}
                       style={{
-                        flex: 1, height: 32, borderRadius: 7, border: '1px solid',
+                        flex: 1, height: 32, borderRadius: '0.5rem', border: '1px solid',
                         borderColor: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                        background: scale === s ? 'rgba(244,63,94,0.12)' : 'var(--color-base-800)',
+                        background: scale === s ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
                         color: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-400)',
                         fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 150ms',
                       }}

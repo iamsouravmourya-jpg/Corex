@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
   <defs>
     <linearGradient id="corexGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F43F5E" />
-      <stop offset="55%" stop-color="#E11D48" />
-      <stop offset="100%" stop-color="#8B5CF6" />
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="55%" stop-color="#14B8A6" />
+      <stop offset="100%" stop-color="#10B981" />
     </linearGradient>
     <linearGradient id="corexInner" x1="14" y1="14" x2="50" y2="50" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="100%" stop-color="#FECDD3" />
+      <stop offset="100%" stop-color="#A5F3FC" />
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="16" fill="#09090B" />
+  <rect width="64" height="64" rx="16" fill="#08090E" />
   <rect x="3" y="3" width="58" height="58" rx="14" fill="url(#corexGrad)" fill-opacity="0.14" stroke="url(#corexGrad)" stroke-width="2" />
   <path d="M43.5 21.5C40.4 18.4 36.1 16.5 31.3 16.5C21.7 16.5 14 24.1 14 33.5C14 42.9 21.7 50.5 31.3 50.5C36.1 50.5 40.4 48.6 43.5 45.5" stroke="url(#corexInner)" stroke-width="5.5" stroke-linecap="round" />
-  <circle cx="45" cy="33.5" r="4.5" fill="#F43F5E" />
+  <circle cx="45" cy="33.5" r="4.5" fill="#06B6D4" />
 </svg>

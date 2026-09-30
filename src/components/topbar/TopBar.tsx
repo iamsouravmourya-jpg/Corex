@@ -14,29 +14,29 @@ function Logo() {
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="cLogoGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#F43F5E"/>
-            <stop offset="100%" stopColor="#BE123C"/>
+            <stop offset="0%" stopColor="#06B6D4"/>
+            <stop offset="100%" stopColor="#14B8A6"/>
           </linearGradient>
         </defs>
         {/* Filled circle */}
         <circle cx="14" cy="14" r="13" fill="url(#cLogoGrad)"/>
-        {/* Bold white "C" arc */}
+        {/* Bold ink "C" arc */}
         <path
           d="M20 9C18.3 7.75 16.24 7 14 7C9.03 7 5 10.69 5 15C5 19.31 9.03 23 14 23C16.24 23 18.3 22.25 20 21"
-          stroke="white"
-          strokeWidth="2.6"
+          stroke="#08090E"
+          strokeWidth="2.8"
           strokeLinecap="round"
           fill="none"
         />
       </svg>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <span style={{
-          fontFamily: "'Sora','Inter',sans-serif",
-          fontWeight: 700, fontSize: 15,
-          letterSpacing: '-0.04em', lineHeight: 1,
+          fontFamily: "'Plus Jakarta Sans','Inter',sans-serif",
+          fontWeight: 800, fontSize: 15,
+          letterSpacing: '-0.03em', lineHeight: 1,
         }}>
-          <span style={{ color: '#E8E8F0' }}>Core</span>
-          <span style={{ color: '#F43F5E' }}>x</span>
+          <span style={{ color: '#F8FAFC' }}>Core</span>
+          <span style={{ color: '#06B6D4' }}>x</span>
         </span>
         <span style={{ fontSize: 8.5, color: 'var(--color-base-500)', letterSpacing: '0.06em', textTransform: 'uppercase', lineHeight: 1 }}>
           by LernexAI
@@ -192,10 +192,10 @@ function UserProfileMenu() {
             width: 20,
             height: 20,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%)',
-            color: '#fff',
+            background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+            color: '#08090E',
             fontSize: 9.5,
-            fontWeight: 700,
+            fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -203,7 +203,7 @@ function UserProfileMenu() {
         >
           {initials}
         </div>
-        <span style={{ fontSize: 11, fontWeight: 500, maxWidth: 96, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: 11, fontWeight: 600, maxWidth: 96, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {displayName.split(' ')[0]}
         </span>
         <ChevronDown size={10} style={{ color: 'var(--color-base-500)' }} />
@@ -226,17 +226,17 @@ function UserProfileMenu() {
               width: 210,
               background: 'var(--color-base-850)',
               border: '1px solid var(--color-base-600)',
-              borderRadius: 10,
+              borderRadius: '0.75rem',
               boxShadow: 'var(--shadow-float)',
               padding: 6,
             }}
           >
             <div style={{ padding: '8px 10px', borderBottom: '1px solid var(--color-base-700)', marginBottom: 4 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-base-100)' }}>{displayName}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-base-100)' }}>{displayName}</div>
               <div style={{ fontSize: 10.5, color: 'var(--color-base-500)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {displayEmail}
               </div>
-              <div style={{ fontSize: 9.5, color: '#F43F5E', marginTop: 3, fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: 9.5, color: '#06B6D4', marginTop: 3, fontFamily: 'var(--font-mono)' }}>
                 {user?.plan || 'Corex Pro · LernexAI'}
               </div>
             </div>
@@ -328,24 +328,24 @@ export function TopBar() {
               display: 'flex',
               alignItems: 'center',
               gap: 5,
-              height: 28,
-              padding: '0 10px',
+              height: 30,
+              padding: '0 12px',
               background: isAiModeOpen
-                ? 'linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(139,92,246,0.25) 100%)'
+                ? 'linear-gradient(135deg, rgba(6,182,212,0.22) 0%, rgba(20,184,166,0.22) 100%)'
                 : 'var(--color-base-800)',
               border: isAiModeOpen
-                ? '1px solid var(--color-accent-400)'
+                ? '1px solid #06B6D4'
                 : '1px solid var(--color-base-600)',
-              borderRadius: 6,
-              color: isAiModeOpen ? '#FECDD3' : 'var(--color-base-200)',
-              fontSize: 11,
-              fontWeight: 600,
+              borderRadius: '0.5rem',
+              color: isAiModeOpen ? '#A5F3FC' : 'var(--color-base-200)',
+              fontSize: 11.5,
+              fontWeight: 700,
               cursor: 'pointer',
               transition: 'all 150ms var(--ease-spring)',
-              boxShadow: isAiModeOpen ? '0 0 10px rgba(244,63,94,0.3)' : 'none',
+              boxShadow: isAiModeOpen ? '0 6px 16px rgba(6,182,212,0.18)' : 'none',
             }}
           >
-            <Sparkles size={13} style={{ color: isAiModeOpen ? '#FB7185' : '#F43F5E' }} />
+            <Sparkles size={13} style={{ color: isAiModeOpen ? '#22D3EE' : '#06B6D4' }} />
             <span>AI Mode</span>
           </motion.button>
         </Tooltip>
@@ -374,11 +374,11 @@ export function TopBar() {
             aria-label="Export design"
             style={{ display: 'flex', alignItems: 'center', gap: 6,
               height: 30, padding: '0 14px',
-              background: 'linear-gradient(180deg,#F43F5E 0%,#E11D48 100%)',
-              border: '1px solid rgba(255,255,255,0.15)', borderRadius: 7,
-              color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(244,63,94,0.4),inset 0 1px 0 rgba(255,255,255,0.15)' }}>
-            <Download size={13} strokeWidth={2} />
+              background: 'linear-gradient(135deg,#06B6D4 0%,#14B8A6 100%)',
+              border: '1px solid rgba(255,255,255,0.2)', borderRadius: '0.5rem',
+              color: '#08090E', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              boxShadow: '0 6px 16px rgba(6,182,212,0.25),inset 0 1px 0 rgba(255,255,255,0.25)' }}>
+            <Download size={13} strokeWidth={2.2} />
             Export
           </motion.button>
         </Tooltip>

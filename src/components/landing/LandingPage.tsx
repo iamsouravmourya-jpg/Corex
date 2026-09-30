@@ -4,14 +4,10 @@ import {
   Sparkles,
   Wand2,
   ScanEye,
-  Layers,
   Download,
-  Zap,
   ArrowRight,
-  Check,
   Image as ImageIcon,
   Sliders,
-  Command,
   Shield,
   Play,
 } from 'lucide-react'
@@ -47,7 +43,7 @@ export function LandingPage() {
     open: false,
     mode: 'signup',
   })
-  const [previewAccent, setPreviewAccent] = useState('#F43F5E')
+  const [previewAccent, setPreviewAccent] = useState('#06B6D4')
 
   const handleInstantDemo = () => {
     setUser({
@@ -65,22 +61,25 @@ export function LandingPage() {
         overflowY: 'auto',
         overflowX: 'hidden',
         scrollBehavior: 'smooth',
-        background: '#09090B',
+        background: '#08090E',
         color: '#F8FAFC',
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
+        fontSize: '16px',
+        lineHeight: 1.75,
         position: 'relative',
       }}
     >
-      {/* Subtle Ambient Background Mesh */}
+      {/* Ambient Cyan & Teal Atmospheric Mesh */}
       <div
         style={{
           position: 'fixed',
           top: -180,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 960,
-          height: 460,
-          background: 'radial-gradient(ellipse at center, rgba(244, 63, 94, 0.14) 0%, rgba(139, 92, 246, 0.08) 45%, transparent 75%)',
+          width: 1020,
+          height: 480,
+          background:
+            'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.14) 0%, rgba(20, 184, 166, 0.09) 45%, transparent 75%)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
@@ -92,10 +91,10 @@ export function LandingPage() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          height: 64,
-          background: 'rgba(9, 9, 11, 0.82)',
-          backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid #1E1E2A',
+          height: 68,
+          background: 'rgba(8, 9, 14, 0.84)',
+          backdropFilter: 'blur(18px)',
+          borderBottom: '1px solid #1A1E2A',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -103,26 +102,26 @@ export function LandingPage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <svg width="30" height="30" viewBox="0 0 28 28" fill="none">
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
             <defs>
-              <linearGradient id="navLogoGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#F43F5E" />
-                <stop offset="100%" stopColor="#BE123C" />
+              <linearGradient id="navCyanGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#06B6D4" />
+                <stop offset="100%" stopColor="#14B8A6" />
               </linearGradient>
             </defs>
-            <circle cx="14" cy="14" r="13" fill="url(#navLogoGrad)" />
+            <circle cx="14" cy="14" r="13" fill="url(#navCyanGrad)" />
             <path
               d="M20 9C18.3 7.75 16.24 7 14 7C9.03 7 5 10.69 5 15C5 19.31 9.03 23 14 23C16.24 23 18.3 22.25 20 21"
-              stroke="white"
-              strokeWidth="2.6"
+              stroke="#08090E"
+              strokeWidth="2.8"
               strokeLinecap="round"
               fill="none"
             />
           </svg>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: 18, letterSpacing: '-0.04em' }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: 19, letterSpacing: '-0.03em' }}>
               <span style={{ color: '#F8FAFC' }}>Core</span>
-              <span style={{ color: '#F43F5E' }}>x</span>
+              <span style={{ color: '#06B6D4' }}>x</span>
             </span>
             <span style={{ fontSize: 11, color: '#64748B', fontFamily: "'JetBrains Mono', monospace" }}>
               by LernexAI
@@ -131,15 +130,15 @@ export function LandingPage() {
         </div>
 
         {/* Clean Unboxed Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-          <a href="#features" style={{ fontSize: 13, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <a href="#features" style={{ fontSize: 13.5, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
             Architecture
           </a>
-          <a href="#ai-engine" style={{ fontSize: 13, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
+          <a href="#ai-engine" style={{ fontSize: 13.5, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
             Gemini AI Suite
           </a>
-          <a href="#workflow" style={{ fontSize: 13, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
-            Workflow
+          <a href="#workflow" style={{ fontSize: 13.5, color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}>
+            Benchmarks
           </a>
         </nav>
 
@@ -148,15 +147,16 @@ export function LandingPage() {
           <button
             onClick={() => setAuthModal({ open: true, mode: 'signin' })}
             style={{
-              height: 36,
-              padding: '0 14px',
-              background: 'transparent',
-              border: '1px solid #262636',
-              borderRadius: 8,
+              height: 38,
+              padding: '0 16px',
+              background: '#11141C',
+              border: '1px solid #1A1E2A',
+              borderRadius: '0.5rem',
               color: '#E2E8F0',
-              fontSize: 12.5,
-              fontWeight: 500,
+              fontSize: 13,
+              fontWeight: 600,
               cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
             }}
           >
             Sign In
@@ -164,14 +164,14 @@ export function LandingPage() {
           <button
             onClick={() => setAuthModal({ open: true, mode: 'google' })}
             style={{
-              height: 36,
-              padding: '0 14px',
-              background: '#FFFFFF',
+              height: 38,
+              padding: '0 16px',
+              background: '#F8FAFC',
               border: '1px solid #E2E8F0',
-              borderRadius: 8,
-              color: '#0F172A',
-              fontSize: 12.5,
-              fontWeight: 600,
+              borderRadius: '0.5rem',
+              color: '#08090E',
+              fontSize: 13,
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
               gap: 7,
@@ -184,23 +184,23 @@ export function LandingPage() {
           <button
             onClick={() => setAuthModal({ open: true, mode: 'signup' })}
             style={{
-              height: 36,
-              padding: '0 16px',
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: 8,
-              color: '#FFFFFF',
-              fontSize: 12.5,
-              fontWeight: 600,
+              height: 38,
+              padding: '0 18px',
+              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '0.5rem',
+              color: '#08090E',
+              fontSize: 13,
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
               gap: 6,
               cursor: 'pointer',
-              boxShadow: '0 2px 12px rgba(244, 63, 94, 0.35)',
+              boxShadow: '0 6px 16px rgba(6, 182, 212, 0.22)',
             }}
           >
             <span>Sign Up Free</span>
-            <ArrowRight size={13} />
+            <ArrowRight size={14} />
           </button>
         </div>
       </header>
@@ -212,7 +212,7 @@ export function LandingPage() {
           zIndex: 1,
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '72px 24px 64px',
+          padding: '76px 24px 64px',
           textAlign: 'center',
         }}
       >
@@ -220,44 +220,47 @@ export function LandingPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
+          transition={{ duration: 0.4 }}
           style={{
-            fontSize: 11.5,
+            fontSize: 12,
             fontFamily: "'JetBrains Mono', monospace",
-            color: '#F43F5E',
-            letterSpacing: '0.08em',
+            color: '#06B6D4',
+            letterSpacing: '0.09em',
             textTransform: 'uppercase',
-            marginBottom: 18,
+            marginBottom: 20,
           }}
         >
           COREX STUDIO 2.0 &nbsp;·&nbsp; LERNEXAI PROPRIETARY ENGINE &nbsp;·&nbsp; GEMINI 3.8 FLASH VISION
         </motion.div>
 
-        {/* Display Headline */}
+        {/* Display Headline Combining Plus Jakarta Sans + Playfair Display */}
         <motion.h1
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.05 }}
+          transition={{ duration: 0.45, delay: 0.05 }}
           style={{
-            fontFamily: "'Sora', sans-serif",
-            fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.4rem)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: 'clamp(2.6rem, 5vw + 1rem, 4.5rem)',
             fontWeight: 800,
-            letterSpacing: '-0.04em',
-            lineHeight: 1.06,
-            maxWidth: 920,
-            margin: '0 auto 22px',
+            letterSpacing: '-0.035em',
+            lineHeight: 1.08,
+            maxWidth: 940,
+            margin: '0 auto 24px',
             color: '#F8FAFC',
           }}
         >
-          Autonomous Vector & AI Design Studio{' '}
+          Autonomous Vector & AI Studio Crafted for{' '}
           <span
             style={{
-              background: 'linear-gradient(135deg, #F43F5E 0%, #FB7185 45%, #A78BFA 100%)',
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: 'italic',
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 50%, #10B981 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Built for Speed.
+            Visual Mastery.
           </span>
         </motion.h1>
 
@@ -265,48 +268,48 @@ export function LandingPage() {
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+          transition={{ duration: 0.45, delay: 0.1 }}
           style={{
-            fontSize: 17,
+            fontSize: '1.05rem',
             color: '#94A3B8',
-            lineHeight: 1.65,
-            maxWidth: 680,
-            margin: '0 auto 34px',
+            lineHeight: 1.75,
+            maxWidth: 700,
+            margin: '0 auto 36px',
           }}
         >
-          Experience a sub-millisecond 60FPS vector canvas fused with autonomous Text-to-Canvas layout generation, AI image creation & editing, and lossless 3x multi-format exports.
+          Experience a sub-millisecond 60FPS vector canvas fused with autonomous Text-to-Canvas layout synthesis, Gemini 3.1 Flash image creation, and lossless 3x multi-format exports.
         </motion.p>
 
         {/* Primary CTA Cluster */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
+          transition={{ duration: 0.45, delay: 0.15 }}
           style={{
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 12,
-            marginBottom: 18,
+            gap: 14,
+            marginBottom: 20,
           }}
         >
           <button
             onClick={() => setAuthModal({ open: true, mode: 'google' })}
             style={{
-              height: 46,
-              padding: '0 22px',
-              borderRadius: 10,
-              background: '#FFFFFF',
-              color: '#09090B',
+              height: 48,
+              padding: '0 24px',
+              borderRadius: '0.75rem',
+              background: '#F8FAFC',
+              color: '#08090E',
               border: '1px solid #E2E8F0',
-              fontSize: 14,
-              fontWeight: 600,
+              fontSize: 14.5,
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
               gap: 10,
               cursor: 'pointer',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+              boxShadow: '0 6px 16px rgba(6, 182, 212, 0.12)',
             }}
           >
             <GoogleIconSmall />
@@ -316,19 +319,19 @@ export function LandingPage() {
           <button
             onClick={() => setAuthModal({ open: true, mode: 'signup' })}
             style={{
-              height: 46,
-              padding: '0 24px',
-              borderRadius: 10,
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255,255,255,0.18)',
-              fontSize: 14,
-              fontWeight: 600,
+              height: 48,
+              padding: '0 26px',
+              borderRadius: '0.75rem',
+              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+              color: '#08090E',
+              border: '1px solid rgba(255,255,255,0.22)',
+              fontSize: 14.5,
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
               gap: 8,
               cursor: 'pointer',
-              boxShadow: '0 8px 28px rgba(244, 63, 94, 0.4)',
+              boxShadow: '0 8px 24px rgba(6, 182, 212, 0.28)',
             }}
           >
             <span>Sign Up & Open Dashboard</span>
@@ -338,27 +341,28 @@ export function LandingPage() {
           <button
             onClick={handleInstantDemo}
             style={{
-              height: 46,
-              padding: '0 18px',
-              borderRadius: 10,
-              background: '#14141D',
+              height: 48,
+              padding: '0 20px',
+              borderRadius: '0.75rem',
+              background: '#11141C',
               color: '#E2E8F0',
-              border: '1px solid #2A2A3C',
-              fontSize: 13.5,
-              fontWeight: 500,
+              border: '1px solid #1A1E2A',
+              fontSize: 14,
+              fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
-              gap: 7,
+              gap: 8,
               cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
             }}
           >
-            <Play size={13} fill="#F43F5E" color="#F43F5E" />
+            <Play size={13} fill="#06B6D4" color="#06B6D4" />
             <span>Instant Demo Login</span>
           </button>
         </motion.div>
 
         {/* Sub-CTA Metadata Line */}
-        <div style={{ fontSize: 12, color: '#64748B', marginBottom: 48 }}>
+        <div style={{ fontSize: 12.5, color: '#64748B', marginBottom: 52 }}>
           Instant browser workspace &nbsp;·&nbsp; No credit card required &nbsp;·&nbsp; Local IndexedDB + Gemini Cloud AI
         </div>
 
@@ -368,10 +372,10 @@ export function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           style={{
-            background: '#111116',
-            border: '1px solid #262636',
-            borderRadius: 16,
-            boxShadow: '0 32px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(244, 63, 94, 0.1)',
+            background: '#0D0F17',
+            border: '1px solid #1A1E2A',
+            borderRadius: '1.5rem',
+            boxShadow: '0 32px 80px rgba(8, 9, 14, 0.85), 0 6px 16px rgba(6, 182, 212, 0.12)',
             overflow: 'hidden',
             textAlign: 'left',
           }}
@@ -379,10 +383,10 @@ export function LandingPage() {
           {/* Preview Window Top Bar */}
           <div
             style={{
-              height: 42,
-              background: '#16161F',
-              borderBottom: '1px solid #242432',
-              padding: '0 16px',
+              height: 46,
+              background: '#11141C',
+              borderBottom: '1px solid #1A1E2A',
+              padding: '0 20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -393,21 +397,21 @@ export function LandingPage() {
               <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#F59E0B' }} />
               <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981' }} />
               <span style={{ marginLeft: 10, fontSize: 11.5, fontFamily: "'JetBrains Mono', monospace", color: '#94A3B8' }}>
-                Corex Studio — Launch_Campaign_2026.corex (1080×1080)
+                Corex Studio — Brand_Identity_2026.corex (1080×1080)
               </span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 11, color: '#64748B' }}>Interactive Theme Preview:</span>
-              {['#F43F5E', '#8B5CF6', '#38BDF8', '#10B981', '#F59E0B'].map((col) => (
+              <span style={{ fontSize: 11.5, color: '#64748B' }}>Accent Palette:</span>
+              {['#06B6D4', '#14B8A6', '#10B981', '#F59E0B', '#F43F5E'].map((col) => (
                 <button
                   key={col}
                   onClick={() => setPreviewAccent(col)}
                   aria-label={`Preview accent ${col}`}
                   style={{
-                    width: 16,
-                    height: 16,
-                    borderRadius: 4,
+                    width: 18,
+                    height: 18,
+                    borderRadius: '0.375rem',
                     background: col,
                     border: previewAccent === col ? '2px solid #FFFFFF' : '1px solid rgba(255,255,255,0.2)',
                     cursor: 'pointer',
@@ -418,43 +422,43 @@ export function LandingPage() {
                 onClick={handleInstantDemo}
                 style={{
                   marginLeft: 8,
-                  padding: '4px 10px',
-                  borderRadius: 6,
-                  background: '#F43F5E',
+                  padding: '5px 12px',
+                  borderRadius: '0.5rem',
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
                   border: 'none',
-                  color: '#FFFFFF',
-                  fontSize: 11,
-                  fontWeight: 600,
+                  color: '#08090E',
+                  fontSize: 11.5,
+                  fontWeight: 700,
                   cursor: 'pointer',
                 }}
               >
-                Open in Full Editor →
+                Open Full Studio →
               </button>
             </div>
           </div>
 
           {/* Simulated 3-Column Studio Interface */}
-          <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr 260px', minHeight: 410 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '230px 1fr 270px', minHeight: 420 }}>
             {/* Left Layers & Tools Column */}
-            <div style={{ background: '#13131B', borderRight: '1px solid #222230', padding: 16 }}>
-              <div style={{ fontSize: 10.5, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>
-                Active Scene Layers (5)
+            <div style={{ background: '#0D0F17', borderRight: '1px solid #1A1E2A', padding: 18 }}>
+              <div style={{ fontSize: 10.5, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>
+                Scene Layer Tree (5)
               </div>
               {[
-                { name: 'CTA Button Group', type: 'Vector Rect' },
-                { name: 'Hero Display Title', type: 'Sora 800' },
-                { name: 'AI Generated 3D Asset', type: 'Gemini Image' },
-                { name: 'Accent Glow Sphere', type: 'Radial Shader' },
-                { name: 'Obsidian Artboard', type: '1080 × 1080' },
+                { name: 'Primary CTA Pill', type: 'Vector Rect' },
+                { name: 'Playfair Serif Title', type: 'Display' },
+                { name: 'AI Generated Asset', type: 'Gemini 3.1' },
+                { name: 'Cyan Ambient Glow', type: 'Radial Shader' },
+                { name: 'Deep Ink Artboard', type: '1080 × 1080' },
               ].map((layer, idx) => (
                 <div
                   key={idx}
                   style={{
-                    padding: '8px 10px',
-                    borderRadius: 6,
-                    background: idx === 1 ? '#1E1E2C' : 'transparent',
-                    borderLeft: idx === 1 ? `2px solid ${previewAccent}` : '2px solid transparent',
-                    marginBottom: 4,
+                    padding: '9px 10px',
+                    borderRadius: '0.5rem',
+                    background: idx === 1 ? '#1A1E2A' : 'transparent',
+                    borderLeft: idx === 1 ? `2.5px solid ${previewAccent}` : '2.5px solid transparent',
+                    marginBottom: 6,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -473,10 +477,10 @@ export function LandingPage() {
             {/* Center Artboard Canvas */}
             <div
               onClick={handleInstantDemo}
-              title="Click to open interactive editor"
+              title="Click to launch interactive editor"
               style={{
-                background: '#0C0C11',
-                backgroundImage: 'radial-gradient(#222230 1px, transparent 1px)',
+                background: '#08090E',
+                backgroundImage: 'radial-gradient(#1A1E2A 1px, transparent 1px)',
                 backgroundSize: '20px 20px',
                 display: 'flex',
                 alignItems: 'center',
@@ -489,11 +493,11 @@ export function LandingPage() {
                 style={{
                   width: '100%',
                   maxWidth: 460,
-                  padding: '36px 32px',
-                  borderRadius: 14,
-                  background: '#09090B',
+                  padding: '38px 34px',
+                  borderRadius: '1rem',
+                  background: '#0D0F17',
                   border: `2px solid ${previewAccent}`,
-                  boxShadow: `0 20px 60px rgba(0,0,0,0.65), 0 0 40px ${previewAccent}22`,
+                  boxShadow: `0 24px 64px rgba(8,9,14,0.75), 0 6px 24px ${previewAccent}26`,
                   position: 'relative',
                 }}
               >
@@ -507,60 +511,61 @@ export function LandingPage() {
                     marginBottom: 10,
                   }}
                 >
-                  LERNEXAI CREATIVE ENGINE
+                  LERNEXAI DESIGN SYSTEM
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Sora', sans-serif",
-                    fontSize: 28,
-                    fontWeight: 800,
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: 'italic',
+                    fontSize: 30,
+                    fontWeight: 700,
                     color: '#FFFFFF',
-                    lineHeight: 1.15,
+                    lineHeight: 1.2,
                     marginBottom: 10,
                   }}
                 >
-                  CRAFT WITHOUT LIMITS.
+                  Craft Without Limits.
                 </div>
-                <div style={{ fontSize: 13, color: '#94A3B8', marginBottom: 22 }}>
-                  Click anywhere on this artboard to launch the live 60FPS Studio Dashboard.
+                <div style={{ fontSize: 13.5, color: '#94A3B8', marginBottom: 24, lineHeight: 1.6 }}>
+                  Click anywhere on this artboard to launch the live 60FPS Corex Studio Dashboard.
                 </div>
                 <div
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: 8,
-                    padding: '9px 18px',
-                    borderRadius: 7,
+                    padding: '10px 20px',
+                    borderRadius: '0.5rem',
                     background: previewAccent,
-                    color: '#FFFFFF',
-                    fontSize: 12,
-                    fontWeight: 700,
+                    color: '#08090E',
+                    fontSize: 12.5,
+                    fontWeight: 800,
                   }}
                 >
-                  <span>LAUNCH EDITOR NOW</span>
-                  <ArrowRight size={13} />
+                  <span>ENTER STUDIO WORKSPACE</span>
+                  <ArrowRight size={14} />
                 </div>
               </div>
             </div>
 
             {/* Right AI Copilot Inspector */}
-            <div style={{ background: '#13131B', borderLeft: '1px solid #222230', padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ background: '#0D0F17', borderLeft: '1px solid #1A1E2A', padding: 18, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: '#F8FAFC', marginBottom: 10 }}>
-                  <Sparkles size={13} color={previewAccent} />
-                  <span>Corex AI Studio</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 700, color: '#F8FAFC', marginBottom: 12 }}>
+                  <Sparkles size={14} color={previewAccent} />
+                  <span>Corex AI Copilot</span>
                 </div>
-                <div style={{ padding: 10, borderRadius: 8, background: '#1A1A26', border: '1px solid #2A2A3C', fontSize: 11.5, color: '#CBD5E1', lineHeight: 1.5, marginBottom: 12 }}>
-                  "Generate a high-contrast SaaS launch poster with neon accents and bold Sora typography."
+                <div style={{ padding: 12, borderRadius: '0.75rem', background: '#11141C', border: '1px solid #1A1E2A', fontSize: 12, color: '#CBD5E1', lineHeight: 1.6, marginBottom: 14 }}>
+                  "Create a luxury editorial poster with deep ink background, Playfair Display serif headline, and cyan glow."
                 </div>
-                <div style={{ fontSize: 11, color: '#10B981', marginBottom: 8 }}>
-                  ✓ 5 vector layers generated
+                <div style={{ fontSize: 11.5, color: '#10B981', marginBottom: 8 }}>
+                  ✓ 5 vector layers synthesized
                 </div>
-                <div style={{ fontSize: 11, color: '#10B981', marginBottom: 8 }}>
-                  ✓ Contrast ratio: 14.2:1 (AAA)
+                <div style={{ fontSize: 11.5, color: '#14B8A6', marginBottom: 8 }}>
+                  ✓ Contrast ratio: 15.4:1 (AAA)
                 </div>
-                <div style={{ fontSize: 11, color: '#10B981' }}>
-                  ✓ Gemini Image Gen ready
+                <div style={{ fontSize: 11.5, color: '#06B6D4' }}>
+                  ✓ Gemini 3.1 Image AI active
                 </div>
               </div>
 
@@ -568,17 +573,17 @@ export function LandingPage() {
                 onClick={() => setAuthModal({ open: true, mode: 'google' })}
                 style={{
                   width: '100%',
-                  height: 36,
-                  borderRadius: 8,
-                  background: '#1E1E2C',
-                  border: '1px solid #323248',
+                  height: 38,
+                  borderRadius: '0.5rem',
+                  background: '#1A1E2A',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
                   color: '#F8FAFC',
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
               >
-                Try AI Mode in Dashboard →
+                Launch AI Mode →
               </button>
             </div>
           </div>
@@ -595,11 +600,15 @@ export function LandingPage() {
         }}
       >
         <div style={{ marginBottom: 40 }}>
-          <div style={{ fontSize: 11.5, fontFamily: "'JetBrains Mono', monospace", color: '#F43F5E', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+          <div style={{ fontSize: 11.5, fontFamily: "'JetBrains Mono', monospace", color: '#06B6D4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
             PROPRIETARY ARCHITECTURE
           </div>
-          <h2 style={{ fontFamily: "'Sora', sans-serif", fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', color: '#F8FAFC' }}>
-            Engineered for Professional Creative Teams
+          <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', color: '#F8FAFC', lineHeight: 1.2 }}>
+            Engineered for{' '}
+            <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', color: '#14B8A6' }}>
+              Next-Generation
+            </span>{' '}
+            Creative Teams
           </h2>
         </div>
 
@@ -613,37 +622,37 @@ export function LandingPage() {
         >
           {[
             {
-              icon: <Wand2 size={20} color="#F43F5E" />,
+              icon: <Wand2 size={20} color="#06B6D4" />,
               kicker: 'TEXT-TO-CANVAS ENGINE',
               title: 'Autonomous AI Layout Generator',
               desc: 'Describe any poster, social banner, or YouTube thumbnail in natural language. Corex synthesizes editable Fabric.js vector shapes, cards, and typography hierarchies directly on your canvas.',
             },
             {
-              icon: <ImageIcon size={20} color="#8B5CF6" />,
+              icon: <ImageIcon size={20} color="#14B8A6" />,
               kicker: 'GEMINI 3.1 FLASH IMAGE',
               title: 'AI Image Creation & Editing',
               desc: 'Create bespoke illustrations, 3D icons, and product visuals from text prompts or edit existing canvas images using our integrated Gemini image generation pipeline.',
             },
             {
-              icon: <ScanEye size={20} color="#38BDF8" />,
+              icon: <ScanEye size={20} color="#10B981" />,
               kicker: 'MULTIMODAL VISION',
               title: 'Design Doctor Live Critique',
               desc: 'One-click canvas snapshot inspection evaluates contrast ratios, visual hierarchy, alignment balance, and recommends instant 1-click color palette upgrades.',
             },
             {
-              icon: <Sliders size={20} color="#10B981" />,
+              icon: <Sliders size={20} color="#F59E0B" />,
               kicker: '60FPS GPU COMPOSITOR',
               title: 'Vector Precision & Live Shaders',
               desc: 'Full affine transformations, smart edge/center snapping guides, 16 composite blend modes, linear/radial gradient builders, and live brightness/contrast/blur filters.',
             },
             {
-              icon: <Download size={20} color="#F59E0B" />,
+              icon: <Download size={20} color="#F43F5E" />,
               kicker: 'MULTI-FORMAT COMPILER',
               title: 'Lossless 3x Studio Exports',
               desc: 'Export supersampled 1x/2x/3x PNG & JPEG, transparent alpha cutouts, scalable vector SVG, print-ready 96DPI PDF documents, and native editable PowerPoint PPTX decks.',
             },
             {
-              icon: <Shield size={20} color="#EC4899" />,
+              icon: <Shield size={20} color="#06B6D4" />,
               kicker: 'ZERO-LATENCY VAULT',
               title: 'Local IndexedDB + 50-Step History',
               desc: 'Every project saves instantaneously to your browser IndexedDB with live visual thumbnails, drag-to-reorder layer trees, and a 50-step delta undo/redo stack.',
@@ -653,9 +662,10 @@ export function LandingPage() {
               key={idx}
               style={{
                 padding: 28,
-                borderRadius: 14,
-                background: '#111116',
-                border: '1px solid #222230',
+                borderRadius: '1rem',
+                background: '#11141C',
+                border: '1px solid #1A1E2A',
+                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 12,
@@ -663,11 +673,11 @@ export function LandingPage() {
             >
               <div
                 style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  background: '#181822',
-                  border: '1px solid #2A2A3C',
+                  width: 42,
+                  height: 42,
+                  borderRadius: '0.75rem',
+                  background: '#1A1E2A',
+                  border: '1px solid rgba(6, 182, 212, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -675,13 +685,13 @@ export function LandingPage() {
               >
                 {feat.icon}
               </div>
-              <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#64748B', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#06B6D4', letterSpacing: '0.06em' }}>
                 {feat.kicker}
               </div>
-              <h3 style={{ fontFamily: "'Sora', sans-serif", fontSize: 18, fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
                 {feat.title}
               </h3>
-              <p style={{ fontSize: 13.5, color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 1.75, margin: 0 }}>
                 {feat.desc}
               </p>
             </div>
@@ -691,6 +701,7 @@ export function LandingPage() {
 
       {/* COMPARISON & KEYBOARD ERGONOMICS SECTION */}
       <section
+        id="workflow"
         style={{
           maxWidth: 1200,
           margin: '0 auto',
@@ -704,15 +715,15 @@ export function LandingPage() {
         <div
           style={{
             padding: 28,
-            borderRadius: 16,
-            background: '#111116',
-            border: '1px solid #222230',
+            borderRadius: '1rem',
+            background: '#11141C',
+            border: '1px solid #1A1E2A',
           }}
         >
-          <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#F43F5E', letterSpacing: '0.08em', marginBottom: 8 }}>
+          <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#06B6D4', letterSpacing: '0.08em', marginBottom: 8 }}>
             PERFORMANCE BENCHMARK
           </div>
-          <h3 style={{ fontFamily: "'Sora', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
             Why Creators Switch to Corex Studio
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -729,14 +740,14 @@ export function LandingPage() {
                   display: 'grid',
                   gridTemplateColumns: '1.2fr 1.1fr 1fr',
                   alignItems: 'center',
-                  padding: '10px 12px',
-                  borderRadius: 8,
-                  background: '#16161F',
-                  border: '1px solid #222230',
-                  fontSize: 12,
+                  padding: '10px 14px',
+                  borderRadius: '0.5rem',
+                  background: '#0D0F17',
+                  border: '1px solid #1A1E2A',
+                  fontSize: 12.5,
                 }}
               >
-                <span style={{ color: '#CBD5E1', fontWeight: 500 }}>{row.metric}</span>
+                <span style={{ color: '#CBD5E1', fontWeight: 600 }}>{row.metric}</span>
                 <span style={{ color: '#10B981', fontWeight: 600, fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
                   ✓ {row.corex}
                 </span>
@@ -750,15 +761,15 @@ export function LandingPage() {
         <div
           style={{
             padding: 28,
-            borderRadius: 16,
-            background: '#111116',
-            border: '1px solid #222230',
+            borderRadius: '1rem',
+            background: '#11141C',
+            border: '1px solid #1A1E2A',
           }}
         >
-          <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#8B5CF6', letterSpacing: '0.08em', marginBottom: 8 }}>
+          <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#14B8A6', letterSpacing: '0.08em', marginBottom: 8 }}>
             FIGMA-GRADE ERGONOMICS
           </div>
-          <h3 style={{ fontFamily: "'Sora', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
             Zero-Friction Keyboard Command Matrix
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -775,16 +786,16 @@ export function LandingPage() {
               <div
                 key={idx}
                 style={{
-                  padding: '10px 12px',
-                  borderRadius: 8,
-                  background: '#16161F',
-                  border: '1px solid #222230',
+                  padding: '10px 14px',
+                  borderRadius: '0.5rem',
+                  background: '#0D0F17',
+                  border: '1px solid #1A1E2A',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 4,
                 }}
               >
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#F43F5E', fontWeight: 600 }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#06B6D4', fontWeight: 600 }}>
                   {sc.key}
                 </span>
                 <span style={{ fontSize: 12, color: '#94A3B8' }}>{sc.action}</span>
@@ -794,21 +805,21 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* WORKFLOW & SHORTCUTS SECTION */}
+      {/* BOTTOM CTA BANNER */}
       <section
-        id="workflow"
         style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '32px 24px 80px',
+          padding: '24px 24px 80px',
         }}
       >
         <div
           style={{
             padding: '44px 40px',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #13131C 0%, #0E0E14 100%)',
-            border: '1px solid #262636',
+            borderRadius: '1.5rem',
+            background: 'linear-gradient(135deg, #11141C 0%, #0D0F17 100%)',
+            border: '1px solid #1A1E2A',
+            boxShadow: '0 6px 16px rgba(6, 182, 212, 0.12)',
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
@@ -817,13 +828,16 @@ export function LandingPage() {
           }}
         >
           <div style={{ maxWidth: 560 }}>
-            <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: '#F43F5E', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: '#06B6D4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
               READY TO CREATE?
             </div>
-            <h2 style={{ fontFamily: "'Sora', sans-serif", fontSize: 28, fontWeight: 700, color: '#F8FAFC', marginBottom: 12 }}>
-              Sign in with Google Demo Auth & Enter the Corex Dashboard
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 28, fontWeight: 800, color: '#F8FAFC', marginBottom: 12, lineHeight: 1.25 }}>
+              Sign in with Google Demo Auth & Enter the{' '}
+              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', color: '#06B6D4' }}>
+                Corex Dashboard
+              </span>
             </h2>
-            <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontSize: 14.5, color: '#94A3B8', lineHeight: 1.75, margin: 0 }}>
               Experience the complete LernexAI design workspace immediately. Test Google OAuth demo login, create multi-layer designs, generate AI images, and export in 5 studio formats.
             </p>
           </div>
@@ -832,14 +846,14 @@ export function LandingPage() {
             <button
               onClick={() => setAuthModal({ open: true, mode: 'google' })}
               style={{
-                height: 44,
-                padding: '0 20px',
-                borderRadius: 10,
-                background: '#FFFFFF',
-                color: '#09090B',
+                height: 46,
+                padding: '0 22px',
+                borderRadius: '0.75rem',
+                background: '#F8FAFC',
+                color: '#08090E',
                 border: 'none',
-                fontSize: 13.5,
-                fontWeight: 600,
+                fontSize: 14,
+                fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 9,
@@ -852,15 +866,16 @@ export function LandingPage() {
             <button
               onClick={() => setAuthModal({ open: true, mode: 'signup' })}
               style={{
-                height: 44,
-                padding: '0 22px',
-                borderRadius: 10,
-                background: '#F43F5E',
-                color: '#FFFFFF',
+                height: 46,
+                padding: '0 24px',
+                borderRadius: '0.75rem',
+                background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+                color: '#08090E',
                 border: 'none',
-                fontSize: 13.5,
-                fontWeight: 600,
+                fontSize: 14,
+                fontWeight: 700,
                 cursor: 'pointer',
+                boxShadow: '0 6px 16px rgba(6, 182, 212, 0.25)',
               }}
             >
               Create Free Account →
@@ -872,15 +887,15 @@ export function LandingPage() {
       {/* FOOTER */}
       <footer
         style={{
-          borderTop: '1px solid #1E1E2A',
+          borderTop: '1px solid #1A1E2A',
           padding: '28px 32px',
-          background: '#070709',
+          background: '#08090E',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
-          fontSize: 12,
+          fontSize: 12.5,
           color: '#64748B',
         }}
       >

@@ -14,14 +14,14 @@ const DEMO_GOOGLE_ACCOUNTS = [
     email: 'iamsouravmaurya@gmail.com',
     role: 'Founder · LernexAI Pro',
     initials: 'SM',
-    color: '#F43F5E',
+    color: '#06B6D4',
   },
   {
     name: 'Aarav Verma',
     email: 'aarav.design@lernexai.com',
     role: 'Lead Creative Director',
     initials: 'AV',
-    color: '#8B5CF6',
+    color: '#14B8A6',
   },
 ]
 
@@ -99,12 +99,13 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
           position: 'fixed',
           inset: 0,
           zIndex: 1000,
-          background: 'rgba(5, 5, 8, 0.78)',
-          backdropFilter: 'blur(12px)',
+          background: 'rgba(8, 9, 14, 0.82)',
+          backdropFilter: 'blur(14px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           padding: 16,
+          fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
         }}
       >
         <motion.div
@@ -116,10 +117,10 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
           style={{
             width: '100%',
             maxWidth: 420,
-            background: '#111116',
-            border: '1px solid #262636',
-            borderRadius: 16,
-            boxShadow: '0 24px 64px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(244, 63, 94, 0.12)',
+            background: '#0D0F17',
+            border: '1px solid #1A1E2A',
+            borderRadius: '1.5rem',
+            boxShadow: '0 24px 64px rgba(8, 9, 14, 0.85), 0 6px 16px rgba(6, 182, 212, 0.12)',
             overflow: 'hidden',
             position: 'relative',
           }}
@@ -129,7 +130,7 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
             style={{
               height: 3,
               width: '100%',
-              background: 'linear-gradient(90deg, #F43F5E 0%, #8B5CF6 50%, #38BDF8 100%)',
+              background: 'linear-gradient(90deg, #06B6D4 0%, #14B8A6 50%, #10B981 100%)',
             }}
           />
 
@@ -143,9 +144,9 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
               right: 16,
               width: 30,
               height: 30,
-              borderRadius: 8,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '0.5rem',
+              background: '#11141C',
+              border: '1px solid #1A1E2A',
               color: '#94A3B8',
               display: 'flex',
               alignItems: 'center',
@@ -162,21 +163,21 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
               <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
                 <defs>
                   <linearGradient id="authLogoGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#F43F5E" />
-                    <stop offset="100%" stopColor="#BE123C" />
+                    <stop offset="0%" stopColor="#06B6D4" />
+                    <stop offset="100%" stopColor="#14B8A6" />
                   </linearGradient>
                 </defs>
                 <circle cx="14" cy="14" r="13" fill="url(#authLogoGrad)" />
                 <path
                   d="M20 9C18.3 7.75 16.24 7 14 7C9.03 7 5 10.69 5 15C5 19.31 9.03 23 14 23C16.24 23 18.3 22.25 20 21"
-                  stroke="white"
-                  strokeWidth="2.6"
+                  stroke="#08090E"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
                   fill="none"
                 />
               </svg>
               <div>
-                <div style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: 16, color: '#F8FAFC', letterSpacing: '-0.03em' }}>
+                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: 16, color: '#F8FAFC', letterSpacing: '-0.03em' }}>
                   Corex Studio
                 </div>
                 <div style={{ fontSize: 10.5, color: '#64748B' }}>
@@ -190,11 +191,11 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                   <GoogleBrandIcon />
-                  <span style={{ fontSize: 15, fontWeight: 600, color: '#F1F5F9' }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: '#F1F5F9' }}>
                     Sign in with Google
                   </span>
                 </div>
-                <p style={{ fontSize: 12, color: '#94A3B8', marginBottom: 18, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12.5, color: '#94A3B8', marginBottom: 18, lineHeight: 1.6 }}>
                   Choose a demo Google account to launch straight into your Corex Studio workspace:
                 </p>
 
@@ -212,9 +213,9 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                           gap: 12,
                           width: '100%',
                           padding: '12px 14px',
-                          borderRadius: 10,
-                          background: isSelected ? 'rgba(244, 63, 94, 0.14)' : '#181822',
-                          border: isSelected ? '1px solid #F43F5E' : '1px solid #2A2A3C',
+                          borderRadius: '0.75rem',
+                          background: isSelected ? 'rgba(6, 182, 212, 0.14)' : '#11141C',
+                          border: isSelected ? '1px solid #06B6D4' : '1px solid #1A1E2A',
                           cursor: 'pointer',
                           textAlign: 'left',
                           transition: 'all 150ms ease',
@@ -226,11 +227,11 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                             height: 38,
                             borderRadius: '50%',
                             background: acc.color,
-                            color: '#FFFFFF',
+                            color: '#08090E',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 700,
+                            fontWeight: 800,
                             fontSize: 13,
                             flexShrink: 0,
                           }}
@@ -238,18 +239,18 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                           {acc.initials}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: '#F8FAFC' }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#F8FAFC' }}>
                             {acc.name}
                           </div>
                           <div style={{ fontSize: 11.5, color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {acc.email}
                           </div>
-                          <div style={{ fontSize: 10, color: '#64748B', marginTop: 2 }}>
+                          <div style={{ fontSize: 10, color: '#06B6D4', marginTop: 2 }}>
                             {acc.role}
                           </div>
                         </div>
                         {isSelected ? (
-                          <CheckCircle2 size={18} color="#F43F5E" />
+                          <CheckCircle2 size={18} color="#06B6D4" />
                         ) : (
                           <ArrowRight size={15} color="#64748B" />
                         )}
@@ -262,7 +263,7 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                   <div
                     style={{
                       padding: '10px 12px',
-                      borderRadius: 8,
+                      borderRadius: '0.5rem',
                       background: 'rgba(16, 185, 129, 0.12)',
                       border: '1px solid rgba(16, 185, 129, 0.3)',
                       color: '#6EE7B7',
@@ -284,8 +285,8 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                     width: '100%',
                     padding: '9px',
                     background: 'transparent',
-                    border: '1px solid #262636',
-                    borderRadius: 8,
+                    border: '1px solid #1A1E2A',
+                    borderRadius: '0.5rem',
                     color: '#94A3B8',
                     fontSize: 12,
                     cursor: 'pointer',
@@ -297,10 +298,20 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
             ) : (
               /* STANDARD SIGN UP / SIGN IN FORM + GOOGLE BUTTON */
               <div>
-                <h2 style={{ fontFamily: "'Sora', sans-serif", fontSize: 19, fontWeight: 700, color: '#F8FAFC', marginBottom: 4 }}>
-                  {mode === 'signup' ? 'Create your Studio account' : 'Welcome back to Corex'}
+                <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 800, color: '#F8FAFC', marginBottom: 4 }}>
+                  {mode === 'signup' ? (
+                    <>
+                      Create your{' '}
+                      <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', color: '#06B6D4' }}>
+                        Studio
+                      </span>{' '}
+                      account
+                    </>
+                  ) : (
+                    'Welcome back to Corex'
+                  )}
                 </h2>
-                <p style={{ fontSize: 12, color: '#94A3B8', marginBottom: 18 }}>
+                <p style={{ fontSize: 12.5, color: '#94A3B8', marginBottom: 18 }}>
                   {mode === 'signup'
                     ? 'Start designing with 60FPS vector tools & Gemini 3.8 Flash AI.'
                     : 'Sign in to access your saved projects, templates, and AI studio.'}
@@ -314,18 +325,18 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                   style={{
                     width: '100%',
                     height: 42,
-                    borderRadius: 9,
-                    background: '#FFFFFF',
-                    color: '#0F172A',
+                    borderRadius: '0.75rem',
+                    background: '#F8FAFC',
+                    color: '#08090E',
                     border: '1px solid #E2E8F0',
                     fontSize: 13,
-                    fontWeight: 600,
+                    fontWeight: 700,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 10,
                     cursor: 'pointer',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                    boxShadow: '0 6px 16px rgba(6, 182, 212, 0.12)',
                     marginBottom: 16,
                   }}
                 >
@@ -335,22 +346,22 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
 
                 {/* Divider */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <div style={{ flex: 1, height: 1, background: '#222230' }} />
+                  <div style={{ flex: 1, height: 1, background: '#1A1E2A' }} />
                   <span style={{ fontSize: 10.5, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     or continue with email
                   </span>
-                  <div style={{ flex: 1, height: 1, background: '#222230' }} />
+                  <div style={{ flex: 1, height: 1, background: '#1A1E2A' }} />
                 </div>
 
                 {/* Email Form */}
                 <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {mode === 'signup' && (
                     <div>
-                      <label style={{ fontSize: 11, fontWeight: 500, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
+                      <label style={{ fontSize: 11.5, fontWeight: 600, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
                         Full Name
                       </label>
                       <div style={{ position: 'relative' }}>
-                        <UserIcon size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#64748B' }} />
+                        <UserIcon size={14} style={{ position: 'absolute', left: 11, top: 12, color: '#64748B' }} />
                         <input
                           type="text"
                           value={name}
@@ -359,14 +370,14 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                           required
                           style={{
                             width: '100%',
-                            height: 36,
-                            paddingLeft: 32,
+                            height: 38,
+                            paddingLeft: 34,
                             paddingRight: 12,
-                            borderRadius: 8,
-                            background: '#181822',
-                            border: '1px solid #2A2A3C',
+                            borderRadius: '0.5rem',
+                            background: '#11141C',
+                            border: '1px solid #1A1E2A',
                             color: '#F8FAFC',
-                            fontSize: 12.5,
+                            fontSize: 13,
                             outline: 'none',
                           }}
                         />
@@ -375,11 +386,11 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                   )}
 
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 500, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
+                    <label style={{ fontSize: 11.5, fontWeight: 600, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
                       Work Email
                     </label>
                     <div style={{ position: 'relative' }}>
-                      <Mail size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#64748B' }} />
+                      <Mail size={14} style={{ position: 'absolute', left: 11, top: 12, color: '#64748B' }} />
                       <input
                         type="email"
                         value={email}
@@ -388,14 +399,14 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                         required
                         style={{
                           width: '100%',
-                          height: 36,
-                          paddingLeft: 32,
+                          height: 38,
+                          paddingLeft: 34,
                           paddingRight: 12,
-                          borderRadius: 8,
-                          background: '#181822',
-                          border: '1px solid #2A2A3C',
+                          borderRadius: '0.5rem',
+                          background: '#11141C',
+                          border: '1px solid #1A1E2A',
                           color: '#F8FAFC',
-                          fontSize: 12.5,
+                          fontSize: 13,
                           outline: 'none',
                         }}
                       />
@@ -403,11 +414,11 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 500, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
+                    <label style={{ fontSize: 11.5, fontWeight: 600, color: '#CBD5E1', display: 'block', marginBottom: 5 }}>
                       Password
                     </label>
                     <div style={{ position: 'relative' }}>
-                      <Lock size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#64748B' }} />
+                      <Lock size={14} style={{ position: 'absolute', left: 11, top: 12, color: '#64748B' }} />
                       <input
                         type="password"
                         value={password}
@@ -415,14 +426,14 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                         required
                         style={{
                           width: '100%',
-                          height: 36,
-                          paddingLeft: 32,
+                          height: 38,
+                          paddingLeft: 34,
                           paddingRight: 12,
-                          borderRadius: 8,
-                          background: '#181822',
-                          border: '1px solid #2A2A3C',
+                          borderRadius: '0.5rem',
+                          background: '#11141C',
+                          border: '1px solid #1A1E2A',
                           color: '#F8FAFC',
-                          fontSize: 12.5,
+                          fontSize: 13,
                           outline: 'none',
                         }}
                       />
@@ -434,19 +445,19 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                     disabled={authenticating}
                     style={{
                       marginTop: 4,
-                      height: 40,
-                      borderRadius: 9,
-                      background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#FFFFFF',
-                      fontSize: 13,
-                      fontWeight: 600,
+                      height: 42,
+                      borderRadius: '0.75rem',
+                      background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      color: '#08090E',
+                      fontSize: 13.5,
+                      fontWeight: 700,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 8,
-                      boxShadow: '0 4px 16px rgba(244, 63, 94, 0.35)',
+                      boxShadow: '0 6px 16px rgba(6, 182, 212, 0.25)',
                     }}
                   >
                     <span>
@@ -468,7 +479,7 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                       <button
                         type="button"
                         onClick={() => setMode('signin')}
-                        style={{ background: 'none', border: 'none', color: '#F43F5E', fontWeight: 600, cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', color: '#06B6D4', fontWeight: 700, cursor: 'pointer' }}
                       >
                         Sign In
                       </button>
@@ -479,7 +490,7 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
                       <button
                         type="button"
                         onClick={() => setMode('signup')}
-                        style={{ background: 'none', border: 'none', color: '#F43F5E', fontWeight: 600, cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', color: '#06B6D4', fontWeight: 700, cursor: 'pointer' }}
                       >
                         Create Free Account
                       </button>
@@ -494,8 +505,8 @@ export function AuthModal({ initialMode = 'signup', onClose }: AuthModalProps) {
           <div
             style={{
               padding: '10px 28px',
-              background: '#0C0C10',
-              borderTop: '1px solid #1E1E2A',
+              background: '#08090E',
+              borderTop: '1px solid #1A1E2A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
