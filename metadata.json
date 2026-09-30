@@ -1,0 +1,8 @@
+{
+  "name": "Craftora — Design Studio",
+  "description": "A professional-grade graphic design editor that runs entirely in your browser with rich shapes, text, images, layers, and multi-format exports.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

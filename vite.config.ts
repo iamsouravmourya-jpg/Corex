@@ -1,0 +1,35 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath, URL } from 'node:url'
+
+export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+    allowedHosts: true,
+  },
+  plugins: [
+    tailwindcss(),
+    react(),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules/fabric')) return 'vendor-fabric'
+          if (id.includes('@dnd-kit')) return 'vendor-dnd'
+          if (id.includes('framer-motion')) return 'vendor-motion'
+          if (id.includes('@radix-ui')) return 'vendor-radix'
+          // No catch-all here: assigning every dependency to one chunk also drags
+          // the export libraries' transitive deps into the initial bundle.
+        },
+      },
+    },
+  },
+})
