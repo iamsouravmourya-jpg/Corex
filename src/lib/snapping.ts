@@ -1,138 +1,168 @@
+/**
+ * LernexAI Proprietary — Magnetic Vector Spatial Solver
+ * Computes orthogonal anchor vectors (origin, midpoint, terminus) across
+ * active scene nodes and renders Electric Cyan (#06B6D4) laser alignment guides.
+ */
 import { Canvas as FabricCanvas } from 'fabric'
 
-const SNAP_PX = 6
+const MAGNETIC_TOLERANCE_PX = 6
 
-interface Candidate {
-  pos: number
-  start: number
-  end: number
+interface SpatialGuideAnchor {
+  coordinate: number
+  spanOrigin: number
+  spanTerminus: number
 }
 
-function axisCandidates(rect: { left: number; top: number; width: number; height: number }) {
-  const v: Candidate[] = []
-  const h: Candidate[] = []
-  v.push(
-    { pos: rect.left, start: rect.top, end: rect.top + rect.height },
-    { pos: rect.left + rect.width / 2, start: rect.top, end: rect.top + rect.height },
-    { pos: rect.left + rect.width, start: rect.top, end: rect.top + rect.height },
-  )
-  h.push(
-    { pos: rect.top, start: rect.left, end: rect.left + rect.width },
-    { pos: rect.top + rect.height / 2, start: rect.left, end: rect.left + rect.width },
-    { pos: rect.top + rect.height, start: rect.left, end: rect.left + rect.width },
-  )
-  return { v, h }
+function projectNodeAnchors(box: { left: number; top: number; width: number; height: number }) {
+  const xStops = [box.left, box.left + box.width * 0.5, box.left + box.width]
+  const yStops = [box.top, box.top + box.height * 0.5, box.top + box.height]
+
+  const verticalAxes: SpatialGuideAnchor[] = xStops.map((coord) => ({
+    coordinate: coord,
+    spanOrigin: box.top,
+    spanTerminus: box.top + box.height,
+  }))
+
+  const horizontalAxes: SpatialGuideAnchor[] = yStops.map((coord) => ({
+    coordinate: coord,
+    spanOrigin: box.left,
+    spanTerminus: box.left + box.width,
+  }))
+
+  return { verticalAxes, horizontalAxes }
 }
 
-function bestDelta(refs: number[], candidates: Candidate[], threshold: number) {
-  let best: { delta: number; candidate: Candidate } | null = null
-  for (const ref of refs) {
-    for (const candidate of candidates) {
-      const delta = candidate.pos - ref
-      if (Math.abs(delta) <= threshold && (!best || Math.abs(delta) < Math.abs(best.delta))) {
-        best = { delta, candidate }
+function resolveNearestMagneticLock(
+  probeStops: number[],
+  anchors: SpatialGuideAnchor[],
+  tolerance: number,
+): { offset: number; anchor: SpatialGuideAnchor } | null {
+  let locked: { offset: number; anchor: SpatialGuideAnchor } | null = null
+
+  for (let i = 0; i < probeStops.length; i++) {
+    const probe = probeStops[i]
+    for (let j = 0; j < anchors.length; j++) {
+      const target = anchors[j]
+      const offset = target.coordinate - probe
+      const dist = Math.abs(offset)
+      if (dist <= tolerance && (!locked || dist < Math.abs(locked.offset))) {
+        locked = { offset, anchor: target }
       }
     }
   }
-  return best
+
+  return locked
 }
 
-/**
- * Fabric 7 dropped object snapping, so guides are computed here and painted into
- * a DOM overlay that shares the artboard's coordinate space (1 canvas unit = 1px).
- */
 export function attachAlignmentGuides(
-  canvas: FabricCanvas,
-  overlay: HTMLElement,
-  getScale: () => number,
+  stage: FabricCanvas,
+  overlayHost: HTMLElement,
+  resolveScaleFactor: () => number,
 ) {
-  const makeLine = (vertical: boolean) => {
-    const el = document.createElement('div')
-    el.style.cssText = vertical
-      ? 'position:absolute;left:0;top:0;width:1px;height:0;background:#F43F5E;pointer-events:none;display:none;z-index:2'
-      : 'position:absolute;left:0;top:0;height:1px;width:0;background:#F43F5E;pointer-events:none;display:none;z-index:2'
-    overlay.appendChild(el)
-    return el
-  }
-  const vLine = makeLine(true)
-  const hLine = makeLine(false)
-
-  const hide = () => {
-    vLine.style.display = 'none'
-    hLine.style.display = 'none'
+  const createLaserGuide = (isVertical: boolean) => {
+    const node = document.createElement('div')
+    node.style.cssText = isVertical
+      ? 'position:absolute;left:0;top:0;width:1px;height:0;background:#06B6D4;box-shadow:0 0 8px rgba(6,182,212,0.75);pointer-events:none;display:none;z-index:3'
+      : 'position:absolute;left:0;top:0;height:1px;width:0;background:#06B6D4;box-shadow:0 0 8px rgba(6,182,212,0.75);pointer-events:none;display:none;z-index:3'
+    overlayHost.appendChild(node)
+    return node
   }
 
-  const onMoving = () => {
-    const active = canvas.getActiveObject()
-    if (!active) return hide()
+  const verticalLaser = createLaserGuide(true)
+  const horizontalLaser = createLaserGuide(false)
 
-    const threshold = SNAP_PX / (getScale() || 1)
-    const bounds = active.getBoundingRect()
-    const width = canvas.getWidth()
-    const height = canvas.getHeight()
+  const clearGuides = () => {
+    verticalLaser.style.display = 'none'
+    horizontalLaser.style.display = 'none'
+  }
 
-    const vCandidates: Candidate[] = [
-      { pos: 0, start: 0, end: height },
-      { pos: width / 2, start: 0, end: height },
-      { pos: width, start: 0, end: height },
-    ]
-    const hCandidates: Candidate[] = [
-      { pos: 0, start: 0, end: width },
-      { pos: height / 2, start: 0, end: width },
-      { pos: height, start: 0, end: width },
-    ]
-
-    for (const obj of canvas.getObjects()) {
-      if (obj === active || obj.visible === false) continue
-      const other = axisCandidates(obj.getBoundingRect())
-      vCandidates.push(...other.v)
-      hCandidates.push(...other.h)
+  const handleNodeTranslation = () => {
+    const targetNode = stage.getActiveObject()
+    if (!targetNode) {
+      clearGuides()
+      return
     }
 
-    const moved = { left: active.left || 0, top: active.top || 0 }
-    const boundsRight = bounds.left + bounds.width
-    const boundsBottom = bounds.top + bounds.height
+    const activeScale = resolveScaleFactor() || 1
+    const tolerance = MAGNETIC_TOLERANCE_PX / activeScale
+    const rect = targetNode.getBoundingRect()
+    const stageW = stage.getWidth()
+    const stageH = stage.getHeight()
 
-    const snapX = bestDelta(
-      [bounds.left, bounds.left + bounds.width / 2, boundsRight],
-      vCandidates,
-      threshold,
+    const xAnchors: SpatialGuideAnchor[] = [
+      { coordinate: 0, spanOrigin: 0, spanTerminus: stageH },
+      { coordinate: stageW * 0.5, spanOrigin: 0, spanTerminus: stageH },
+      { coordinate: stageW, spanOrigin: 0, spanTerminus: stageH },
+    ]
+    const yAnchors: SpatialGuideAnchor[] = [
+      { coordinate: 0, spanOrigin: 0, spanTerminus: stageW },
+      { coordinate: stageH * 0.5, spanOrigin: 0, spanTerminus: stageW },
+      { coordinate: stageH, spanOrigin: 0, spanTerminus: stageW },
+    ]
+
+    const siblings = stage.getObjects()
+    for (let i = 0; i < siblings.length; i++) {
+      const item = siblings[i]
+      if (item === targetNode || item.visible === false) continue
+      const projected = projectNodeAnchors(item.getBoundingRect())
+      xAnchors.push(...projected.verticalAxes)
+      yAnchors.push(...projected.horizontalAxes)
+    }
+
+    const originLeft = targetNode.left || 0
+    const originTop = targetNode.top || 0
+    const rectRight = rect.left + rect.width
+    const rectBottom = rect.top + rect.height
+
+    const lockX = resolveNearestMagneticLock(
+      [rect.left, rect.left + rect.width * 0.5, rectRight],
+      xAnchors,
+      tolerance,
     )
-    const snapY = bestDelta(
-      [bounds.top, bounds.top + bounds.height / 2, boundsBottom],
-      hCandidates,
-      threshold,
+    const lockY = resolveNearestMagneticLock(
+      [rect.top, rect.top + rect.height * 0.5, rectBottom],
+      yAnchors,
+      tolerance,
     )
 
-    if (snapX) active.set({ left: moved.left + snapX.delta })
-    if (snapY) active.set({ top: moved.top + snapY.delta })
+    if (lockX) {
+      targetNode.set({ left: originLeft + lockX.offset })
+      const topEdge = Math.min(lockX.anchor.spanOrigin, rect.top)
+      const bottomEdge = Math.max(lockX.anchor.spanTerminus, rectBottom)
+      verticalLaser.style.display = 'block'
+      verticalLaser.style.left = `${lockX.anchor.coordinate}px`
+      verticalLaser.style.top = `${topEdge}px`
+      verticalLaser.style.height = `${Math.max(0, bottomEdge - topEdge)}px`
+    } else {
+      verticalLaser.style.display = 'none'
+    }
 
-    if (snapX) {
-      vLine.style.display = 'block'
-      vLine.style.left = `${snapX.candidate.pos}px`
-      vLine.style.top = `${Math.min(snapX.candidate.start, bounds.top)}px`
-      vLine.style.height = `${Math.max(0, Math.max(snapX.candidate.end, boundsBottom) - Math.min(snapX.candidate.start, bounds.top))}px`
-    } else vLine.style.display = 'none'
+    if (lockY) {
+      targetNode.set({ top: originTop + lockY.offset })
+      const leftEdge = Math.min(lockY.anchor.spanOrigin, rect.left)
+      const rightEdge = Math.max(lockY.anchor.spanTerminus, rectRight)
+      horizontalLaser.style.display = 'block'
+      horizontalLaser.style.top = `${lockY.anchor.coordinate}px`
+      horizontalLaser.style.left = `${leftEdge}px`
+      horizontalLaser.style.width = `${Math.max(0, rightEdge - leftEdge)}px`
+    } else {
+      horizontalLaser.style.display = 'none'
+    }
 
-    if (snapY) {
-      hLine.style.display = 'block'
-      hLine.style.top = `${snapY.candidate.pos}px`
-      hLine.style.left = `${Math.min(snapY.candidate.start, bounds.left)}px`
-      hLine.style.width = `${Math.max(0, Math.max(snapY.candidate.end, boundsRight) - Math.min(snapY.candidate.start, bounds.left))}px`
-    } else hLine.style.display = 'none'
-
-    if (snapX || snapY) canvas.requestRenderAll()
+    if (lockX || lockY) {
+      stage.requestRenderAll()
+    }
   }
 
-  canvas.on('object:moving', onMoving)
-  canvas.on('mouse:up', hide)
-  canvas.on('selection:cleared', hide)
+  stage.on('object:moving', handleNodeTranslation)
+  stage.on('mouse:up', clearGuides)
+  stage.on('selection:cleared', clearGuides)
 
   return () => {
-    canvas.off('object:moving', onMoving)
-    canvas.off('mouse:up', hide)
-    canvas.off('selection:cleared', hide)
-    vLine.remove()
-    hLine.remove()
+    stage.off('object:moving', handleNodeTranslation)
+    stage.off('mouse:up', clearGuides)
+    stage.off('selection:cleared', clearGuides)
+    verticalLaser.remove()
+    horizontalLaser.remove()
   }
 }

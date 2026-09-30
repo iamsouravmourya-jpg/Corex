@@ -63,35 +63,35 @@
 * **Dual Typography Engine**: **Plus Jakarta Sans** for crisp UI reading and **Playfair Display** (italic serif) for high-end editorial headings.
 * **Component Radii & Hover Shadows**: 0.5rem to 1.5rem rounded card systems with `0 6px 16px rgba(6, 182, 212, 0.12)` cyan hover glows.
 
-### 2. 🎨 The Canvas Subsystem (`src/components/canvas/`)
-* **Coordinate Space & Matrix Transformation**: Supports dynamic viewport scaling from `0.25x` to `4.0x` with center-locked zoom anchors and coordinate translation matrices.
-* **Smart Alignment & Snapping Engine**: Real-time bounding box intersection algorithms calculate nearest center and edge guide thresholds with dynamic red overlay guides.
+### 2. 🎨 The Canvas Subsystem & Magnetic Solver (`src/components/canvas/` & `src/lib/snapping.ts`)
+* **Stage Matrix Viewport**: Supports dynamic viewport scaling from `0.25x` to `4.0x` with center-locked zoom anchors and focal wheel translation.
+* **Magnetic Vector Spatial Solver (`src/lib/snapping.ts`)**: Real-time orthogonal anchor projection (origin, midpoint, terminus) rendering Electric Cyan (`#06B6D4`) laser guide lines with glowing box-shadows.
 * **Layer Composite Shaders**: 16 hardware-accelerated canvas blend modes (`multiply`, `screen`, `overlay`, `difference`, `hard-light`, etc.).
 * **Live Shader Filter Pipelines**: Convolutions and color transforms for real-time adjustments to brightness, contrast, saturation, and Gaussian blur.
 
-### 2. 🤖 Autonomous Gemini 3.8 & 3.1 Flash AI Engine (`server.ts` & `src/components/ai/`)
+### 3. 🤖 Autonomous Gemini 3.8 & 3.1 Flash AI Engine (`server.ts` & `src/components/ai/`)
 * **Text-to-Design Autonomous Layout**: Translates natural language prompts into balanced JSON geometry schemas, injecting coordinated cards, badge accents, background colors, and structured typography hierarchy in under 2 seconds.
 * **AI Image Creation & Editing (`gemini-3.1-flash-image-preview`)**: Generates bespoke visual assets or edits active canvas artwork directly from text prompts via `/api/ai/generate-image`.
 * **Design Doctor (Multimodal Vision Analysis)**: Rasterizes the active canvas viewport into Base64 PNG payloads and streams it to Gemini Vision for holistic critique on visual weight, contrast ratios, typography balance, and alignment.
 * **Design Copilot**: Context-aware design advisor capable of extracting hex color palettes (`#RRGGBB`) and instant 1-click text insertion.
 
-### 3. 🚀 Interactive Landing Page & Demo Auth Flow (`src/components/landing/` & `src/components/auth/`)
+### 4. 🚀 Interactive Landing Page & Demo Auth Flow (`src/components/landing/` & `src/components/auth/`)
 * **Editorial Landing Experience (`LandingPage.tsx`)**: Full-viewport scrollable showcase featuring an interactive 3-column live studio preview, 6-card architectural Bento grid, performance benchmark matrix, and keyboard ergonomics guide.
 * **Google OAuth Demo & Sign-Up Flow (`AuthModal.tsx`)**: Realistic Google Account chooser (`iamsouravmaurya@gmail.com` / `lernexai.com`) and email sign-up/sign-in flow that transitions directly into the authenticated Studio Dashboard.
 
-### 4. ⚡ State Management & History Stack (`src/store/editorStore.ts`)
-* **Zustand 5 with `subscribeWithSelector`**: Granular slice subscriptions eliminate unnecessary React component re-renders during 60FPS pointer events.
-* **50-Step Delta History Stack**: High-efficiency JSON snapshots with debounced batching for undo (`⌘Z`) and redo (`⌘⇧Z`) states.
+### 5. ⚡ Binary Transaction Command Ledger (`src/lib/commandLedger.ts` & `src/store/editorStore.ts`)
+* **ZLIB/DEFLATE Binary Compression (`pako`)**: Scene graph transitions are compressed into binary `Uint8Array` frames via `encodeSceneTransaction` and `decodeSceneTransaction`, eliminating plain-text history arrays.
+* **GoF Command Pattern (`CanvasCommand` / `MoveElementCommand`)**: Atomic coordinate and state mutations with 64-frame binary undo (`⌘Z`) and redo (`⌘⇧Z`) buffers.
 
-### 5. 🗂️ Figma-Grade Layer & Grouping Hierarchy (`src/components/panels/LayersPanel.tsx`)
-* **@dnd-kit Drag-and-Drop Reordering**: Direct z-index manipulation on Fabric.js canvas stack.
+### 6. 🗂️ Figma-Grade Layer & Grouping Hierarchy (`src/components/panels/LayersPanel.tsx`)
+* **@dnd-kit Drag-and-Drop Reordering**: Direct z-index manipulation on the scene stack.
 * **Layer Property Controls**: 1-click layer duplication, visibility toggle (`eye`), locking toggle (`padlock`), delete, and inline `corexLabel` layer renaming.
 
-### 6. 📦 High-Fidelity Export Compilers (`src/components/export/ExportModal.tsx`)
+### 7. 📦 High-Fidelity Export Compilers (`src/components/export/ExportModal.tsx` & `server.ts`)
 * **High-DPI Raster Engine**: Canvas supersampling at `1x`, `2x`, and `3x` resolution multipliers with optional alpha transparency channel.
 * **Vector SVG Compiler**: Exports scalable SVG with embedded font references and vector paths.
-* **jsPDF Engine**: Compiles precise vector coordinates directly into PDF documents for print workflows.
-* **PptxGenJS Native Slide Builder**: Generates native editable Microsoft PowerPoint presentation files without server processing.
+* **Hybrid PDF Compiler (`/api/v1/secure-compiler/export-pdf` + `jsPDF`)**: Server-verified vector compilation into 96DPI print-ready PDF documents.
+* **PptxGenJS Native Slide Builder**: Generates native editable Microsoft PowerPoint (`LERNEX_STAGE`) presentation files.
 
 ---
 
@@ -100,7 +100,7 @@
 ```
 .
 ├── LICENSE                        # LernexAI Proprietary Software License
-├── server.ts                      # Express backend proxy with @google/genai routes
+├── server.ts                      # Express backend proxy with @google/genai & compiler routes
 ├── vercel.json                    # Edge & production routing configuration
 ├── public/
 │   ├── corex-icon.svg             # Custom Corex Studio by LernexAI vector emblem
@@ -108,7 +108,7 @@
 ├── src/
 │   ├── main.tsx                   # React 19 application root entry
 │   ├── App.tsx                    # View router (LandingPage <-> EditorLayout)
-│   ├── index.css                  # Tailwind CSS v4 design token definitions
+│   ├── index.css                  # Deep Ink & Cyan/Teal design token definitions
 │   │
 │   ├── components/
 │   │   ├── landing/               # 🌐 Product Showcase & Entry
@@ -118,7 +118,7 @@
 │   │   ├── ai/                    # 🤖 AI Mode & Gemini Assistant
 │   │   │   └── AiChatPanel.tsx    # Copilot, Text-to-Design, Image AI & Vision Doctor
 │   │   ├── canvas/                # 🎨 Canvas rendering & interaction
-│   │   │   └── CanvasBoard.tsx    # Fabric.js viewport, zoom/pan & coordinate sync
+│   │   │   └── CanvasBoard.tsx    # Stage matrix viewport, focal zoom/pan & sync
 │   │   ├── toolbar/               # 🛠️ Left tool palette
 │   │   │   └── Toolbar.tsx        # Vector tool selection (Select, Shapes, Text, Pen)
 │   │   ├── topbar/                # ⚡ Header controls
@@ -126,32 +126,33 @@
 │   │   ├── panels/                # 🎛️ Right inspector panels
 │   │   │   ├── PropertiesPanel.tsx# Fill, stroke, shadows, blend modes, filters
 │   │   │   ├── LayersPanel.tsx    # Drag-and-drop layer reordering & duplication
-│   │   │   ├── TemplatePanel.tsx  # Multi-layer Corex Studio layout templates
-│   │   │   ├── StickerPanel.tsx   # 310+ offline categorized vector emoji
-│   │   │   ├── ProjectsPanel.tsx  # IndexedDB saved project manager
-│   │   │   └── RightPanel.tsx     # Tabbed inspector container & AI overlay
+│   │   │   ├── TemplatePanel.tsx  # Multi-layer Corex Studio layout blueprints
+│   │   │   ├── StickerPanel.tsx   # Corex Vector Primitives & 8 Glyph Collections
+│   │   │   ├── ProjectsPanel.tsx  # IndexedDB saved project vault
+│   │   │   └── RightPanel.tsx     # Inspector / Hierarchy / Blueprints / Vectors / Vault
 │   │   ├── export/                # ⬇️ File compilers
 │   │   │   └── ExportModal.tsx    # PNG, JPEG, SVG, PDF, PPTX export pipeline
 │   │   ├── statusbar/             # 📊 Bottom workspace status & zoom
 │   │   │   └── StatusBar.tsx      # Live X/Y coordinates, layer count & zoom controls
-│   │   └── ui/                    # 🧩 Accessible Radix UI primitives
+│   │   └── ui/                    # 🧩 Accessible UI primitives
 │   │
 │   ├── store/
-│   │   └── editorStore.ts         # Zustand global state, user session & history stack
+│   │   └── editorStore.ts         # Zustand global state & Uint8Array binary ledger
 │   ├── db/
 │   │   └── db.ts                  # CorexDB Dexie.js IndexedDB schema
 │   ├── hooks/
-│   │   ├── useFabricCanvas.ts     # Fabric.js lifecycle & hook integration
+│   │   ├── useFabricCanvas.ts     # Corex SceneGraph runtime & viewport hooks
 │   │   ├── useKeyboardShortcuts.ts# Global hotkeys listener
 │   │   └── useProjects.ts         # Live IndexedDB project queries
 │   ├── lib/
-│   │   ├── appearance.ts          # Linear/radial gradients, shadows & 16 blend modes
+│   │   ├── commandLedger.ts       # ZLIB/DEFLATE (pako) Binary Transaction Command Pattern
+│   │   ├── appearance.ts          # Polar coordinate gradients, shadows & 16 blend modes
 │   │   ├── clipboard.ts           # Object copy/cut/paste & Z-order operations
 │   │   ├── export.ts              # High-DPI raster, SVG, PDF & PPTX compilers
 │   │   ├── imageFilters.ts        # Live WebGL/Canvas brightness, contrast, blur shaders
-│   │   ├── motion.ts              # Framer Motion spring physics curves
-│   │   ├── shapes.ts              # Vector shape & IText instantiation helpers
-│   │   ├── snapping.ts            # Smart edge & center alignment guide math
+│   │   ├── motion.ts              # Kinetic spring physics curves
+│   │   ├── shapes.ts              # Corex Vector Node Factory (cx_* UIDs)
+│   │   ├── snapping.ts            # Magnetic Vector Spatial Solver (Cyan laser guides)
 │   │   └── style.ts               # Object appearance copy/paste engine
 │   └── types/
 │       └── index.ts               # Strict TypeScript interface declarations

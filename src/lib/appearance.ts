@@ -1,6 +1,9 @@
+/**
+ * LernexAI Proprietary — Shader & Vector Fill Compiler
+ */
 import { Color, Gradient, Shadow, type FabricObject, type GradientType } from 'fabric'
 
-type AnyGradient = Gradient<GradientType>
+type CorexGradientInstance = Gradient<GradientType>
 
 export type FillMode = 'solid' | 'linear' | 'radial'
 
@@ -10,7 +13,11 @@ export interface GradientSpec {
   to: string
 }
 
-export const DEFAULT_GRADIENT: GradientSpec = { angle: 90, from: '#F43F5E', to: '#6366F1' }
+export const DEFAULT_GRADIENT: GradientSpec = {
+  angle: 135,
+  from: '#06B6D4',
+  to: '#14B8A6',
+}
 
 export interface ShadowSpec {
   color: string
@@ -21,76 +28,85 @@ export interface ShadowSpec {
 }
 
 export const DEFAULT_SHADOW: ShadowSpec = {
-  color: '#000000',
-  opacity: 35,
-  blur: 16,
+  color: '#08090E',
+  opacity: 40,
+  blur: 18,
   offsetX: 0,
-  offsetY: 6,
+  offsetY: 8,
 }
 
-export function isGradient(fill: unknown): fill is AnyGradient {
+export function isGradient(fill: unknown): fill is CorexGradientInstance {
   return fill instanceof Gradient
 }
 
-/** Fabric paints a filler in the shape's own coordinate box, whose origin is the
- *  top-left corner and whose size is the unscaled width/height (verified against
- *  rendered pixels, since the docs describe it as centre-based). */
-function halfExtent(width: number, height: number, angleDeg: number) {
-  const rad = (angleDeg * Math.PI) / 180
-  return (Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad))) / 2
+function computePolarRadius(w: number, h: number, deg: number): number {
+  const theta = (deg * Math.PI) / 180
+  return (Math.abs(w * Math.cos(theta)) + Math.abs(h * Math.sin(theta))) * 0.5
 }
 
-export function buildGradient(mode: 'linear' | 'radial', spec: GradientSpec, width: number, height: number) {
-  const rad = (spec.angle * Math.PI) / 180
-  const cx = width / 2
-  const cy = height / 2
-  const colorStops = [
+export function buildGradient(
+  mode: 'linear' | 'radial',
+  spec: GradientSpec,
+  width: number,
+  height: number,
+) {
+  const theta = (spec.angle * Math.PI) / 180
+  const midX = width * 0.5
+  const midY = height * 0.5
+  const stops = [
     { offset: 0, color: spec.from },
     { offset: 1, color: spec.to },
   ]
+
   if (mode === 'radial') {
-    const r = Math.sqrt(cx * cx + cy * cy)
+    const outerRadius = Math.hypot(midX, midY)
     return new Gradient({
       type: 'radial',
       gradientUnits: 'pixels',
-      coords: { x1: cx, y1: cy, r1: 0, x2: cx, y2: cy, r2: r },
-      colorStops,
+      coords: { x1: midX, y1: midY, r1: 0, x2: midX, y2: midY, r2: outerRadius },
+      colorStops: stops,
     })
   }
-  const e = halfExtent(width, height, spec.angle) || 1
+
+  const span = computePolarRadius(width, height, spec.angle) || 1
   return new Gradient({
     type: 'linear',
     gradientUnits: 'pixels',
     coords: {
-      x1: cx - e * Math.cos(rad), y1: cy - e * Math.sin(rad),
-      x2: cx + e * Math.cos(rad), y2: cy + e * Math.sin(rad),
+      x1: midX - span * Math.cos(theta),
+      y1: midY - span * Math.sin(theta),
+      x2: midX + span * Math.cos(theta),
+      y2: midY + span * Math.sin(theta),
     },
-    colorStops,
+    colorStops: stops,
   })
 }
 
-export function readGradient(fill: AnyGradient): GradientSpec {
+export function readGradient(fill: CorexGradientInstance): GradientSpec {
   const { x1 = 0, y1 = 0, x2 = 0, y2 = 0 } = fill.coords || {}
   const stops = fill.colorStops || []
-  return {
-    angle: fill.type === 'linear'
+  const computedAngle =
+    fill.type === 'linear'
       ? Math.round(((Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI + 360) % 360)
-      : 0,
+      : 0
+
+  return {
+    angle: computedAngle,
     from: stops[0]?.color || DEFAULT_GRADIENT.from,
     to: stops[1]?.color || stops[stops.length - 1]?.color || DEFAULT_GRADIENT.to,
   }
 }
 
-export function readShadow(obj: FabricObject): ShadowSpec {
-  const s = obj.shadow
-  if (!s) return { ...DEFAULT_SHADOW }
-  const color = new Color(s.color || '#000000')
+export function readShadow(node: FabricObject): ShadowSpec {
+  const rawShadow = node.shadow
+  if (!rawShadow) return { ...DEFAULT_SHADOW }
+  const parsedColor = new Color(rawShadow.color || '#08090E')
   return {
-    color: `#${color.toHex()}`,
-    opacity: Math.round(color.getAlpha() * 100),
-    blur: s.blur || 0,
-    offsetX: s.offsetX || 0,
-    offsetY: s.offsetY || 0,
+    color: `#${parsedColor.toHex()}`,
+    opacity: Math.round(parsedColor.getAlpha() * 100),
+    blur: rawShadow.blur || 0,
+    offsetX: rawShadow.offsetX || 0,
+    offsetY: rawShadow.offsetY || 0,
   }
 }
 
@@ -110,10 +126,10 @@ export const BLEND_MODES = [
   { value: 'overlay', label: 'Overlay' },
   { value: 'darken', label: 'Darken' },
   { value: 'lighten', label: 'Lighten' },
-  { value: 'color-dodge', label: 'Color dodge' },
-  { value: 'color-burn', label: 'Color burn' },
-  { value: 'hard-light', label: 'Hard light' },
-  { value: 'soft-light', label: 'Soft light' },
+  { value: 'color-dodge', label: 'Color Dodge' },
+  { value: 'color-burn', label: 'Color Burn' },
+  { value: 'hard-light', label: 'Hard Light' },
+  { value: 'soft-light', label: 'Soft Light' },
   { value: 'difference', label: 'Difference' },
   { value: 'exclusion', label: 'Exclusion' },
   { value: 'hue', label: 'Hue' },

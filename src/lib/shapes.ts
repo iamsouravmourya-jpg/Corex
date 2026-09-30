@@ -1,178 +1,199 @@
-import { Canvas as FabricCanvas, Rect, Circle, Triangle, Line, Path, IText, FabricImage, PencilBrush, type FabricObject } from 'fabric'
+/**
+ * LernexAI Proprietary — Vector Node Factory
+ */
+import {
+  Canvas as FabricCanvas,
+  Rect,
+  Circle,
+  Triangle,
+  Line,
+  Path,
+  IText,
+  FabricImage,
+  PencilBrush,
+  type FabricObject,
+} from 'fabric'
 import { nanoid } from 'nanoid'
 
-function uid() {
-  return nanoid(8)
+function createNodeUid(): string {
+  return `cx_${nanoid(8)}`
 }
 
-function setUid(obj: FabricObject) {
-  ;(obj as any).__uid = uid()
+function attachNodeIdentity(node: FabricObject, label?: string) {
+  ;(node as any).__uid = createNodeUid()
+  if (label) {
+    ;(node as any).corexLabel = label
+  }
 }
 
-function centerObj(canvas: FabricCanvas, obj: FabricObject) {
-  const w = (obj as any).width || 100
-  const h = (obj as any).height || 100
-  obj.set({
-    left: canvas.getWidth() / 2 - w / 2,
-    top: canvas.getHeight() / 2 - h / 2,
+function placeAtStageCenter(stage: FabricCanvas, node: FabricObject, label?: string) {
+  const nodeW = (node as any).width || 120
+  const nodeH = (node as any).height || 120
+  node.set({
+    left: stage.getWidth() * 0.5 - nodeW * 0.5,
+    top: stage.getHeight() * 0.5 - nodeH * 0.5,
   })
-  setUid(obj)
+  attachNodeIdentity(node, label)
 }
 
-export function addRect(canvas: FabricCanvas) {
-  const obj = new Rect({
-    width: 200,
-    height: 140,
-    fill: '#3C3C4E',
-    stroke: 'transparent',
-    strokeWidth: 0,
-    rx: 4,
-    ry: 4,
+export function addRect(stage: FabricCanvas) {
+  const node = new Rect({
+    width: 220,
+    height: 150,
+    fill: '#1A1E2A',
+    stroke: '#06B6D4',
+    strokeWidth: 2,
+    rx: 8,
+    ry: 8,
   })
-  centerObj(canvas, obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
+  placeAtStageCenter(stage, node, 'Vector Card')
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
 }
 
-export function addCircle(canvas: FabricCanvas) {
-  const obj = new Circle({
-    radius: 80,
-    fill: '#3C3C4E',
-    stroke: 'transparent',
-    strokeWidth: 0,
-  })
-  setUid(obj)
-  obj.set({
-    left: canvas.getWidth() / 2 - 80,
-    top: canvas.getHeight() / 2 - 80,
-  })
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
-}
-
-export function addTriangle(canvas: FabricCanvas) {
-  const obj = new Triangle({
-    width: 160,
-    height: 140,
-    fill: '#3C3C4E',
+export function addCircle(stage: FabricCanvas) {
+  const node = new Circle({
+    radius: 84,
+    fill: '#06B6D4',
     stroke: 'transparent',
     strokeWidth: 0,
   })
-  centerObj(canvas, obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
+  attachNodeIdentity(node, 'Vector Orb')
+  node.set({
+    left: stage.getWidth() * 0.5 - 84,
+    top: stage.getHeight() * 0.5 - 84,
+  })
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
 }
 
-export function addLine(canvas: FabricCanvas) {
-  const obj = new Line(
-    [canvas.getWidth() / 2 - 100, canvas.getHeight() / 2,
-     canvas.getWidth() / 2 + 100, canvas.getHeight() / 2],
+export function addTriangle(stage: FabricCanvas) {
+  const node = new Triangle({
+    width: 170,
+    height: 150,
+    fill: '#14B8A6',
+    stroke: 'transparent',
+    strokeWidth: 0,
+  })
+  placeAtStageCenter(stage, node, 'Vector Prism')
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
+}
+
+export function addLine(stage: FabricCanvas) {
+  const midX = stage.getWidth() * 0.5
+  const midY = stage.getHeight() * 0.5
+  const node = new Line([midX - 110, midY, midX + 110, midY], {
+    stroke: '#06B6D4',
+    strokeWidth: 3,
+    selectable: true,
+  })
+  attachNodeIdentity(node, 'Vector Divider')
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
+}
+
+export function addArrow(stage: FabricCanvas) {
+  const cx = stage.getWidth() * 0.5
+  const cy = stage.getHeight() * 0.5
+  const node = new Path(
+    `M ${cx - 85} ${cy} L ${cx + 65} ${cy} M ${cx + 42} ${cy - 18} L ${cx + 82} ${cy} L ${cx + 42} ${cy + 18}`,
     {
-      stroke: '#C4C4D4',
-      strokeWidth: 2,
-      selectable: true,
-    }
-  )
-  setUid(obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
-}
-
-export function addArrow(canvas: FabricCanvas) {
-  const cx = canvas.getWidth() / 2
-  const cy = canvas.getHeight() / 2
-  const obj = new Path(
-    `M ${cx - 80} ${cy} L ${cx + 60} ${cy} M ${cx + 40} ${cy - 18} L ${cx + 80} ${cy} L ${cx + 40} ${cy + 18}`,
-    {
-      stroke: '#C4C4D4',
-      strokeWidth: 2,
+      stroke: '#06B6D4',
+      strokeWidth: 3,
       fill: 'transparent',
       strokeLineCap: 'round',
       strokeLineJoin: 'round',
-    }
+    },
   )
-  setUid(obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
+  attachNodeIdentity(node, 'Directional Vector')
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
 }
 
-export function addIText(canvas: FabricCanvas, text = 'Double-click to edit') {
-  const obj = new IText(text, {
-    left: canvas.getWidth() / 2 - 150,
-    top: canvas.getHeight() / 2 - 20,
-    fontFamily: 'Inter',
-    fontSize: 32,
-    fill: '#E8E8F0',
-    fontWeight: '400',
+export function addIText(stage: FabricCanvas, text = 'Double-click to edit') {
+  const node = new IText(text, {
+    left: stage.getWidth() * 0.5 - 160,
+    top: stage.getHeight() * 0.5 - 22,
+    fontFamily: 'Plus Jakarta Sans',
+    fontSize: 34,
+    fill: '#F8FAFC',
+    fontWeight: '700',
   })
-  setUid(obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
+  attachNodeIdentity(node, 'Typography Layer')
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
 }
 
-export function addEmoji(emoji: string, canvas: FabricCanvas) {
-  const obj = new IText(emoji, {
-    left: canvas.getWidth() / 2 - 40,
-    top: canvas.getHeight() / 2 - 40,
+export function addEmoji(glyph: string, stage: FabricCanvas) {
+  const node = new IText(glyph, {
+    left: stage.getWidth() * 0.5 - 40,
+    top: stage.getHeight() * 0.5 - 40,
     fontSize: 72,
     selectable: true,
   })
-  setUid(obj)
-  canvas.add(obj)
-  canvas.setActiveObject(obj)
-  canvas.requestRenderAll()
-  return obj
+  attachNodeIdentity(node, `Glyph ${glyph}`)
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  return node
 }
 
-export async function addImageFromDataUrl(canvas: FabricCanvas, dataUrl: string) {
+export async function addImageFromDataUrl(stage: FabricCanvas, dataUrl: string) {
   const img = await FabricImage.fromURL(dataUrl)
-  const maxW = canvas.getWidth() * 0.7
-  const maxH = canvas.getHeight() * 0.7
-  const scale = Math.min(maxW / (img.width || 1), maxH / (img.height || 1), 1)
-  img.scale(scale)
+  const maxW = stage.getWidth() * 0.72
+  const maxH = stage.getHeight() * 0.72
+  const scaleFactor = Math.min(maxW / (img.width || 1), maxH / (img.height || 1), 1)
+  img.scale(scaleFactor)
   img.set({
-    left: canvas.getWidth() / 2 - (img.width! * scale) / 2,
-    top: canvas.getHeight() / 2 - (img.height! * scale) / 2,
+    left: stage.getWidth() * 0.5 - ((img.width || 100) * scaleFactor) * 0.5,
+    top: stage.getHeight() * 0.5 - ((img.height || 100) * scaleFactor) * 0.5,
   })
-  ;(img as any).__uid = uid()
-  canvas.add(img)
-  canvas.setActiveObject(img)
-  canvas.requestRenderAll()
+  attachNodeIdentity(img, 'Raster Asset')
+  stage.add(img)
+  stage.setActiveObject(img)
+  stage.requestRenderAll()
   return img
 }
 
-export function enablePencil(canvas: FabricCanvas, color = '#F43F5E', width = 3) {
-  const brush = new PencilBrush(canvas)
+export function enablePencil(stage: FabricCanvas, color = '#06B6D4', width = 3) {
+  const brush = new PencilBrush(stage)
   brush.color = color
   brush.width = width
-  canvas.freeDrawingBrush = brush
-  canvas.isDrawingMode = true
+  stage.freeDrawingBrush = brush
+  stage.isDrawingMode = true
 }
 
-export function disablePencil(canvas: FabricCanvas) {
-  canvas.isDrawingMode = false
+export function disablePencil(stage: FabricCanvas) {
+  stage.isDrawingMode = false
 }
 
-export function duplicateActiveObject(canvas: FabricCanvas) {
-  const obj = canvas.getActiveObject()
-  if (!obj) return
-  obj.clone().then((cloned: any) => {
-    cloned.set({ left: (obj.left || 0) + 20, top: (obj.top || 0) + 20 })
-    cloned.__uid = uid()
-    canvas.add(cloned)
-    canvas.setActiveObject(cloned)
-    canvas.requestRenderAll()
+export function duplicateActiveObject(stage: FabricCanvas) {
+  const active = stage.getActiveObject()
+  if (!active) return
+  active.clone().then((cloned: any) => {
+    cloned.set({
+      left: (active.left || 0) + 24,
+      top: (active.top || 0) + 24,
+    })
+    cloned.__uid = createNodeUid()
+    if ((active as any).corexLabel) {
+      cloned.corexLabel = `${(active as any).corexLabel} Copy`
+    }
+    stage.add(cloned)
+    stage.setActiveObject(cloned)
+    stage.requestRenderAll()
   })
 }

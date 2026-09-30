@@ -5,239 +5,275 @@ import { nanoid } from 'nanoid'
 import { addImageFromDataUrl } from '@/lib/shapes'
 import { attachAlignmentGuides } from '@/lib/snapping'
 
-const PAD = 80
+const STAGE_MARGIN_PX = 80
 
 export function CanvasBoard() {
-  const canvasEl = useRef<HTMLCanvasElement>(null)
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const guidesRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const panRef = useRef({ x: 0, y: 0 })
-  const scaleRef = useRef(1)
-  const spaceRef = useRef(false)
+  const surfaceNodeRef = useRef<HTMLCanvasElement>(null)
+  const matrixFrameRef = useRef<HTMLDivElement>(null)
+  const magneticOverlayRef = useRef<HTMLDivElement>(null)
+  const stageHostRef = useRef<HTMLDivElement>(null)
+  const translationVecRef = useRef({ x: 0, y: 0 })
+  const activeScaleRef = useRef(1)
+  const spaceHoldRef = useRef(false)
 
   const {
-    canvasSize, viewZoom, viewNonce, fabricCanvas, showGrid,
-    setFabricCanvas, setActiveObjectId, snapshot, setFitScale, setViewZoom,
+    canvasSize,
+    viewZoom,
+    viewNonce,
+    fabricCanvas,
+    showGrid,
+    setFabricCanvas,
+    setActiveObjectId,
+    snapshot,
+    setFitScale,
   } = useEditorStore()
 
-  const applyView = useCallback(() => {
-    const wrapper = wrapperRef.current
-    const container = containerRef.current
-    if (!wrapper || !container) return
+  const computeViewportMatrix = useCallback(() => {
+    const frameEl = matrixFrameRef.current
+    const hostEl = stageHostRef.current
+    if (!frameEl || !hostEl) return
 
-    const fit = Math.min(
-      (container.clientWidth - PAD) / canvasSize.width,
-      (container.clientHeight - PAD) / canvasSize.height,
+    const fitRatio = Math.min(
+      (hostEl.clientWidth - STAGE_MARGIN_PX) / canvasSize.width,
+      (hostEl.clientHeight - STAGE_MARGIN_PX) / canvasSize.height,
       1,
     )
-    const scale = fit * viewZoom
-    scaleRef.current = scale
-    wrapper.style.transform =
-      `translate(${panRef.current.x}px, ${panRef.current.y}px) scale(${scale})`
+    const compositeScale = fitRatio * viewZoom
+    activeScaleRef.current = compositeScale
+    frameEl.style.transform = `translate(${translationVecRef.current.x}px, ${translationVecRef.current.y}px) scale(${compositeScale})`
 
-    if (Math.abs(useEditorStore.getState().fitScale - fit) > 0.001) setFitScale(fit)
+    if (Math.abs(useEditorStore.getState().fitScale - fitRatio) > 0.001) {
+      setFitScale(fitRatio)
+    }
   }, [canvasSize, viewZoom, setFitScale])
 
-  // Build the Fabric canvas exactly once. Rebuilding it on a page-size switch is
-  // what used to erase every object.
   useEffect(() => {
-    if (!canvasEl.current) return
-    const size = useEditorStore.getState().canvasSize
+    if (!surfaceNodeRef.current) return
+    const initialBounds = useEditorStore.getState().canvasSize
 
-    const canvas = new FabricCanvas(canvasEl.current, {
-      width: size.width,
-      height: size.height,
+    const stage = new FabricCanvas(surfaceNodeRef.current, {
+      width: initialBounds.width,
+      height: initialBounds.height,
       backgroundColor: '#ffffff',
       preserveObjectStacking: true,
       selection: true,
     })
 
-    setFabricCanvas(canvas)
-    // Fabric only repaints on object add/remove/modify, so an empty artboard
-    // would never paint its own background without this.
-    canvas.renderAll()
+    setFabricCanvas(stage)
+    stage.renderAll()
 
-    canvas.on('object:added', (e) => {
-      if (!(e.target as any).__uid) (e.target as any).__uid = nanoid(8)
+    stage.on('object:added', (ev) => {
+      if (!(ev.target as any).__uid) {
+        ;(ev.target as any).__uid = nanoid(8)
+      }
       snapshot()
     })
-    canvas.on('object:removed', snapshot)
-    canvas.on('object:modified', snapshot)
+    stage.on('object:removed', snapshot)
+    stage.on('object:modified', snapshot)
 
-    const select = (e: any) => setActiveObjectId((e.selected?.[0] as any)?.__uid || null)
-    canvas.on('selection:created', select)
-    canvas.on('selection:updated', select)
-    canvas.on('selection:cleared', () => setActiveObjectId(null))
+    const syncSelection = (ev: any) => {
+      setActiveObjectId((ev.selected?.[0] as any)?.__uid || null)
+    }
+    stage.on('selection:created', syncSelection)
+    stage.on('selection:updated', syncSelection)
+    stage.on('selection:cleared', () => setActiveObjectId(null))
 
     snapshot()
 
     return () => {
-      canvas.dispose()
+      stage.dispose()
       setFabricCanvas(null)
     }
   }, [])
 
-  // Resize the artboard in place: objects keep their coordinates.
   useEffect(() => {
     if (!fabricCanvas) return
     fabricCanvas.setDimensions({ width: canvasSize.width, height: canvasSize.height })
     fabricCanvas.renderAll()
-    applyView()
-  }, [fabricCanvas, canvasSize, applyView])
-
-  useEffect(() => applyView(), [applyView, viewNonce])
+    computeViewportMatrix()
+  }, [fabricCanvas, canvasSize, computeViewportMatrix])
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    computeViewportMatrix()
+  }, [computeViewportMatrix, viewNonce])
 
-    const zoomAt = (clientX: number, clientY: number, nextZoom: number) => {
-      const wrapper = wrapperRef.current
-      if (!wrapper) return
-      const state = useEditorStore.getState()
-      const prevScale = scaleRef.current
-      const nextScale = prevScale * (nextZoom / state.viewZoom)
-      const rect = wrapper.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-      const keep = 1 - nextScale / prevScale
-      panRef.current = {
-        x: panRef.current.x + (clientX - centerX) * keep,
-        y: panRef.current.y + (clientY - centerY) * keep,
+  useEffect(() => {
+    const hostEl = stageHostRef.current
+    if (!hostEl) return
+
+    const applyFocalZoom = (pointerX: number, pointerY: number, targetZoom: number) => {
+      const frameEl = matrixFrameRef.current
+      if (!frameEl) return
+      const store = useEditorStore.getState()
+      const currentScale = activeScaleRef.current
+      const projectedScale = currentScale * (targetZoom / store.viewZoom)
+      const bounds = frameEl.getBoundingClientRect()
+      const midX = bounds.left + bounds.width * 0.5
+      const midY = bounds.top + bounds.height * 0.5
+      const ratioDelta = 1 - projectedScale / currentScale
+      translationVecRef.current = {
+        x: translationVecRef.current.x + (pointerX - midX) * ratioDelta,
+        y: translationVecRef.current.y + (pointerY - midY) * ratioDelta,
       }
-      state.setViewZoom(nextZoom)
+      store.setViewZoom(targetZoom)
     }
 
-    const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey && !e.metaKey) return
-      e.preventDefault()
-      const current = useEditorStore.getState().viewZoom
-      zoomAt(e.clientX, e.clientY, current * (e.deltaY < 0 ? 1.1 : 1 / 1.1))
+    const handleWheelZoom = (ev: WheelEvent) => {
+      if (!ev.ctrlKey && !ev.metaKey) return
+      ev.preventDefault()
+      const currentZoom = useEditorStore.getState().viewZoom
+      applyFocalZoom(ev.clientX, ev.clientY, currentZoom * (ev.deltaY < 0 ? 1.1 : 1 / 1.1))
     }
-    container.addEventListener('wheel', onWheel, { passive: false })
+    hostEl.addEventListener('wheel', handleWheelZoom, { passive: false })
 
-    // Capture phase, so Fabric never sees a pan gesture.
-    const onMouseDown = (e: MouseEvent) => {
-      const panning = e.button === 1 || (e.button === 0 && spaceRef.current)
-      if (!panning) return
-      e.preventDefault()
-      e.stopPropagation()
-      const origin = { ...panRef.current }
-      const startX = e.clientX
-      const startY = e.clientY
-      const onMove = (ev: MouseEvent) => {
-        panRef.current = {
-          x: origin.x + ev.clientX - startX,
-          y: origin.y + ev.clientY - startY,
+    const handleStagePanStart = (ev: MouseEvent) => {
+      const isPanGesture = ev.button === 1 || (ev.button === 0 && spaceHoldRef.current)
+      if (!isPanGesture) return
+      ev.preventDefault()
+      ev.stopPropagation()
+      const startVec = { ...translationVecRef.current }
+      const originX = ev.clientX
+      const originY = ev.clientY
+      const onPointerMove = (moveEv: MouseEvent) => {
+        translationVecRef.current = {
+          x: startVec.x + moveEv.clientX - originX,
+          y: startVec.y + moveEv.clientY - originY,
         }
-        applyView()
+        computeViewportMatrix()
       }
-      const onUp = () => {
-        window.removeEventListener('mousemove', onMove)
-        window.removeEventListener('mouseup', onUp)
+      const onPointerRelease = () => {
+        window.removeEventListener('mousemove', onPointerMove)
+        window.removeEventListener('mouseup', onPointerRelease)
       }
-      window.addEventListener('mousemove', onMove)
-      window.addEventListener('mouseup', onUp)
+      window.addEventListener('mousemove', onPointerMove)
+      window.addEventListener('mouseup', onPointerRelease)
     }
-    container.addEventListener('mousedown', onMouseDown, true)
+    hostEl.addEventListener('mousedown', handleStagePanStart, true)
 
-    const isTyping = () => {
+    const isTextInputFocused = () => {
       const tag = (document.activeElement?.tagName || '').toLowerCase()
-      const editing = (useEditorStore.getState().fabricCanvas?.getActiveObject() as any)?.isEditing
-      return tag === 'input' || tag === 'textarea' || !!editing
+      const isEditingNode = (useEditorStore.getState().fabricCanvas?.getActiveObject() as any)?.isEditing
+      return tag === 'input' || tag === 'textarea' || Boolean(isEditingNode)
     }
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code !== 'Space' || spaceRef.current || isTyping()) return
-      spaceRef.current = true
-      e.preventDefault()
-      const canvas = useEditorStore.getState().fabricCanvas
-      if (canvas) canvas.defaultCursor = 'grab'
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.code === 'Space' && !spaceHoldRef.current && !isTextInputFocused()) {
+        spaceHoldRef.current = true
+        hostEl.style.cursor = 'grab'
+        ev.preventDefault()
+      }
+      if ((ev.ctrlKey || ev.metaKey) && !isTextInputFocused()) {
+        const rect = hostEl.getBoundingClientRect()
+        const midX = rect.left + rect.width * 0.5
+        const midY = rect.top + rect.height * 0.5
+        if (ev.key === '=' || ev.key === '+') {
+          ev.preventDefault()
+          applyFocalZoom(midX, midY, useEditorStore.getState().viewZoom * 1.2)
+        } else if (ev.key === '-') {
+          ev.preventDefault()
+          applyFocalZoom(midX, midY, useEditorStore.getState().viewZoom / 1.2)
+        } else if (ev.key === '0') {
+          ev.preventDefault()
+          translationVecRef.current = { x: 0, y: 0 }
+          useEditorStore.getState().resetView()
+        }
+      }
     }
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.code !== 'Space') return
-      spaceRef.current = false
-      const canvas = useEditorStore.getState().fabricCanvas
-      if (canvas) canvas.defaultCursor = 'default'
+
+    const onKeyUp = (ev: KeyboardEvent) => {
+      if (ev.code === 'Space') {
+        spaceHoldRef.current = false
+        hostEl.style.cursor = ''
+      }
     }
+
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
 
-    const ro = new ResizeObserver(() => applyView())
-    if (containerRef.current) ro.observe(containerRef.current)
+    const resizeObserver = new ResizeObserver(() => computeViewportMatrix())
+    resizeObserver.observe(hostEl)
+    computeViewportMatrix()
 
     return () => {
-      ro.disconnect()
-      container.removeEventListener('wheel', onWheel)
-      container.removeEventListener('mousedown', onMouseDown, true)
+      hostEl.removeEventListener('wheel', handleWheelZoom)
+      hostEl.removeEventListener('mousedown', handleStagePanStart, true)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
+      resizeObserver.disconnect()
     }
-  }, [applyView])
+  }, [computeViewportMatrix])
 
   useEffect(() => {
-    if (!fabricCanvas || !guidesRef.current) return
-    return attachAlignmentGuides(fabricCanvas, guidesRef.current, () => scaleRef.current)
+    translationVecRef.current = { x: 0, y: 0 }
+    computeViewportMatrix()
+  }, [viewNonce, computeViewportMatrix])
+
+  useEffect(() => {
+    const overlayEl = magneticOverlayRef.current
+    if (!fabricCanvas || !overlayEl) return
+    return attachAlignmentGuides(fabricCanvas, overlayEl, () => activeScaleRef.current)
   }, [fabricCanvas])
 
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault()
-    const file = e.dataTransfer.files[0]
-    if (!file || !file.type.startsWith('image/') || !fabricCanvas) return
-    const reader = new FileReader()
-    reader.onload = async (ev) => {
-      await addImageFromDataUrl(fabricCanvas, ev.target!.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
+  const handleAssetDrop = useCallback(
+    async (ev: React.DragEvent) => {
+      ev.preventDefault()
+      const file = ev.dataTransfer.files[0]
+      if (!file || !file.type.startsWith('image/') || !fabricCanvas) return
+      const reader = new FileReader()
+      reader.onload = async (loadEv) => {
+        await addImageFromDataUrl(fabricCanvas, loadEv.target!.result as string)
+      }
+      reader.readAsDataURL(file)
+    },
+    [fabricCanvas],
+  )
 
   return (
     <div
-      ref={containerRef}
-      className="flex-1 flex items-center justify-center overflow-hidden relative"
-      style={{ background: 'var(--color-base-950)', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}
-      onDrop={handleDrop}
-      onDragOver={(e) => e.preventDefault()}
+      ref={stageHostRef}
+      onDrop={handleAssetDrop}
+      onDragOver={(ev) => ev.preventDefault()}
+      style={{
+        flex: 1,
+        background: 'var(--color-ink-950)',
+        backgroundImage: 'radial-gradient(var(--color-ink-700) 1px, transparent 1px)',
+        backgroundSize: '20px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
     >
-      {/* Subtle center glow */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(circle at 50% 50%, rgba(244,63,94,0.04) 0%, transparent 65%)',
-      }} />
-
       <div
-        ref={wrapperRef}
-        data-canvas-wrapper="true"
+        ref={matrixFrameRef}
         style={{
           position: 'relative',
           transformOrigin: 'center center',
           boxShadow: 'var(--shadow-canvas)',
           borderRadius: 2,
-          lineHeight: 0,
           flexShrink: 0,
         }}
       >
-        <canvas ref={canvasEl} />
+        <canvas ref={surfaceNodeRef} />
         {showGrid && (
           <div
-            data-grid="true"
             style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none',
-              backgroundImage: [
-                'linear-gradient(to right, rgba(244,63,94,0.22) 1px, transparent 1px)',
-                'linear-gradient(to bottom, rgba(244,63,94,0.22) 1px, transparent 1px)',
-                'linear-gradient(to right, rgba(244,63,94,0.09) 1px, transparent 1px)',
-                'linear-gradient(to bottom, rgba(244,63,94,0.09) 1px, transparent 1px)',
-              ].join(', '),
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              backgroundImage:
+                'linear-gradient(to right, rgba(6, 182, 212, 0.22) 1px, transparent 1px),' +
+                'linear-gradient(to bottom, rgba(6, 182, 212, 0.22) 1px, transparent 1px),' +
+                'linear-gradient(to right, rgba(6, 182, 212, 0.08) 1px, transparent 1px),' +
+                'linear-gradient(to bottom, rgba(6, 182, 212, 0.08) 1px, transparent 1px)',
               backgroundSize: '100px 100px, 100px 100px, 20px 20px, 20px 20px',
             }}
           />
         )}
         <div
-          ref={guidesRef}
-          data-guides="true"
-          style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}
+          ref={magneticOverlayRef}
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
         />
       </div>
     </div>

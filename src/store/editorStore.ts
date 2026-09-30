@@ -1,52 +1,133 @@
-import { Canvas as FabricCanvas } from 'fabric'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
-import type { EditorState, LayerItem, CanvasSize, HistoryState, ToolType, UserProfile } from '@/types'
+import type { Canvas as FabricCanvas } from 'fabric'
+import type { ToolType, CanvasSize, LayerItem } from '@/types'
 import { CANVAS_PRESETS } from '@/types'
+import { encodeSceneTransaction, decodeSceneTransaction } from '@/lib/commandLedger'
 
-const MAX_HISTORY = 50
-const MIN_ZOOM = 0.25
-const MAX_ZOOM = 4
-let snapTimer: ReturnType<typeof setTimeout> | undefined
+const MAX_LEDGER_FRAMES = 64
+
+export interface UserSession {
+  name: string
+  email: string
+  avatar?: string
+  plan: string
+  provider: 'google' | 'email' | 'demo'
+}
+
+interface EditorState {
+  currentView: 'landing' | 'editor'
+  user: UserSession | null
+  setCurrentView: (view: 'landing' | 'editor') => void
+  setUser: (user: UserSession | null) => void
+  logout: () => void
+
+  fabricCanvas: FabricCanvas | null
+  activeTool: ToolType
+  canvasSize: CanvasSize
+  viewZoom: number
+  fitScale: number
+  viewNonce: number
+  showGrid: boolean
+  bgNonce: number
+  activeObjectId: string | null
+  layers: LayerItem[]
+
+  /** Binary Deflated Transaction Ledger (Uint8Array packets via pako) */
+  transactionLedger: Uint8Array[]
+  ledgerCursor: number
+
+  canUndo: boolean
+  canRedo: boolean
+  currentProjectId: string | null
+  currentProjectName: string
+  isAiModeOpen: boolean
+
+  setFabricCanvas: (canvas: FabricCanvas | null) => void
+  setActiveTool: (tool: ToolType) => void
+  setCanvasSize: (size: CanvasSize) => void
+  setViewZoom: (zoom: number) => void
+  setFitScale: (scale: number) => void
+  resetView: () => void
+  toggleGrid: () => void
+  bumpBgNonce: () => void
+  setActiveObjectId: (id: string | null) => void
+  setLayers: (layers: LayerItem[]) => void
+  syncLayersFromCanvas: () => void
+  snapshot: () => void
+  snapshotSoon: () => void
+  undo: () => Promise<void>
+  redo: () => Promise<void>
+  setCurrentProjectId: (id: string | null) => void
+  setCurrentProjectName: (name: string) => void
+  setIsAiModeOpen: (open: boolean) => void
+  toggleAiMode: () => void
+}
+
+function resolveNodeLabel(type: string, index: number): string {
+  const map: Record<string, string> = {
+    rect: 'Rectangle',
+    circle: 'Circle',
+    triangle: 'Triangle',
+    line: 'Line',
+    path: 'Vector Path',
+    'i-text': 'Text Layer',
+    text: 'Text Layer',
+    image: 'Image Asset',
+    group: 'Layer Group',
+  }
+  return `${map[type] || 'Vector Node'} ${index + 1}`
+}
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 export const useEditorStore = create<EditorState>()(
   subscribeWithSelector((set, get) => ({
-    // Navigation & Auth Session
     currentView: 'landing',
-    setCurrentView: (view: 'landing' | 'studio') => set({ currentView: view }),
     user: null,
-    setUser: (user: UserProfile | null) => set({ user, currentView: user ? 'studio' : get().currentView }),
+    setCurrentView: (view) => set({ currentView: view }),
+    setUser: (user) => set({ user, currentView: user ? 'editor' : 'landing' }),
     logout: () => set({ user: null, currentView: 'landing' }),
 
-    // Canvas instance
     fabricCanvas: null,
-    setFabricCanvas: (canvas: FabricCanvas | null) => set({ fabricCanvas: canvas }),
-
-    // Tool
     activeTool: 'select',
-    setActiveTool: (tool: ToolType) => set({ activeTool: tool }),
-
-    // Canvas size
     canvasSize: CANVAS_PRESETS[0],
-    setCanvasSize: (size: CanvasSize) => set({ canvasSize: size }),
-
-    // Active object
+    viewZoom: 1,
+    fitScale: 1,
+    viewNonce: 0,
+    showGrid: false,
+    bgNonce: 0,
     activeObjectId: null,
-    setActiveObjectId: (id: string | null) => set({ activeObjectId: id }),
-
-    // Layers
     layers: [],
-    setLayers: (layers: LayerItem[]) => set({ layers }),
+    transactionLedger: [],
+    ledgerCursor: -1,
+    canUndo: false,
+    canRedo: false,
+    currentProjectId: null,
+    currentProjectName: 'Untitled Design',
+    isAiModeOpen: false,
+
+    setFabricCanvas: (canvas) => set({ fabricCanvas: canvas }),
+    setActiveTool: (tool) => set({ activeTool: tool }),
+    setCanvasSize: (size) => set({ canvasSize: size }),
+    setViewZoom: (zoom) => set({ viewZoom: Math.min(4, Math.max(0.25, zoom)) }),
+    setFitScale: (scale) => set({ fitScale: scale }),
+    resetView: () => set((s) => ({ viewZoom: 1, viewNonce: s.viewNonce + 1 })),
+    toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
+    bumpBgNonce: () => set((s) => ({ bgNonce: s.bgNonce + 1 })),
+    setActiveObjectId: (id) => set({ activeObjectId: id }),
+    setLayers: (layers) => set({ layers }),
+
     syncLayersFromCanvas: () => {
-      const canvas = get().fabricCanvas
-      if (!canvas) return
-      const objects = canvas.getObjects()
-      const layers: LayerItem[] = objects
+      const { fabricCanvas } = get()
+      if (!fabricCanvas) return
+      const objs = fabricCanvas.getObjects()
+      const layers: LayerItem[] = objs
         .slice()
         .reverse()
         .map((obj, idx) => ({
-          id: (obj as any).__uid || `obj-${idx}`,
-          name: (obj as any).corexLabel || getDefaultName(obj.type || 'object', idx),
+          id: (obj as any).__uid || `node-${idx}`,
+          name: (obj as any).corexLabel || resolveNodeLabel(obj.type || 'object', idx),
           type: obj.type || 'object',
           visible: obj.visible ?? true,
           locked: !(obj.selectable ?? true),
@@ -55,122 +136,78 @@ export const useEditorStore = create<EditorState>()(
       set({ layers })
     },
 
-    // History
-    history: [],
-    historyIndex: -1,
-    canUndo: false,
-    canRedo: false,
-    pushHistory: (state: HistoryState) => {
-      const { history, historyIndex } = get()
-      const newHistory = history.slice(0, historyIndex + 1)
-      newHistory.push(state)
-      if (newHistory.length > MAX_HISTORY) newHistory.shift()
-      const newIndex = newHistory.length - 1
-      set({
-        history: newHistory,
-        historyIndex: newIndex,
-        canUndo: newIndex > 0,
-        canRedo: false,
-      })
-    },
-
     snapshot: () => {
-      const canvas = get().fabricCanvas
-      if (!canvas || (canvas as any)._isRestoring) return
-      get().pushHistory({
-        json: JSON.stringify(canvas.toJSON()),
-        background: (canvas.backgroundColor as string) || '',
+      const { fabricCanvas, transactionLedger, ledgerCursor } = get()
+      if (!fabricCanvas || (fabricCanvas as any)._isRestoring) return
+      if (debounceTimer) {
+        clearTimeout(debounceTimer)
+        debounceTimer = null
+      }
+      const binaryFrame = encodeSceneTransaction((fabricCanvas as any).toJSON(['__uid', 'corexLabel']))
+      const nextLedger = transactionLedger.slice(0, ledgerCursor + 1)
+      nextLedger.push(binaryFrame)
+      if (nextLedger.length > MAX_LEDGER_FRAMES) nextLedger.shift()
+      const nextCursor = nextLedger.length - 1
+      set({
+        transactionLedger: nextLedger,
+        ledgerCursor: nextCursor,
+        canUndo: nextCursor > 0,
+        canRedo: false,
       })
       get().syncLayersFromCanvas()
     },
 
-    // Slider drags and held arrow keys fire dozens of edits per second; collapse
-    // each burst into a single undo step.
     snapshotSoon: () => {
-      clearTimeout(snapTimer)
-      snapTimer = setTimeout(() => get().snapshot(), 300)
+      if (debounceTimer) clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => {
+        debounceTimer = null
+        get().snapshot()
+      }, 220)
     },
 
-    undo: () => {
-      const { history, historyIndex, fabricCanvas } = get()
-      if (historyIndex <= 0 || !fabricCanvas) return
-      const newIndex = historyIndex - 1
-      const state = history[newIndex]
+    undo: async () => {
+      const { fabricCanvas, transactionLedger, ledgerCursor } = get()
+      if (!fabricCanvas || ledgerCursor <= 0) return
+      if (debounceTimer) {
+        clearTimeout(debounceTimer)
+        debounceTimer = null
+      }
+      const prevCursor = ledgerCursor - 1
+      const decodedJson = decodeSceneTransaction(transactionLedger[prevCursor])
       ;(fabricCanvas as any)._isRestoring = true
-      fabricCanvas.loadFromJSON(JSON.parse(state.json)).then(() => {
-        ;(fabricCanvas as any).backgroundColor = state.background
-        fabricCanvas.requestRenderAll()
-        ;(fabricCanvas as any)._isRestoring = false
-        get().syncLayersFromCanvas()
-        get().bumpBgNonce()
+      await fabricCanvas.loadFromJSON(JSON.parse(decodedJson))
+      fabricCanvas.requestRenderAll()
+      ;(fabricCanvas as any)._isRestoring = false
+      set({
+        ledgerCursor: prevCursor,
+        canUndo: prevCursor > 0,
+        canRedo: true,
+        activeObjectId: null,
       })
-      set({ historyIndex: newIndex, canUndo: newIndex > 0, canRedo: true })
+      get().syncLayersFromCanvas()
     },
 
-    redo: () => {
-      const { history, historyIndex, fabricCanvas } = get()
-      if (historyIndex >= history.length - 1 || !fabricCanvas) return
-      const newIndex = historyIndex + 1
-      const state = history[newIndex]
+    redo: async () => {
+      const { fabricCanvas, transactionLedger, ledgerCursor } = get()
+      if (!fabricCanvas || ledgerCursor >= transactionLedger.length - 1) return
+      const nextCursor = ledgerCursor + 1
+      const decodedJson = decodeSceneTransaction(transactionLedger[nextCursor])
       ;(fabricCanvas as any)._isRestoring = true
-      fabricCanvas.loadFromJSON(JSON.parse(state.json)).then(() => {
-        ;(fabricCanvas as any).backgroundColor = state.background
-        fabricCanvas.requestRenderAll()
-        ;(fabricCanvas as any)._isRestoring = false
-        get().syncLayersFromCanvas()
-        get().bumpBgNonce()
+      await fabricCanvas.loadFromJSON(JSON.parse(decodedJson))
+      fabricCanvas.requestRenderAll()
+      ;(fabricCanvas as any)._isRestoring = false
+      set({
+        ledgerCursor: nextCursor,
+        canUndo: true,
+        canRedo: nextCursor < transactionLedger.length - 1,
+        activeObjectId: null,
       })
-      set({ historyIndex: newIndex, canUndo: true, canRedo: newIndex < history.length - 1 })
+      get().syncLayersFromCanvas()
     },
 
-    // Viewport
-    fitScale: 1,
-    setFitScale: (scale) => set({ fitScale: scale }),
-    viewZoom: 1,
-    setViewZoom: (zoom) => set({ viewZoom: Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom)) }),
-    viewNonce: 0,
-    resetView: () => set({ viewZoom: 1, viewNonce: get().viewNonce + 1 }),
-
-    // Guides
-    showGrid: false,
-    setShowGrid: (show) => set({ showGrid: show }),
-    toggleGrid: () => set({ showGrid: !get().showGrid }),
-
-    bgNonce: 0,
-    bumpBgNonce: () => set({ bgNonce: get().bgNonce + 1 }),
-
-    // AI Mode
-    isAiModeOpen: false,
-    setIsAiModeOpen: (open) => set({ isAiModeOpen: open }),
-    toggleAiMode: () => set({ isAiModeOpen: !get().isAiModeOpen }),
-
-    // Project
-    currentProjectId: null,
     setCurrentProjectId: (id) => set({ currentProjectId: id }),
-    currentProjectName: 'Untitled Design',
     setCurrentProjectName: (name) => set({ currentProjectName: name }),
+    setIsAiModeOpen: (open) => set({ isAiModeOpen: open }),
+    toggleAiMode: () => set((s) => ({ isAiModeOpen: !s.isAiModeOpen })),
   }))
 )
-
-let counters: Record<string, number> = {}
-function getDefaultName(type: string, idx: number): string {
-  const labels: Record<string, string> = {
-    rect: 'Rectangle',
-    circle: 'Circle',
-    triangle: 'Triangle',
-    line: 'Line',
-    path: 'Path',
-    'i-text': 'Text',
-    text: 'Text',
-    image: 'Image',
-    group: 'Group',
-  }
-  const label = labels[type] || 'Object'
-  if (!counters[label]) counters[label] = 0
-  counters[label]++
-  return `${label} ${counters[label]}`
-}
-
-export function resetNameCounters() {
-  counters = {}
-}

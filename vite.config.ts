@@ -19,15 +19,15 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('node_modules/fabric')) return 'vendor-fabric'
-          if (id.includes('@dnd-kit')) return 'vendor-dnd'
-          if (id.includes('framer-motion')) return 'vendor-motion'
-          if (id.includes('@radix-ui')) return 'vendor-radix'
-          // No catch-all here: assigning every dependency to one chunk also drags
-          // the export libraries' transitive deps into the initial bundle.
+          if (id.includes('node_modules/fabric')) return 'corex-scene-engine'
+          if (id.includes('@dnd-kit')) return 'corex-hierarchy-dnd'
+          if (id.includes('framer-motion')) return 'corex-kinetic-engine'
+          if (id.includes('@radix-ui')) return 'corex-ui-primitives'
+          if (id.includes('pako')) return 'corex-binary-ledger'
         },
       },
     },
