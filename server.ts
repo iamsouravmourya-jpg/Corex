@@ -26,7 +26,7 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
   let bg = '#09090B'
   let primaryColor = '#F43F5E'
   let secondaryColor = '#8B5CF6'
-  let title = 'CRAFT WITHOUT LIMITS'
+  let title = 'DESIGN BEYOND BOUNDARIES'
   let subtitle = 'High Performance Design Studio'
   let badgeText = 'NEW RELEASE'
 
@@ -424,7 +424,7 @@ app.post('/api/ai/generate-image', async (req, res) => {
     }
   }
 
-  // High-craft Procedural Vector Artwork DataURL Fallback
+  // Procedural Vector Artwork DataURL Fallback
   const label = prompt.slice(0, 28).toUpperCase()
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
     <defs>

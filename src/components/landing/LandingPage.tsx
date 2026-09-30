@@ -249,7 +249,7 @@ export function LandingPage() {
             color: '#F8FAFC',
           }}
         >
-          Autonomous Vector & AI Studio Crafted for{' '}
+          Autonomous Vector & AI Studio Engineered for{' '}
           <span
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
@@ -524,7 +524,7 @@ export function LandingPage() {
                     marginBottom: 10,
                   }}
                 >
-                  Craft Without Limits.
+                  Design Beyond Boundaries.
                 </div>
                 <div style={{ fontSize: 13.5, color: '#94A3B8', marginBottom: 24, lineHeight: 1.6 }}>
                   Click anywhere on this artboard to launch the live 60FPS Corex Studio Dashboard.

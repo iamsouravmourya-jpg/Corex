@@ -36,7 +36,7 @@ const TEMPLATES: Template[] = [
   { id: 'ocean-blue', name: 'Deep Ocean', category: 'Presentation', bg: '#0c4a6e', accent: '#38bdf8', headline: 'GLOBAL SUMMIT', subhead: 'Innovation & Design Leadership', badge: 'SUMMIT' },
   { id: 'minimal-white', name: 'Swiss Minimal', category: 'Editorial', bg: '#ffffff', accent: '#111111', headline: 'LESS IS MORE.', subhead: 'Precision Typography & Grid Systems', badge: 'ISSUE 01' },
   { id: 'neon-dark', name: 'Midnight Glow', category: 'YouTube Cover', bg: '#030712', accent: '#a78bfa', headline: '10X YOUR WORKFLOW', subhead: 'Complete Masterclass Inside', badge: 'TUTORIAL' },
-  { id: 'rose-gold', name: 'Atelier Luxe', category: 'Brand Card', bg: '#fdf2f8', accent: '#be185d', headline: 'MAISON DE LUXE', subhead: 'Handcrafted Signature Collection', badge: 'EXCLUSIVE' },
+  { id: 'rose-gold', name: 'Atelier Luxe', category: 'Brand Card', bg: '#fdf2f8', accent: '#be185d', headline: 'MAISON DE LUXE', subhead: 'Bespoke Signature Collection', badge: 'EXCLUSIVE' },
   { id: 'paper-beige', name: 'Artisan Roast', category: 'Menu / Promo', bg: '#fef3c7', accent: '#92400e', headline: 'MORNING BREW', subhead: 'Single Origin Specialty Coffee', badge: 'FRESH ROAST' },
   { id: 'warm-gray', name: 'Monolith Dark', category: 'Banner', bg: '#1C1917', accent: '#F59E0B', headline: 'BUILT FOR CREATORS', subhead: 'Zero Latency Browser Canvas Engine', badge: 'LERNEXAI' },
   { id: 'vibrant-yellow', name: 'Flash Sale', category: 'Promo Ad', bg: '#fef08a', accent: '#713f12', headline: 'MEGA FLASH SALE', subhead: 'Up to 60% Off Sitewide Today Only', badge: 'LIMITED TIME' },

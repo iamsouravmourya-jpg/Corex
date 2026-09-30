@@ -1,165 +1,185 @@
 import { useState } from 'react'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
-import { addEmoji } from '@/lib/shapes'
+import { addEmoji, addRect, addCircle, addTriangle } from '@/lib/shapes'
 import { motion } from 'framer-motion'
 
-const EMOJI_CATEGORIES: { label: string; icon: string; emojis: string[] }[] = [
+const COREX_GLYPH_COLLECTIONS: { label: string; icon: string; glyphs: string[] }[] = [
   {
-    label: 'Smileys',
-    icon: '😊',
-    emojis: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒'],
+    label: 'Tech & AI',
+    icon: '⚡',
+    glyphs: ['⚡','🚀','🤖','✨','💎','🔮','🧬','🛰️','🪐','🌌','💻','🖥️','⌨️','🖱️','📱','🔋','📡','🔭','🔬','🧪','⚙️','🧲','💡','🔦','🛡️','🔑','🎯','♾️'],
   },
   {
-    label: 'Gestures',
-    icon: '👋',
-    emojis: ['👋','🤚','🖐️','✋','🖖','🫱','🫲','🤝','👏','🙌','🫶','🤲','🙏','✍️','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','👄'],
+    label: 'Reactions',
+    icon: '🔥',
+    glyphs: ['🔥','💯','🎉','🎊','🏆','🥇','👑','🌟','⭐','💫','💥','❤️','🧡','💛','💚','💙','💜','🖤','🤍','💖','💘','💝','🙌','👏','🤝','👍','🫶','✌️'],
   },
   {
-    label: 'Hearts',
-    icon: '❤️',
-    emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️','🕉️','✡️','🔯','🕎','☯️','☦️','🛐'],
+    label: 'Expressions',
+    icon: '😎',
+    glyphs: ['😀','😄','😁','😆','🤣','😂','🙂','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🤓','🧐','🥳','🤯','🤠','🫡','🤫','🤔','😌','😴','👻'],
   },
   {
-    label: 'Nature',
-    icon: '🌸',
-    emojis: ['🌸','🌺','🌻','🌹','🌷','🌼','🪷','🌱','🌿','🍃','🍂','🍁','🍄','🌾','🎋','🎍','🪴','🌵','🌴','🌲','🌳','🌞','🌝','🌛','🌜','🌚','🌕','🌖','🌗','🌘'],
+    label: 'Signals & UI',
+    icon: '📌',
+    glyphs: ['📌','📍','🔔','📣','📢','💬','💭','🗯️','✅','☑️','✔️','❌','⚠️','🚫','♻️','⬆️','↗️','➡️','↘️','⬇️','↙️','⬅️','↖️','🔄','⏩','⏪','▶️','⏸️'],
   },
   {
-    label: 'Food',
-    icon: '🍕',
-    emojis: ['🍕','🍔','🌮','🌯','🥙','🧆','🥚','🍳','🥘','🍲','🫕','🥗','🍿','🧂','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤','🍥','🥮','🍡','🥟'],
+    label: 'Commerce',
+    icon: '💰',
+    glyphs: ['💰','💵','💴','💶','💷','💳','🪙','📈','📉','📊','📋','📁','📂','📅','📆','📇','📎','📏','📐','✂️','🔒','🔓','🏷️','🛍️','🎁','📦','📫','🧾'],
   },
   {
-    label: 'Activities',
-    icon: '⚽',
-    emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🥊','🥋','⛳','🏹','🎣','🤿','🎽','🛹','🛼','🛷','⛸️','🎿','🏋️','🤸','🤼','🤺','🏇','⛷️'],
+    label: 'Nature & Eco',
+    icon: '🌿',
+    glyphs: ['🌿','🌱','🍃','🌸','🌺','🌻','🌹','🌷','🌼','🪷','🌴','🌲','🌳','🌵','🍁','🍂','🍄','🌊','❄️','☀️','🌈','🌙','🌎','🌍','🌏','🦋','🐝','🐬'],
   },
   {
-    label: 'Travel',
-    icon: '✈️',
-    emojis: ['✈️','🚀','🛸','🚁','🛩️','⛵','🚢','🚂','🚃','🚄','🚅','🚆','🚇','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍','🚎','🚐','🚑','🚒','🚓','🚔','🚕','🚗','🚘'],
+    label: 'Media & Art',
+    icon: '🎨',
+    glyphs: ['🎨','🖌️','🖍️','✏️','✒️','🖋️','🎬','🎤','🎧','🎼','🎹','🥁','🎷','🎺','🎸','🎻','🎲','🎯','🎳','🎮','🕹️','🎰','📷','📸','📹','🎥','📽️','🎞️'],
   },
   {
-    label: 'Objects',
-    icon: '💡',
-    emojis: ['💡','🔦','🕯️','🪔','🧯','🛢️','💰','💵','💴','💶','💷','💳','🪙','💎','⚖️','🪜','🧲','🔧','🪛','🔩','⚙️','🗜️','🔗','⛓️','🪝','🧰','🪤','🧱','🔮','🧿'],
-  },
-  {
-    label: 'Symbols',
-    icon: '✨',
-    emojis: ['✨','⭐','🌟','💫','⚡','🔥','💥','❄️','🌊','🌀','🌈','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','⛄','🌬️','💨','💧','💦','🌫️','🌪️','🌡️'],
-  },
-  {
-    label: 'Flags',
-    icon: '🏳️',
-    emojis: ['🏳️','🏴','🏁','🚩','🏳️‍🌈','🏳️‍⚧️','🏴‍☠️','🇺🇳','🎌','🏴󠁧󠁢󠁥󠁮󠁧󠁿','🏴󠁧󠁢󠁳󠁣󠁴󠁿','🏴󠁧󠁢󠁷󠁬󠁳󠁿','🇦🇨','🇦🇩','🇦🇪','🇦🇫','🇦🇬','🇦🇮','🇦🇱','🇦🇲','🇦🇴','🇦🇶','🇦🇷','🇦🇸','🇦🇹','🇦🇺','🇦🇼','🇦🇽','🇦🇿'],
+    label: 'Lifestyle',
+    icon: '☕',
+    glyphs: ['☕','🍵','🧋','🥤','🍕','🍔','🍟','🌮','🍣','🍱','🍜','🍩','🍪','🎂','🍰','🧁','🍫','🍿','✈️','⛵','🏔️','🏖️','🏛️','🗽','🗼','🎢','🎡','🏕️'],
   },
 ]
 
 export function StickerPanel() {
   const canvas = useFabricCanvas()
-  const [activeCategory, setActiveCategory] = useState(0)
-  const [search, setSearch] = useState('')
+  const [selectedGroup, setSelectedGroup] = useState(0)
+  const [query, setQuery] = useState('')
 
-  const handleEmoji = (emoji: string) => {
+  const insertGlyph = (glyph: string) => {
     if (!canvas) return
-    addEmoji(emoji, canvas)
+    addEmoji(glyph, canvas)
   }
 
-  // Filter by search
-  const allEmojis = EMOJI_CATEGORIES.flatMap(c => c.emojis)
-  const filtered = search
-    ? allEmojis.filter(e => e.includes(search))
-    : EMOJI_CATEGORIES[activeCategory]?.emojis || []
+  const allGlyphs = COREX_GLYPH_COLLECTIONS.flatMap((g) => g.glyphs)
+  const visibleGlyphs = query
+    ? allGlyphs.filter((g) => g.includes(query))
+    : COREX_GLYPH_COLLECTIONS[selectedGroup]?.glyphs || []
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Quick Vector Primitives */}
+      <div className="panel-heading">Vector Primitives</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, padding: '4px 10px 8px' }}>
+        <button
+          onClick={() => canvas && addRect(canvas)}
+          className="btn-base"
+          style={{ height: 28, fontSize: 11 }}
+        >
+          ▢ Card
+        </button>
+        <button
+          onClick={() => canvas && addCircle(canvas)}
+          className="btn-base"
+          style={{ height: 28, fontSize: 11 }}
+        >
+          ◯ Orb
+        </button>
+        <button
+          onClick={() => canvas && addTriangle(canvas)}
+          className="btn-base"
+          style={{ height: 28, fontSize: 11 }}
+        >
+          △ Prism
+        </button>
+      </div>
+
       {/* Search */}
-      <div style={{ padding: '8px 10px 6px' }}>
+      <div style={{ padding: '4px 10px 6px' }}>
         <input
           className="input-base"
-          placeholder="Search emoji…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
+          placeholder="Filter studio glyphs…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           style={{ width: '100%' }}
         />
       </div>
 
-      {/* Category pills */}
-      {!search && (
-        <div style={{
-          display: 'flex', overflowX: 'auto', padding: '0 10px 6px', gap: 4,
-          scrollbarWidth: 'none',
-        }}>
-          {EMOJI_CATEGORIES.map((cat, i) => (
+      {/* Category Selector */}
+      {!query && (
+        <div
+          style={{
+            display: 'flex',
+            overflowX: 'auto',
+            padding: '0 10px 6px',
+            gap: 4,
+            scrollbarWidth: 'none',
+          }}
+        >
+          {COREX_GLYPH_COLLECTIONS.map((group, idx) => (
             <button
-              key={cat.label}
-              onClick={() => setActiveCategory(i)}
-              title={cat.label}
+              key={group.label}
+              onClick={() => setSelectedGroup(idx)}
+              title={group.label}
               style={{
                 flexShrink: 0,
-                width: 28, height: 28,
-                borderRadius: 6,
+                width: 28,
+                height: 28,
+                borderRadius: '0.5rem',
                 border: '1px solid',
-                borderColor: activeCategory === i ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                background: activeCategory === i ? 'rgba(244,63,94,0.12)' : 'var(--color-base-750)',
+                borderColor: selectedGroup === idx ? 'var(--color-accent-cyan)' : 'var(--color-base-600)',
+                background: selectedGroup === idx ? 'rgba(6, 182, 212, 0.14)' : 'var(--color-base-750)',
                 cursor: 'pointer',
-                fontSize: 15,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 80ms',
+                fontSize: 14,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 120ms',
               }}
             >
-              {cat.icon}
+              {group.icon}
             </button>
           ))}
         </div>
       )}
 
-      {/* Category label */}
-      {!search && (
+      {!query && (
         <div className="panel-heading" style={{ paddingTop: 4 }}>
-          {EMOJI_CATEGORIES[activeCategory]?.label} ({EMOJI_CATEGORIES[activeCategory]?.emojis.length})
+          {COREX_GLYPH_COLLECTIONS[selectedGroup]?.label} ({COREX_GLYPH_COLLECTIONS[selectedGroup]?.glyphs.length})
         </div>
       )}
 
-      {/* Emoji Grid */}
-      <div style={{
-        flex: 1, overflowY: 'auto', padding: '4px 10px 10px',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: 2,
-      }}>
-        {(search ? filtered : EMOJI_CATEGORIES[activeCategory]?.emojis || []).map((emoji, i) => (
+      {/* Glyph Grid */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '4px 10px 10px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: 3,
+        }}
+      >
+        {visibleGlyphs.map((glyph, idx) => (
           <motion.button
-            key={i}
-            whileHover={{ scale: 1.2 }}
+            key={idx}
+            whileHover={{ scale: 1.18 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => handleEmoji(emoji)}
+            onClick={() => insertGlyph(glyph)}
             style={{
-              width: '100%', aspectRatio: '1',
-              background: 'none', border: 'none',
-              cursor: 'pointer', borderRadius: 5,
-              fontSize: 20,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'background 80ms',
+              width: '100%',
+              aspectRatio: '1',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: '0.375rem',
+              fontSize: 19,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-base-750)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-            title={emoji}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-base-700)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+            title={glyph}
           >
-            {emoji}
+            {glyph}
           </motion.button>
         ))}
-        {filtered.length === 0 && (
-          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '20px 0', fontSize: 12, color: 'var(--color-base-500)' }}>
-            No emoji found for "{search}"
-          </div>
-        )}
-      </div>
-
-      {/* Footer tip */}
-      <div style={{ padding: '6px 10px', borderTop: '1px solid var(--color-base-600)', fontSize: 10, color: 'var(--color-base-500)', textAlign: 'center' }}>
-        Click any emoji to place it on the canvas
       </div>
     </div>
   )

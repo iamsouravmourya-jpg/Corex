@@ -46,7 +46,7 @@ export const useEditorStore = create<EditorState>()(
         .reverse()
         .map((obj, idx) => ({
           id: (obj as any).__uid || `obj-${idx}`,
-          name: (obj as any).corexLabel || (obj as any).craftName || getDefaultName(obj.type || 'object', idx),
+          name: (obj as any).corexLabel || getDefaultName(obj.type || 'object', idx),
           type: obj.type || 'object',
           visible: obj.visible ?? true,
           locked: !(obj.selectable ?? true),

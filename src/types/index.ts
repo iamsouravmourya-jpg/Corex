@@ -18,15 +18,18 @@ export interface CanvasSize {
 }
 
 export const CANVAS_PRESETS: CanvasSize[] = [
-  { width: 1080, height: 1080, label: 'Instagram Post' },
-  { width: 1080, height: 1920, label: 'Instagram Story' },
-  { width: 1280, height: 720, label: 'Presentation 16:9' },
-  { width: 1280, height: 720, label: 'YouTube Thumbnail' },
-  { width: 794,  height: 1123, label: 'A4 Portrait' },
-  { width: 816,  height: 1056, label: 'US Letter' },
-  { width: 1500, height: 500,  label: 'Twitter Banner' },
-  { width: 1200, height: 630,  label: 'Open Graph / OG Image' },
-  { width: 800,  height: 800,  label: 'Square (800×800)' },
+  { width: 1080, height: 1080, label: 'Social Square HD' },
+  { width: 1080, height: 1920, label: 'Vertical Reel / Story' },
+  { width: 1920, height: 1080, label: 'Widescreen Deck 16:9' },
+  { width: 1280, height: 720,  label: 'YouTube Studio Cover' },
+  { width: 1600, height: 1200, label: 'Dribbble Shot 4:3' },
+  { width: 1270, height: 760,  label: 'Product Hunt Launch' },
+  { width: 1584, height: 396,  label: 'LinkedIn Cover Banner' },
+  { width: 1500, height: 500,  label: 'X / Header Banner' },
+  { width: 1200, height: 630,  label: 'OpenGraph Social Card' },
+  { width: 794,  height: 1123, label: 'A4 Editorial Print' },
+  { width: 816,  height: 1056, label: 'US Letter Document' },
+  { width: 960,  height: 960,  label: 'Studio Square (960×960)' },
 ]
 
 export interface LayerItem {
