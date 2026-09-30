@@ -132,6 +132,11 @@ export const useEditorStore = create<EditorState>()(
     bgNonce: 0,
     bumpBgNonce: () => set({ bgNonce: get().bgNonce + 1 }),
 
+    // AI Mode
+    isAiModeOpen: false,
+    setIsAiModeOpen: (open) => set({ isAiModeOpen: open }),
+    toggleAiMode: () => set({ isAiModeOpen: !get().isAiModeOpen }),
+
     // Project
     currentProjectId: null,
     setCurrentProjectId: (id) => set({ currentProjectId: id }),

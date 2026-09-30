@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Undo2, Redo2, Download, ChevronDown } from 'lucide-react'
+import { Undo2, Redo2, Download, ChevronDown, Sparkles } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ExportModal } from '@/components/export/ExportModal'
@@ -103,7 +103,7 @@ function PageSizePicker() {
 
 // ─── TopBar ───────────────────────────────────────────────────────────────────
 export function TopBar() {
-  const { canUndo, canRedo, undo, redo } = useEditorStore()
+  const { canUndo, canRedo, undo, redo, isAiModeOpen, toggleAiMode } = useEditorStore()
   const [showExport, setShowExport] = useState(false)
 
   return (
@@ -121,6 +121,40 @@ export function TopBar() {
         <div style={{ width: 1, height: 20, background: 'var(--color-base-600)', margin: '0 2px' }} />
         <PageSizePicker />
         <div style={{ flex: 1 }} />
+
+        {/* AI Mode Button */}
+        <Tooltip content={isAiModeOpen ? "Close AI Assistant" : "Open AI Assistant"} side="bottom">
+          <motion.button
+            whileTap={{ scale: 0.92 }}
+            onClick={toggleAiMode}
+            aria-label="Toggle AI Mode"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              height: 28,
+              padding: '0 10px',
+              background: isAiModeOpen
+                ? 'linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(139,92,246,0.25) 100%)'
+                : 'var(--color-base-800)',
+              border: isAiModeOpen
+                ? '1px solid var(--color-accent-400)'
+                : '1px solid var(--color-base-600)',
+              borderRadius: 6,
+              color: isAiModeOpen ? '#FECDD3' : 'var(--color-base-200)',
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 150ms var(--ease-spring)',
+              boxShadow: isAiModeOpen ? '0 0 10px rgba(244,63,94,0.3)' : 'none',
+            }}
+          >
+            <Sparkles size={13} style={{ color: isAiModeOpen ? '#FB7185' : '#F43F5E' }} />
+            <span>AI Mode</span>
+          </motion.button>
+        </Tooltip>
+
+        <div style={{ width: 1, height: 16, background: 'var(--color-base-700)', margin: '0 2px' }} />
 
         <Tooltip content="Undo" shortcut="⌘Z" side="bottom">
           <motion.button whileTap={{ scale: 0.88 }} onClick={undo} disabled={!canUndo}

@@ -102,6 +102,11 @@ export interface EditorState {
   bgNonce: number
   bumpBgNonce: () => void
 
+  // AI Mode
+  isAiModeOpen: boolean
+  setIsAiModeOpen: (open: boolean) => void
+  toggleAiMode: () => void
+
   // Current project
   currentProjectId: string | null
   setCurrentProjectId: (id: string | null) => void

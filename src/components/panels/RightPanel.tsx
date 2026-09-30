@@ -6,6 +6,8 @@ import { LayersPanel } from './LayersPanel'
 import { TemplatePanel } from './TemplatePanel'
 import { ProjectsPanel } from './ProjectsPanel'
 import { StickerPanel } from './StickerPanel'
+import { AiChatPanel } from '@/components/ai/AiChatPanel'
+import { useEditorStore } from '@/store/editorStore'
 import { panelVariants } from '@/lib/motion'
 
 const tabs = [
@@ -18,6 +20,7 @@ const tabs = [
 
 export function RightPanel() {
   const [activeTab, setActiveTab] = useState('properties')
+  const { isAiModeOpen } = useEditorStore()
 
   return (
     <motion.aside
@@ -32,6 +35,7 @@ export function RightPanel() {
         flexDirection: 'column',
         flexShrink: 0,
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
       <Tabs.Root
@@ -109,6 +113,25 @@ export function RightPanel() {
           </AnimatePresence>
         </div>
       </Tabs.Root>
+
+      {/* AI Mode Full-Height Overlay Cover */}
+      <AnimatePresence>
+        {isAiModeOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 100,
+            }}
+          >
+            <AiChatPanel />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.aside>
   )
 }
