@@ -2,6 +2,8 @@
   "$schema": "https://lernexai.com/schemas/quantum-studio-v3.json",
   "engine": "Corex Quantum Studio",
   "organization": "LernexAI",
+  "founder": "Sourav Maurya",
+  "owner": "Sourav Maurya",
   "version": "3.0.0-quantum",
   "architecture": {
     "uxTopology": "Borderless-Tonal-Depth-Floating-Glass-Pods",

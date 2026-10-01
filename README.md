@@ -34,7 +34,7 @@
 6. [Design System Specification (`Borderless Deep Ink & Electric Cyan`)](#6-design-system-specification-borderless-deep-ink--electric-cyan)
 7. [Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar](#7-pro-studio-keyboard-command-matrix--k-omnibar)
 8. [Installation, Environment Configuration & Production Build](#8-installation-environment-configuration--production-build)
-9. [Intellectual Property & Proprietary License](#9-intellectual-property--proprietary-license)
+9. [Intellectual Property, Ownership & Proprietary License](#9-intellectual-property-ownership--proprietary-license)
 
 ---
 
@@ -410,12 +410,22 @@ npm run build
 
 ---
 
-## 9. Intellectual Property & Proprietary License
+## 9. Intellectual Property, Ownership & Proprietary License
 
 ```
 ═════════════════════════════════════════════════════════════════════════════════
-                      LERNEXAI INTELLECTUAL PROPERTY NOTICE
+                LERNEXAI INTELLECTUAL PROPERTY & OWNERSHIP NOTICE
 ═════════════════════════════════════════════════════════════════════════════════
+
+OWNERSHIP & IP DISCLOSURE:
+• Intellectual Property (IP): All intellectual property, algorithms, mathematical 
+  models, rendering kernels, and source architecture belong exclusively to LernexAI.
+• Product Lineage: Corex (Corex Quantum Studio) is an independent, standalone 
+  flagship product developed under and powered by LernexAI.
+• Ownership: Founded and solely owned by Sourav Maurya.
+• Product Nature: Corex Quantum Studio is a permanent, commercial-grade, 
+  independent production software suite with zero affiliation to any hackathon, 
+  temporary challenge, or third-party competition.
 
 Copyright (c) 2026 LernexAI (Sourav Maurya). All Rights Reserved.
 
@@ -425,10 +435,10 @@ hardware WebGL2 GLSL ES 3.00 fragment shader engine, W3C OPFS (.cxbin) binary
 deflate vault, Gielis Superformula & Lissajous mathematical synthesizers, CSG
 vector boolean solver, 3D axonometric depth extruder, ZLIB binary command ledger,
 P2P Lamport CRDT mesh, and 10-pipeline 8K artifact compiler are the proprietary
-intellectual property of LernexAI.
+intellectual property of LernexAI, owned by Sourav Maurya.
 
 Unauthorized reproduction, reverse engineering, redistribution, or commercial
-exploitation without prior written authorization from LernexAI is strictly
-prohibited under international copyright and intellectual property laws.
+exploitation without prior written authorization from LernexAI / Sourav Maurya is
+strictly prohibited under international copyright, trademark, and trade secret laws.
 ═════════════════════════════════════════════════════════════════════════════════
 ```
