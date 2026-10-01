@@ -1,3 +1,7 @@
+/**
+ * LernexAI Proprietary — Quantum Omnibar Command Palette (⌘K / Ctrl+K)
+ * Borderless soft rounded-3xl surface with 24+ instant vector, shader, CSG, and compiler actions.
+ */
 import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -13,6 +17,8 @@ import {
   Scissors,
   Box,
   Compass,
+  Layers,
+  Code2,
   X,
 } from 'lucide-react'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
@@ -26,8 +32,16 @@ import {
   distributeSelection,
   removeImageBackgroundClient,
   applyImageLutPreset,
+  addSuperformulaVector,
+  addLissajousCurve,
 } from '@/lib/vectorStudio'
-import { exportCanvas } from '@/lib/export'
+import {
+  applyProceduralShaderBackground,
+  applyVectorBooleanOperation,
+  extrudeActiveNode3D,
+  compileCanvasToStandaloneHtml,
+} from '@/lib/quantumEngine'
+import { exportCanvas, dispatchBinaryDownload } from '@/lib/export'
 
 interface CommandPaletteProps {
   open: boolean
@@ -36,7 +50,7 @@ interface CommandPaletteProps {
 
 interface StudioCommand {
   id: string
-  category: 'Vector Lab' | 'Color Themes' | 'Smart Align' | 'Image & Shaders' | 'Studio Export'
+  category: 'Vector Lab' | 'GLSL & CSG' | 'Color Themes' | 'Smart Align' | 'Image & AI' | 'Studio Export'
   title: string
   subtitle: string
   shortcut?: string
@@ -76,6 +90,55 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const commands: StudioCommand[] = useMemo(
     () => [
       {
+        id: 'glsl-aurora',
+        category: 'GLSL & CSG',
+        title: 'Compile WebGL2 Aurora Plasma Fragment Shader',
+        subtitle: '5-Octave Domain-Warped FBM GPU shader (#version 300 es)',
+        shortcut: '⇧M',
+        icon: <Sparkles size={15} color="#22D3EE" />,
+        run: () => canvas && void applyProceduralShaderBackground(canvas, 'aurora-plasma'),
+      },
+      {
+        id: 'csg-union',
+        category: 'GLSL & CSG',
+        title: 'Synthesize CSG Boolean Union Contour',
+        subtitle: 'Constructive Solid Geometry metaball vector union',
+        icon: <Layers size={15} color="#14B8A6" />,
+        run: () => canvas && applyVectorBooleanOperation(canvas, 'union'),
+      },
+      {
+        id: 'csg-subtract',
+        category: 'GLSL & CSG',
+        title: 'Synthesize CSG Boolean Subtract Portal',
+        subtitle: 'Constructive Solid Geometry crescent punch vector',
+        icon: <Layers size={15} color="#06B6D4" />,
+        run: () => canvas && applyVectorBooleanOperation(canvas, 'subtract'),
+      },
+      {
+        id: 'extrude-3d',
+        category: 'GLSL & CSG',
+        title: '3D Axonometric Extrude Selected Node',
+        subtitle: 'Synthesize 12-layer isometric relief stack on active node',
+        icon: <Box size={15} color="#22D3EE" />,
+        run: () => canvas && void extrudeActiveNode3D(canvas, 12),
+      },
+      {
+        id: 'math-superformula',
+        category: 'Vector Lab',
+        title: 'Generate Gielis Superformula Parametric Star (m=8)',
+        subtitle: 'Polar mathematical harmonic curve r(θ) vector path',
+        icon: <Compass size={15} color="#06B6D4" />,
+        run: () => canvas && addSuperformulaVector(canvas, 8, 0.3, 1.7, 1.7),
+      },
+      {
+        id: 'math-lissajous',
+        category: 'Vector Lab',
+        title: 'Generate Lissajous Harmonic Wave (3:4 Ratio)',
+        subtitle: 'Parametric phase-locked harmonic oscillation curve',
+        icon: <Compass size={15} color="#14B8A6" />,
+        run: () => canvas && addLissajousCurve(canvas, 3, 4, 90),
+      },
+      {
         id: 'vec-star-8',
         category: 'Vector Lab',
         title: 'Insert 8-Point Starburst Seal',
@@ -98,14 +161,14 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         category: 'Vector Lab',
         title: 'Insert 3D Isometric Cube',
         subtitle: 'Multi-face shaded isometric vector block',
-        shortcut: '3D',
+        shortcut: '⇧I',
         icon: <Box size={15} color="#06B6D4" />,
         run: () => canvas && addIsometricCube(canvas),
       },
       {
         id: 'vec-wave',
         category: 'Vector Lab',
-        title: 'Generate Cyber Wave Mesh (Corel / Illustrator Blend)',
+        title: 'Generate Cyber Wave Mesh',
         subtitle: '12-layer parametric cubic bezier wave mesh',
         icon: <Wand2 size={15} color="#06B6D4" />,
         run: () => canvas && addProceduralMesh(canvas, 'cyber-wave'),
@@ -131,6 +194,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         category: 'Vector Lab',
         title: 'Generate Scalable Vector QR Matrix Badge',
         subtitle: '100% client-side vector QR code group',
+        shortcut: '⇧Q',
         icon: <QrCode size={15} color="#10B981" />,
         run: () => canvas && addVectorQrBadge(canvas, 'https://lernexai.com'),
       },
@@ -179,13 +243,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         category: 'Smart Align',
         title: 'Toggle Precision 20px / 100px Cyan Grid',
         subtitle: 'Show or hide architectural coordinate grid',
-        shortcut: "⌘'",
+        shortcut: '⇧G',
         icon: <Grid size={15} color="#06B6D4" />,
         run: () => toggleGrid(),
       },
       {
         id: 'img-cutout',
-        category: 'Image & Shaders',
+        category: 'Image & AI',
         title: 'Smart Chroma Background Cutout (Selected Image)',
         subtitle: '100% client-side alpha background removal',
         icon: <Scissors size={15} color="#10B981" />,
@@ -195,7 +259,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       },
       {
         id: 'img-lut-cyber',
-        category: 'Image & Shaders',
+        category: 'Image & AI',
         title: 'Apply Cyberpunk High-Vibrance LUT (Selected Image)',
         subtitle: 'Client-side WebGL/Canvas contrast & vibrance shader',
         icon: <Sparkles size={15} color="#06B6D4" />,
@@ -203,11 +267,23 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       },
       {
         id: 'ai-toggle',
-        category: 'Image & Shaders',
+        category: 'Image & AI',
         title: 'Open Corex AI Studio (Text-to-Design & Vision Doctor)',
         subtitle: 'Launch autonomous layout & image synthesis copilot',
         icon: <Sparkles size={15} color="#14B8A6" />,
         run: () => toggleAiMode(),
+      },
+      {
+        id: 'exp-html5',
+        category: 'Studio Export',
+        title: 'Compile Standalone Interactive HTML5 Bundle (.html)',
+        subtitle: 'Zero-dependency self-contained vector web page artifact',
+        icon: <Code2 size={15} color="#22D3EE" />,
+        run: () => {
+          if (!canvas) return
+          const html = compileCanvasToStandaloneHtml(canvas, currentProjectName || 'Corex Quantum Studio')
+          dispatchBinaryDownload(new Blob([html], { type: 'text/html;charset=utf-8' }), 'corex-bundle.html')
+        },
       },
       {
         id: 'exp-png-2x',
@@ -224,22 +300,6 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         subtitle: 'Pure mathematical vector XML output',
         icon: <Download size={15} color="#14B8A6" />,
         run: () => canvas && void exportCanvas(canvas, 'svg', 1, currentProjectName || 'corex-design'),
-      },
-      {
-        id: 'exp-pdf',
-        category: 'Studio Export',
-        title: 'Quick Export Print-Ready PDF (96 DPI)',
-        subtitle: 'Vector-calibrated PDF document compilation',
-        icon: <Download size={15} color="#10B981" />,
-        run: () => canvas && void exportCanvas(canvas, 'pdf', 1, currentProjectName || 'corex-design', { scale: 2 }),
-      },
-      {
-        id: 'exp-pptx',
-        category: 'Studio Export',
-        title: 'Quick Export Native PowerPoint Slide (.PPTX)',
-        subtitle: 'Client-side PptxGenJS presentation slide',
-        icon: <Download size={15} color="#F59E0B" />,
-        run: () => canvas && void exportCanvas(canvas, 'pptx', 1, currentProjectName || 'corex-design', { scale: 2 }),
       },
     ],
     [canvas, currentProjectName, toggleGrid, toggleAiMode],
@@ -290,8 +350,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             position: 'fixed',
             inset: 0,
             zIndex: 999,
-            background: 'rgba(8, 9, 14, 0.78)',
-            backdropFilter: 'blur(12px)',
+            background: 'rgba(7, 8, 13, 0.78)',
+            backdropFilter: 'blur(14px)',
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'center',
@@ -306,11 +366,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%',
-              maxWidth: 580,
-              background: '#0D0F17',
-              border: '1px solid #1A1E2A',
-              borderRadius: '1rem',
-              boxShadow: '0 24px 64px rgba(8, 9, 14, 0.9), 0 6px 20px rgba(6, 182, 212, 0.16)',
+              maxWidth: 590,
+              background: '#0C0E16',
+              borderRadius: 24,
+              boxShadow: '0 28px 72px rgba(0, 0, 0, 0.85)',
               overflow: 'hidden',
             }}
           >
@@ -319,13 +378,12 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 10,
-                padding: '14px 18px',
-                borderBottom: '1px solid #1A1E2A',
-                background: '#11141C',
+                gap: 12,
+                padding: '16px 20px',
+                background: '#111522',
               }}
             >
-              <Search size={16} color="#06B6D4" />
+              <Search size={17} color="#22D3EE" />
               <input
                 autoFocus
                 value={query}
@@ -333,7 +391,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   setQuery(e.target.value)
                   setActiveIndex(0)
                 }}
-                placeholder="Type a command (e.g., Guilloche, Isometric Cube, QR Code, Cutout, Theme, SVG)…"
+                placeholder="Search 18-Engine Quantum commands (GLSL, CSG Union, 3D Extrude, Superformula, QR)…"
                 style={{
                   flex: 1,
                   background: 'transparent',
@@ -347,12 +405,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               <button
                 onClick={onClose}
                 style={{
-                  background: '#1A1E2A',
-                  border: '1px solid #262C3D',
-                  borderRadius: '0.375rem',
+                  background: '#181C2B',
+                  border: 'none',
+                  borderRadius: 10,
                   color: '#94A3B8',
-                  padding: '2px 7px',
+                  padding: '4px 9px',
                   fontSize: 10.5,
+                  fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -365,7 +424,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             </div>
 
             {/* Command List */}
-            <div style={{ maxHeight: 380, overflowY: 'auto', padding: 8 }}>
+            <div style={{ maxHeight: 390, overflowY: 'auto', padding: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {filtered.length === 0 ? (
                 <div style={{ padding: 28, textAlign: 'center', color: '#64748B', fontSize: 12.5 }}>
                   No matching studio commands found.
@@ -386,10 +445,12 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                         display: 'flex',
                         alignItems: 'center',
                         gap: 12,
-                        padding: '10px 12px',
-                        borderRadius: '0.625rem',
-                        background: active ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
-                        border: active ? '1px solid rgba(6, 182, 212, 0.35)' : '1px solid transparent',
+                        padding: '10px 14px',
+                        borderRadius: 14,
+                        background: active
+                          ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.16) 0%, rgba(20, 184, 166, 0.08) 100%)'
+                          : 'transparent',
+                        border: 'none',
                         cursor: 'pointer',
                         textAlign: 'left',
                         transition: 'all 100ms',
@@ -397,11 +458,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     >
                       <div
                         style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: '0.5rem',
-                          background: '#11141C',
-                          border: '1px solid #1A1E2A',
+                          width: 34,
+                          height: 34,
+                          borderRadius: 11,
+                          background: '#151926',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -419,16 +479,16 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                             style={{
                               fontSize: 9.5,
                               fontFamily: 'var(--font-mono)',
-                              color: '#06B6D4',
-                              background: 'rgba(6, 182, 212, 0.1)',
-                              padding: '1px 6px',
-                              borderRadius: 4,
+                              color: '#22D3EE',
+                              background: 'rgba(6, 182, 212, 0.12)',
+                              padding: '2px 7px',
+                              borderRadius: 8,
                             }}
                           >
                             {cmd.category}
                           </span>
                         </div>
-                        <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>
+                        <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>
                           {cmd.subtitle}
                         </div>
                       </div>
@@ -437,11 +497,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                           style={{
                             fontSize: 10.5,
                             fontFamily: 'var(--font-mono)',
-                            color: '#94A3B8',
-                            background: '#11141C',
-                            border: '1px solid #1A1E2A',
-                            padding: '2px 7px',
-                            borderRadius: 5,
+                            color: '#22D3EE',
+                            background: '#151926',
+                            padding: '3px 8px',
+                            borderRadius: 8,
                           }}
                         >
                           {cmd.shortcut}
@@ -456,9 +515,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             {/* Footer */}
             <div
               style={{
-                padding: '8px 16px',
-                background: '#08090E',
-                borderTop: '1px solid #1A1E2A',
+                padding: '10px 18px',
+                background: '#090B11',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -467,8 +525,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               }}
             >
               <span>↑↓ Navigate &nbsp;·&nbsp; ↵ Execute &nbsp;·&nbsp; ESC Close</span>
-              <span style={{ color: '#06B6D4', fontFamily: 'var(--font-mono)' }}>
-                100% Client-Side Serverless Engine
+              <span style={{ color: '#22D3EE', fontFamily: 'var(--font-mono)' }}>
+                Corex Quantum v3.0 · 18-Engine Core
               </span>
             </div>
           </motion.div>

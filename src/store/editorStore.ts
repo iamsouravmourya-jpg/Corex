@@ -9,6 +9,7 @@ const MAX_LEDGER_FRAMES = 64
 
 export type LeftDrawerTab = 'create' | 'blueprints' | 'vectors' | 'quantum' | 'vault' | null
 export type RightInspectorTab = 'properties' | 'layers' | 'ai'
+export type FloatingWindowType = 'create' | 'blueprints' | 'vectors' | 'quantum' | 'ai' | null
 
 export interface UserSession {
   name: string
@@ -36,10 +37,18 @@ interface EditorState {
   activeObjectId: string | null
   layers: LayerItem[]
 
-  /** Collapsible Left Slide-Out Drawer & Right Inspector State */
+  /** Left Hierarchy Sidebar & Contextual Floating Pop-Out Windows */
+  isHierarchyOpen: boolean
+  leftSidebarView: 'layers' | 'vault'
+  activeFloatingWindow: FloatingWindowType
   leftDrawerTab: LeftDrawerTab
   rightActiveTab: RightInspectorTab
   isRightPanelOpen: boolean
+
+  toggleHierarchySidebar: () => void
+  setLeftSidebarView: (view: 'layers' | 'vault') => void
+  setActiveFloatingWindow: (win: FloatingWindowType) => void
+  toggleFloatingWindow: (win: Exclude<FloatingWindowType, null>) => void
   setLeftDrawerTab: (tab: LeftDrawerTab) => void
   toggleLeftDrawer: (tab?: Exclude<LeftDrawerTab, null>) => void
   setRightActiveTab: (tab: RightInspectorTab) => void
@@ -112,19 +121,58 @@ export const useEditorStore = create<EditorState>()(
     activeObjectId: null,
     layers: [],
 
-    leftDrawerTab: 'create',
+    isHierarchyOpen: true,
+    leftSidebarView: 'layers',
+    activeFloatingWindow: null,
+    leftDrawerTab: null,
     rightActiveTab: 'properties',
     isRightPanelOpen: true,
-    setLeftDrawerTab: (tab) => set({ leftDrawerTab: tab }),
+
+    toggleHierarchySidebar: () => set((s) => ({ isHierarchyOpen: !s.isHierarchyOpen })),
+    setLeftSidebarView: (view) => set({ leftSidebarView: view, isHierarchyOpen: true }),
+    setActiveFloatingWindow: (win) =>
+      set({
+        activeFloatingWindow: win,
+        leftDrawerTab: win === 'ai' ? null : (win as LeftDrawerTab),
+        isAiModeOpen: win === 'ai',
+      }),
+    toggleFloatingWindow: (win) =>
+      set((s) => {
+        const next = s.activeFloatingWindow === win ? null : win
+        return {
+          activeFloatingWindow: next,
+          leftDrawerTab: next === 'ai' ? null : (next as LeftDrawerTab),
+          isAiModeOpen: next === 'ai',
+        }
+      }),
+
+    setLeftDrawerTab: (tab) =>
+      set({
+        leftDrawerTab: tab,
+        activeFloatingWindow: tab === 'vault' ? null : (tab as FloatingWindowType),
+        ...(tab === 'vault' ? { leftSidebarView: 'vault', isHierarchyOpen: true } : {}),
+      }),
     toggleLeftDrawer: (targetTab = 'create') =>
-      set((s) => ({
-        leftDrawerTab: s.leftDrawerTab === targetTab ? null : targetTab,
-      })),
+      set((s) => {
+        if (targetTab === 'vault') {
+          return {
+            leftSidebarView: 'vault',
+            isHierarchyOpen: !(s.isHierarchyOpen && s.leftSidebarView === 'vault'),
+          }
+        }
+        const next = s.activeFloatingWindow === targetTab ? null : targetTab
+        return {
+          activeFloatingWindow: next,
+          leftDrawerTab: next,
+          isAiModeOpen: false,
+        }
+      }),
     setRightActiveTab: (tab) =>
       set({
         rightActiveTab: tab,
         isRightPanelOpen: true,
-        isAiModeOpen: tab === 'ai',
+        ...(tab === 'ai' ? { activeFloatingWindow: 'ai', isAiModeOpen: true } : {}),
+        ...(tab === 'layers' ? { leftSidebarView: 'layers', isHierarchyOpen: true } : {}),
       }),
     toggleRightPanel: () => set((s) => ({ isRightPanelOpen: !s.isRightPanelOpen })),
 
@@ -239,16 +287,14 @@ export const useEditorStore = create<EditorState>()(
     setIsAiModeOpen: (open) =>
       set({
         isAiModeOpen: open,
-        isRightPanelOpen: true,
-        rightActiveTab: open ? 'ai' : 'properties',
+        activeFloatingWindow: open ? 'ai' : null,
       }),
     toggleAiMode: () =>
       set((s) => {
-        const nextOpen = !s.isAiModeOpen
+        const nextOpen = s.activeFloatingWindow !== 'ai'
         return {
           isAiModeOpen: nextOpen,
-          isRightPanelOpen: true,
-          rightActiveTab: nextOpen ? 'ai' : 'properties',
+          activeFloatingWindow: nextOpen ? 'ai' : null,
         }
       }),
   }))

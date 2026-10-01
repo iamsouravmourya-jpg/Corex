@@ -1,6 +1,6 @@
 /**
- * LernexAI Proprietary — SceneGraph Node Hierarchy & Native Drag-Reorder Tree
- * Zero external @dnd-kit dependency.
+ * LernexAI Proprietary — Left Scene Hierarchy Tree
+ * Zero inner border lines, soft rounded-xl layer pills, and generous breathing space.
  */
 import { useState } from 'react'
 import {
@@ -28,7 +28,7 @@ import { motion } from 'framer-motion'
 import { nanoid } from 'nanoid'
 
 function resolveNodeIcon(type: string) {
-  const props = { size: 12, strokeWidth: 1.7 }
+  const props = { size: 13, strokeWidth: 1.75 }
   switch (type) {
     case 'rect':
       return <Square {...props} />
@@ -122,26 +122,22 @@ export function LayersPanel() {
   }
 
   return (
-    <div style={{ padding: '8px 8px' }}>
-      <div className="panel-heading" style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 4 }}>
-        <span>Scene Node Tree</span>
-        <span style={{ color: '#06B6D4', fontFamily: 'var(--font-mono)' }}>{layers.length} Nodes</span>
-      </div>
-
+    <div style={{ padding: '6px 14px 20px' }}>
       {layers.length === 0 && (
         <div
           style={{
-            padding: '28px 12px',
+            padding: '36px 16px',
             textAlign: 'center',
             color: 'var(--color-base-500)',
-            fontSize: 11.5,
+            fontSize: 12,
+            lineHeight: 1.6,
           }}
         >
-          Stage is empty. Insert vectors, shaders, or typography.
+          Canvas is empty. Pick a shape, text, or blueprint from the left rail.
         </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 4 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
         {layers.map((layer, idx) => {
           const isActive = activeObjectId === layer.id
           const isEditing = editingId === layer.id
@@ -162,21 +158,22 @@ export function LayersPanel() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 5,
-                height: 34,
-                padding: '0 8px',
-                borderRadius: '0.5rem',
+                gap: 6,
+                height: 38,
+                padding: '0 10px',
+                borderRadius: 12,
                 cursor: 'pointer',
-                background: isActive ? 'rgba(6, 182, 212, 0.12)' : 'var(--color-base-800)',
-                border: isActive ? '1px solid rgba(6, 182, 212, 0.45)' : '1px solid transparent',
-                color: isActive ? '#F8FAFC' : 'var(--color-base-400)',
+                background: isActive ? 'rgba(6, 182, 212, 0.16)' : 'rgba(255, 255, 255, 0.025)',
+                border: 'none',
+                color: isActive ? '#F8FAFC' : 'var(--color-base-300)',
                 userSelect: 'none',
+                transition: 'background 140ms',
               }}
             >
               <span style={{ cursor: 'grab', color: 'var(--color-base-500)', display: 'flex' }}>
                 <GripVertical size={12} />
               </span>
-              <span style={{ color: isActive ? '#06B6D4' : 'var(--color-base-500)', display: 'flex' }}>
+              <span style={{ color: isActive ? '#22D3EE' : 'var(--color-base-500)', display: 'flex' }}>
                 {resolveNodeIcon(layer.type)}
               </span>
 
@@ -194,13 +191,13 @@ export function LayersPanel() {
                   onClick={(e) => e.stopPropagation()}
                   style={{
                     flex: 1,
-                    height: 22,
-                    background: 'var(--color-ink-950)',
-                    border: '1px solid #06B6D4',
-                    borderRadius: 4,
+                    height: 24,
+                    background: '#07080D',
+                    border: 'none',
+                    borderRadius: 8,
                     color: '#F8FAFC',
                     fontSize: 11.5,
-                    padding: '0 6px',
+                    padding: '0 8px',
                     outline: 'none',
                   }}
                 />
@@ -213,13 +210,13 @@ export function LayersPanel() {
                   }}
                   style={{
                     flex: 1,
-                    fontSize: 11.5,
+                    fontSize: 12,
                     fontWeight: isActive ? 600 : 500,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
-                  title="Double-click to rename node"
+                  title="Double-click to rename"
                 >
                   {layer.name}
                 </span>
@@ -230,8 +227,8 @@ export function LayersPanel() {
                   e.stopPropagation()
                   reorderLayers(idx, idx - 1)
                 }}
-                title="Step Up"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 1 }}
+                title="Move Up"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 <ChevronUp size={11} />
               </button>
@@ -240,35 +237,35 @@ export function LayersPanel() {
                   e.stopPropagation()
                   reorderLayers(idx, idx + 1)
                 }}
-                title="Step Down"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 1 }}
+                title="Move Down"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 <ChevronDown size={11} />
               </button>
               <button
                 onClick={(e) => duplicateLayer(e, layer)}
-                title="Clone Node"
+                title="Duplicate"
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 <Copy size={11} />
               </button>
               <button
                 onClick={(e) => toggleVisible(e, layer)}
-                title="Toggle Visibility"
+                title="Visibility"
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 {layer.visible ? <Eye size={12} /> : <EyeOff size={12} />}
               </button>
               <button
                 onClick={(e) => toggleLock(e, layer)}
-                title="Lock / Unlock"
+                title="Lock"
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 {layer.locked ? <Lock size={12} color="#F59E0B" /> : <Unlock size={12} />}
               </button>
               <button
                 onClick={(e) => deleteLayer(e, layer)}
-                title="Delete Node"
+                title="Delete"
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-500)', padding: 2 }}
               >
                 <Trash2 size={12} />

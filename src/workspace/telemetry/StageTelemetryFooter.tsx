@@ -31,12 +31,12 @@ export function StatusBar() {
   return (
     <div
       style={{
-        height: 26,
-        background: 'var(--color-base-875)',
-        borderTop: '1px solid var(--color-base-600)',
+        height: 28,
+        background: '#0C0E16',
+        border: 'none',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 12px',
+        padding: '0 16px',
         gap: 12,
         fontSize: 11,
         color: 'var(--color-base-500)',

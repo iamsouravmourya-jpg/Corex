@@ -137,20 +137,6 @@ export function addIText(stage: FabricCanvas, text = 'Double-click to edit') {
   return node
 }
 
-export function addEmoji(glyph: string, stage: FabricCanvas) {
-  const node = new IText(glyph, {
-    left: stage.getWidth() * 0.5 - 40,
-    top: stage.getHeight() * 0.5 - 40,
-    fontSize: 72,
-    selectable: true,
-  })
-  attachNodeIdentity(node, `Glyph ${glyph}`)
-  stage.add(node)
-  stage.setActiveObject(node)
-  stage.requestRenderAll()
-  return node
-}
-
 export async function addImageFromDataUrl(stage: FabricCanvas, dataUrl: string) {
   const img = await FabricImage.fromURL(dataUrl)
   const maxW = stage.getWidth() * 0.72

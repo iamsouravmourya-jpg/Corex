@@ -1,9 +1,7 @@
 /**
- * LernexAI Proprietary — Quantum Color Spectrum & Studio Swatch Matrix
- * Zero external react-colorful dependency.
+ * LernexAI Proprietary — Quantum Color Spectrum & Soft Swatch Matrix
+ * Zero harsh borders, rounded-xl organic pills, and 24 curated studio swatches.
  */
-import React from 'react'
-
 const LERNEX_SWATCH_MATRIX = [
   '#08090E', '#0D0F17', '#11141C', '#1A1E2A', '#475569', '#94A3B8', '#F8FAFC', '#FFFFFF',
   '#06B6D4', '#22D3EE', '#14B8A6', '#10B981', '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899',
@@ -19,21 +17,20 @@ export function QuantumColorSpectrum({ color, onChange }: QuantumColorSpectrumPr
   const safeHex = /^#[0-9A-Fa-f]{6}$/.test(color) ? color : '#06B6D4'
 
   return (
-    <div style={{ width: 204, display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div style={{ width: 212, display: 'flex', flexDirection: 'column', gap: 10 }}>
       {/* Native Full-Spectrum Hardware Picker + Live Preview */}
       <label
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '6px 10px',
-          borderRadius: '0.5rem',
-          background: '#08090E',
-          border: '1px solid #1A1E2A',
+          padding: '8px 12px',
+          borderRadius: 12,
+          background: '#0C0E16',
           cursor: 'pointer',
         }}
       >
-        <span style={{ fontSize: 10.5, fontWeight: 700, color: '#94A3B8' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#CBD5E1' }}>
           Full HSV Spectrum
         </span>
         <input
@@ -56,7 +53,7 @@ export function QuantumColorSpectrum({ color, onChange }: QuantumColorSpectrumPr
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(8, 1fr)',
-          gap: 4,
+          gap: 5,
         }}
       >
         {LERNEX_SWATCH_MATRIX.map((swatch) => {
@@ -70,9 +67,10 @@ export function QuantumColorSpectrum({ color, onChange }: QuantumColorSpectrumPr
               style={{
                 width: '100%',
                 aspectRatio: '1',
-                borderRadius: 4,
+                borderRadius: 8,
                 background: swatch,
-                border: active ? '2px solid #06B6D4' : '1px solid rgba(255,255,255,0.14)',
+                border: 'none',
+                boxShadow: active ? '0 0 0 2px #22D3EE' : 'none',
                 cursor: 'pointer',
                 padding: 0,
               }}

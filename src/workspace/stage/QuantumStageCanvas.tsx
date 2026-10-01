@@ -294,73 +294,82 @@ export function CanvasBoard() {
       <div
         style={{
           position: 'absolute',
-          bottom: 14,
+          bottom: 18,
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 25,
           display: 'flex',
           alignItems: 'center',
-          gap: 6,
-          padding: '5px 10px',
-          borderRadius: '0.625rem',
-          background: 'rgba(13, 15, 23, 0.92)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid var(--color-base-600)',
-          boxShadow: '0 10px 28px rgba(8, 9, 14, 0.75)',
+          gap: 8,
+          padding: '6px 14px',
+          borderRadius: 20,
+          background: 'rgba(12, 14, 22, 0.88)',
+          backdropFilter: 'blur(20px)',
+          border: 'none',
+          boxShadow: '0 14px 36px rgba(0, 0, 0, 0.65)',
           userSelect: 'none',
         }}
       >
-        <button
-          onClick={() => useEditorStore.getState().setViewZoom(viewZoom / 1.2)}
-          title="Zoom Out"
-          style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
-        >
-          <ZoomOut size={13} />
-        </button>
-        <span
+        <div
           style={{
-            fontSize: 11,
-            fontFamily: 'var(--font-mono)',
-            color: '#F8FAFC',
-            fontWeight: 600,
-            minWidth: 40,
-            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            background: '#151927',
+            padding: '4px 8px',
+            borderRadius: 12,
           }}
         >
-          {Math.round(fitScale * viewZoom * 100)}%
-        </span>
-        <button
-          onClick={() => useEditorStore.getState().setViewZoom(viewZoom * 1.2)}
-          title="Zoom In"
-          style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
-        >
-          <ZoomIn size={13} />
-        </button>
-        <button
-          onClick={() => useEditorStore.getState().resetView()}
-          title="Fit Artboard to Viewport"
-          style={{ background: 'none', border: 'none', color: '#06B6D4', cursor: 'pointer', display: 'flex', padding: 3 }}
-        >
-          <Maximize2 size={12} />
-        </button>
-
-        <div style={{ width: 1, height: 14, background: 'var(--color-base-600)', margin: '0 2px' }} />
+          <button
+            onClick={() => useEditorStore.getState().setViewZoom(viewZoom / 1.2)}
+            title="Zoom Out"
+            style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
+          >
+            <ZoomOut size={13} />
+          </button>
+          <span
+            style={{
+              fontSize: 11,
+              fontFamily: 'var(--font-mono)',
+              color: '#F8FAFC',
+              fontWeight: 600,
+              minWidth: 42,
+              textAlign: 'center',
+            }}
+          >
+            {Math.round(fitScale * viewZoom * 100)}%
+          </span>
+          <button
+            onClick={() => useEditorStore.getState().setViewZoom(viewZoom * 1.2)}
+            title="Zoom In"
+            style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
+          >
+            <ZoomIn size={13} />
+          </button>
+          <button
+            onClick={() => useEditorStore.getState().resetView()}
+            title="Fit Artboard to Viewport"
+            style={{ background: 'none', border: 'none', color: '#06B6D4', cursor: 'pointer', display: 'flex', padding: 3 }}
+          >
+            <Maximize2 size={12} />
+          </button>
+        </div>
 
         <button
           onClick={() => useEditorStore.getState().toggleGrid()}
           title="Toggle Coordinate Grid (⌘')"
           style={{
-            height: 24,
-            padding: '0 8px',
-            borderRadius: 5,
+            height: 28,
+            padding: '0 10px',
+            borderRadius: 11,
             border: 'none',
-            background: showGrid ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+            background: showGrid ? 'rgba(6, 182, 212, 0.2)' : '#151927',
             color: showGrid ? '#22D3EE' : '#94A3B8',
-            fontSize: 10.5,
+            fontSize: 11,
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
+            gap: 5,
             cursor: 'pointer',
           }}
         >
@@ -372,17 +381,17 @@ export function CanvasBoard() {
           onClick={() => fabricCanvas && optimizeStageGeometry(fabricCanvas)}
           title="Optimize Sub-Pixel Geometry (Shift+O)"
           style={{
-            height: 24,
-            padding: '0 8px',
-            borderRadius: 5,
+            height: 28,
+            padding: '0 10px',
+            borderRadius: 11,
             border: 'none',
-            background: 'transparent',
-            color: '#94A3B8',
-            fontSize: 10.5,
+            background: '#151927',
+            color: '#E2E8F0',
+            fontSize: 11,
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
+            gap: 5,
             cursor: 'pointer',
           }}
         >
@@ -394,17 +403,17 @@ export function CanvasBoard() {
           onClick={() => fabricCanvas && auditAndHealCanvasContrast(fabricCanvas, true)}
           title="WCAG AAA Contrast Auto-Healer (Shift+H)"
           style={{
-            height: 24,
-            padding: '0 8px',
-            borderRadius: 5,
+            height: 28,
+            padding: '0 10px',
+            borderRadius: 11,
             border: 'none',
-            background: 'transparent',
-            color: '#94A3B8',
-            fontSize: 10.5,
+            background: '#151927',
+            color: '#E2E8F0',
+            fontSize: 11,
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
+            gap: 5,
             cursor: 'pointer',
           }}
         >

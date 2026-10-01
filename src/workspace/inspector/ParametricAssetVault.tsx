@@ -1,234 +1,324 @@
+/**
+ * LernexAI Proprietary — Parametric Vector Lab & SVG Icon Badges (Contextual Floating Module)
+ * Zero inner border lines, soft rounded-2xl tonal cards, and pure vector synthesis.
+ */
 import { useState } from 'react'
+import { Shapes, Box, Compass, QrCode, Sparkles } from 'lucide-react'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
-import { addEmoji, addRect, addCircle, addTriangle } from '@/lib/shapes'
+import { useEditorStore } from '@/store/editorStore'
 import {
   addStarPolygon,
   addRegularPolygon,
   addIsometricCube,
   addProceduralMesh,
   addVectorQrBadge,
+  addSvgVectorIconBadge,
+  addSuperformulaVector,
+  addLissajousCurve,
 } from '@/lib/vectorStudio'
-import { motion } from 'framer-motion'
-import { QrCode } from 'lucide-react'
 
-const COREX_GLYPH_COLLECTIONS: { label: string; icon: string; glyphs: string[] }[] = [
+const VECTOR_ICON_BADGES = [
   {
-    label: 'Tech & AI',
-    icon: '⚡',
-    glyphs: ['⚡','🚀','🤖','✨','💎','🔮','🧬','🛰️','🪐','🌌','💻','🖥️','⌨️','🖱️','📱','🔋','📡','🔭','🔬','🧪','⚙️','🧲','💡','🔦','🛡️','🔑','🎯','♾️'],
+    label: 'Lightning Bolt',
+    color: '#06B6D4',
+    path: 'M 13 2 L 3 14 L 12 14 L 11 22 L 21 10 L 12 10 Z',
   },
   {
-    label: 'Reactions',
-    icon: '🔥',
-    glyphs: ['🔥','💯','🎉','🎊','🏆','🥇','👑','🌟','⭐','💫','💥','❤️','🧡','💛','💚','💙','💜','🖤','🤍','💖','💘','💝','🙌','👏','🤝','👍','🫶','✌️'],
+    label: 'Shield Verified',
+    color: '#10B981',
+    path: 'M 12 22 C 12 22 20 18 20 12 L 20 5 L 12 2 L 4 5 L 4 12 C 4 18 12 22 12 22 Z',
   },
   {
-    label: 'Expressions',
-    icon: '😎',
-    glyphs: ['😀','😄','😁','😆','🤣','😂','🙂','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🤓','🧐','🥳','🤯','🤠','🫡','🤫','🤔','😌','😴','👻'],
+    label: 'Star Emblem',
+    color: '#F59E0B',
+    path: 'M 12 2 L 15.09 8.26 L 22 9.27 L 17 14.14 L 18.18 21.02 L 12 17.77 L 5.82 21.02 L 7 14.14 L 2 9.27 L 8.91 8.26 Z',
   },
   {
-    label: 'Signals & UI',
-    icon: '📌',
-    glyphs: ['📌','📍','🔔','📣','📢','💬','💭','🗯️','✅','☑️','✔️','❌','⚠️','🚫','♻️','⬆️','↗️','➡️','↘️','⬇️','↙️','⬅️','↖️','🔄','⏩','⏪','▶️','⏸️'],
+    label: 'Heart Pulse',
+    color: '#F43F5E',
+    path: 'M 20.84 4.61 A 5.5 5.5 0 0 0 16.5 2.5 C 14.76 2.5 13.09 3.31 12 4.66 C 10.91 3.31 9.24 2.5 7.5 2.5 A 5.5 5.5 0 0 0 3.16 4.61 C 1.25 6.52 1.25 9.62 3.16 11.53 L 12 20.37 L 20.84 11.53 C 22.75 9.62 22.75 6.52 20.84 4.61 Z',
   },
   {
-    label: 'Commerce',
-    icon: '💰',
-    glyphs: ['💰','💵','💴','💶','💷','💳','🪙','📈','📉','📊','📋','📁','📂','📅','📆','📇','📎','📏','📐','✂️','🔒','🔓','🏷️','🛍️','🎁','📦','📫','🧾'],
+    label: 'Diamond Gem',
+    color: '#22D3EE',
+    path: 'M 6 3 L 18 3 L 22 9 L 12 22 L 2 9 Z',
   },
   {
-    label: 'Nature & Eco',
-    icon: '🌿',
-    glyphs: ['🌿','🌱','🍃','🌸','🌺','🌻','🌹','🌷','🌼','🪷','🌴','🌲','🌳','🌵','🍁','🍂','🍄','🌊','❄️','☀️','🌈','🌙','🌎','🌍','🌏','🦋','🐝','🐬'],
+    label: 'Rocket Launch',
+    color: '#14B8A6',
+    path: 'M 4.5 16.5 C 3 18 3 21 3 21 C 3 21 6 21 7.5 19.5 C 8.33 18.67 8.33 17.33 7.5 16.5 C 6.67 15.67 5.33 15.67 4.5 16.5 Z M 12 15 L 9 12 C 10.5 7.5 15 4 21 3 C 20 9 16.5 13.5 12 15 Z',
   },
   {
-    label: 'Media & Art',
-    icon: '🎨',
-    glyphs: ['🎨','🖌️','🖍️','✏️','✒️','🖋️','🎬','🎤','🎧','🎼','🎹','🥁','🎷','🎺','🎸','🎻','🎲','🎯','🎳','🎮','🕹️','🎰','📷','📸','📹','🎥','📽️','🎞️'],
+    label: 'Crown Royal',
+    color: '#F59E0B',
+    path: 'M 2 4 L 5 16 L 19 16 L 22 4 L 16 10 L 12 4 L 8 10 Z M 5 19 L 19 19',
   },
   {
-    label: 'Lifestyle',
-    icon: '☕',
-    glyphs: ['☕','🍵','🧋','🥤','🍕','🍔','🍟','🌮','🍣','🍱','🍜','🍩','🍪','🎂','🍰','🧁','🍫','🍿','✈️','⛵','🏔️','🏖️','🏛️','🗽','🗼','🎢','🎡','🏕️'],
+    label: 'Hexagon Core',
+    color: '#A855F7',
+    path: 'M 21 16 L 21 8 L 12 3 L 3 8 L 3 16 L 12 21 Z',
   },
 ]
 
 export function StickerPanel() {
-  const canvas = useFabricCanvas()
-  const [selectedGroup, setSelectedGroup] = useState(0)
-  const [query, setQuery] = useState('')
-  const [qrUrl, setQrUrl] = useState('https://lernexai.com')
-
-  const insertGlyph = (glyph: string) => {
-    if (!canvas) return
-    addEmoji(glyph, canvas)
-  }
-
-  const allGlyphs = COREX_GLYPH_COLLECTIONS.flatMap((g) => g.glyphs)
-  const visibleGlyphs = query
-    ? allGlyphs.filter((g) => g.includes(query))
-    : COREX_GLYPH_COLLECTIONS[selectedGroup]?.glyphs || []
+  const stage = useFabricCanvas()
+  const { setActiveFloatingWindow } = useEditorStore()
+  const [qrPayload, setQrPayload] = useState('https://lernexai.com')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
-      {/* Parametric Polygons & 3D Vectors */}
-      <div className="panel-heading">Parametric Polygons & 3D</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5, padding: '4px 10px 6px' }}>
-        <button onClick={() => canvas && addRegularPolygon(canvas, 6, 84, '#06B6D4', 'Hexagon')} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          ⬢ Hexagon
-        </button>
-        <button onClick={() => canvas && addRegularPolygon(canvas, 8, 84, '#14B8A6', 'Octagon')} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          ⯃ Octagon
-        </button>
-        <button onClick={() => canvas && addStarPolygon(canvas, 5, 90, 42, '#F59E0B', '5-Star')} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          ★ 5-Star
-        </button>
-        <button onClick={() => canvas && addStarPolygon(canvas, 8, 92, 54, '#06B6D4', '8-Point Seal')} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          ✴ 8-Seal
-        </button>
-        <button onClick={() => canvas && addIsometricCube(canvas)} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          🧊 3D Cube
-        </button>
-        <button onClick={() => canvas && addProceduralMesh(canvas, 'golden-spiral')} className="btn-base" style={{ height: 28, fontSize: 11 }}>
-          🌀 φ Spiral
-        </button>
-      </div>
-
-      {/* Corel / Illustrator Procedural Vector Meshes */}
-      <div className="panel-heading" style={{ paddingTop: 4 }}>Procedural Vector Meshes</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5, padding: '4px 10px 6px' }}>
-        <button onClick={() => canvas && addProceduralMesh(canvas, 'cyber-wave')} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          〰 Wave Mesh
-        </button>
-        <button onClick={() => canvas && addProceduralMesh(canvas, 'guilloche')} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          ❁ Guilloche
-        </button>
-        <button onClick={() => canvas && addProceduralMesh(canvas, 'concentric-halo')} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          ◎ Halo Rings
-        </button>
-        <button onClick={() => canvas && addRect(canvas)} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          ▢ Card
-        </button>
-        <button onClick={() => canvas && addCircle(canvas)} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          ◯ Orb
-        </button>
-        <button onClick={() => canvas && addTriangle(canvas)} className="btn-base" style={{ height: 28, fontSize: 10.5 }}>
-          △ Prism
-        </button>
-      </div>
-
-      {/* Client-Side Vector QR Code Generator */}
-      <div className="panel-heading" style={{ paddingTop: 4 }}>Vector QR Code Studio</div>
-      <div style={{ display: 'flex', gap: 5, padding: '4px 10px 8px' }}>
-        <input
-          className="input-base"
-          value={qrUrl}
-          onChange={(e) => setQrUrl(e.target.value)}
-          placeholder="https://lernexai.com"
-          style={{ flex: 1, fontSize: 11 }}
-        />
-        <button
-          onClick={() => canvas && addVectorQrBadge(canvas, qrUrl || 'https://lernexai.com')}
-          className="btn-primary btn-base"
-          style={{ height: 30, padding: '0 10px', fontSize: 11 }}
-          title="Insert Scalable Vector QR Code"
-        >
-          <QrCode size={12} />
-          <span>QR</span>
-        </button>
-      </div>
-
-      {/* Search Glyphs */}
-      <div style={{ padding: '2px 10px 6px' }}>
-        <input
-          className="input-base"
-          placeholder="Filter studio glyphs…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={{ width: '100%' }}
-        />
-      </div>
-
-      {/* Category Selector */}
-      {!query && (
-        <div
-          style={{
-            display: 'flex',
-            overflowX: 'auto',
-            padding: '0 10px 6px',
-            gap: 4,
-            scrollbarWidth: 'none',
-            flexShrink: 0,
-          }}
-        >
-          {COREX_GLYPH_COLLECTIONS.map((group, idx) => (
-            <button
-              key={group.label}
-              onClick={() => setSelectedGroup(idx)}
-              title={group.label}
-              style={{
-                flexShrink: 0,
-                width: 28,
-                height: 28,
-                borderRadius: '0.5rem',
-                border: '1px solid',
-                borderColor: selectedGroup === idx ? 'var(--color-accent-cyan)' : 'var(--color-base-600)',
-                background: selectedGroup === idx ? 'rgba(6, 182, 212, 0.14)' : 'var(--color-base-750)',
-                cursor: 'pointer',
-                fontSize: 14,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 120ms',
-              }}
-            >
-              {group.icon}
-            </button>
-          ))}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+        padding: '14px 16px 28px',
+      }}
+    >
+      {/* 1. Parametric Polygons & 3D Isometric Cube */}
+      <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Shapes size={13} color="#22D3EE" /> Parametric Polygons & 3D Cube
         </div>
-      )}
-
-      {!query && (
-        <div className="panel-heading" style={{ paddingTop: 2 }}>
-          {COREX_GLYPH_COLLECTIONS[selectedGroup]?.label} ({COREX_GLYPH_COLLECTIONS[selectedGroup]?.glyphs.length})
-        </div>
-      )}
-
-      {/* Glyph Grid */}
-      <div
-        style={{
-          padding: '4px 10px 12px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: 3,
-        }}
-      >
-        {visibleGlyphs.map((glyph, idx) => (
-          <motion.button
-            key={idx}
-            whileHover={{ scale: 1.18 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => insertGlyph(glyph)}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          <button
+            onClick={() => {
+              if (!stage) return
+              addStarPolygon(stage, 5, 90, 42, '#06B6D4', '5-Point Star')
+              setActiveFloatingWindow(null)
+            }}
             style={{
-              width: '100%',
-              aspectRatio: '1',
-              background: 'none',
+              height: 40,
+              borderRadius: 12,
+              background: '#1B2032',
               border: 'none',
+              color: '#F8FAFC',
+              fontSize: 11.5,
+              fontWeight: 600,
               cursor: 'pointer',
-              borderRadius: '0.375rem',
-              fontSize: 19,
+            }}
+          >
+            ★ 5-Point Star
+          </button>
+          <button
+            onClick={() => {
+              if (!stage) return
+              addStarPolygon(stage, 8, 95, 48, '#14B8A6', '8-Point Seal')
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 40,
+              borderRadius: 12,
+              background: '#1B2032',
+              border: 'none',
+              color: '#F8FAFC',
+              fontSize: 11.5,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            ✷ 8-Point Seal
+          </button>
+          <button
+            onClick={() => {
+              if (!stage) return
+              addRegularPolygon(stage, 6, 85, '#06B6D4', 'Hexagon')
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 40,
+              borderRadius: 12,
+              background: '#1B2032',
+              border: 'none',
+              color: '#F8FAFC',
+              fontSize: 11.5,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            ⬢ Hexagon Node
+          </button>
+          <button
+            onClick={() => {
+              if (!stage) return
+              addIsometricCube(stage)
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 40,
+              borderRadius: 12,
+              background: 'rgba(6, 182, 212, 0.16)',
+              border: 'none',
+              color: '#22D3EE',
+              fontSize: 11.5,
+              fontWeight: 700,
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: 6,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-base-700)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
-            title={glyph}
           >
-            {glyph}
-          </motion.button>
-        ))}
+            <Box size={13} /> 3D Iso Cube
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Procedural Guilloche, Golden Ratio & Harmonic Curves */}
+      <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Compass size={13} color="#2DD4BF" /> Procedural Meshes & Math Curves
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {(
+            [
+              { id: 'cyber-wave', label: 'Cyber Wave Mesh' },
+              { id: 'guilloche', label: 'Guilloche Rosette' },
+              { id: 'concentric-halo', label: 'Concentric Halo' },
+              { id: 'golden-spiral', label: 'Golden Spiral φ' },
+            ] as const
+          ).map((m) => (
+            <button
+              key={m.id}
+              onClick={() => {
+                if (!stage) return
+                addProceduralMesh(stage, m.id)
+                setActiveFloatingWindow(null)
+              }}
+              style={{
+                height: 38,
+                borderRadius: 12,
+                background: '#1B2032',
+                border: 'none',
+                color: '#E2E8F0',
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              {m.label}
+            </button>
+          ))}
+          <button
+            onClick={() => {
+              if (!stage) return
+              addSuperformulaVector(stage, 8, 0.3, 1.7, 1.7)
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 38,
+              borderRadius: 12,
+              background: '#0C0E16',
+              border: 'none',
+              color: '#22D3EE',
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Gielis Superformula
+          </button>
+          <button
+            onClick={() => {
+              if (!stage) return
+              addLissajousCurve(stage, 3, 4, 90)
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 38,
+              borderRadius: 12,
+              background: '#0C0E16',
+              border: 'none',
+              color: '#2DD4BF',
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Lissajous 3:4
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Pure SVG Vector Icon Badges */}
+      <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Sparkles size={13} color="#F59E0B" /> Pure SVG Vector Icon Badges
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+          {VECTOR_ICON_BADGES.map((badge) => (
+            <button
+              key={badge.label}
+              onClick={() => {
+                if (!stage) return
+                addSvgVectorIconBadge(stage, badge.path, badge.label, badge.color)
+                setActiveFloatingWindow(null)
+              }}
+              title={badge.label}
+              style={{
+                height: 58,
+                borderRadius: 14,
+                background: '#1B2032',
+                border: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 5,
+                cursor: 'pointer',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d={badge.path}
+                  stroke={badge.color}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span style={{ fontSize: 9.5, color: '#CBD5E1', fontWeight: 600 }}>
+                {badge.label.split(' ')[0]}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Client-Side Scalable Vector QR Generator */}
+      <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <QrCode size={13} color="#10B981" /> Client-Side Vector QR Matrix
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input
+            className="input-base"
+            value={qrPayload}
+            onChange={(e) => setQrPayload(e.target.value)}
+            placeholder="https://lernexai.com"
+            style={{ flex: 1, height: 36, fontSize: 12 }}
+          />
+          <button
+            onClick={() => {
+              if (!stage) return
+              addVectorQrBadge(stage, qrPayload || 'https://lernexai.com')
+              setActiveFloatingWindow(null)
+            }}
+            style={{
+              height: 36,
+              padding: '0 14px',
+              borderRadius: 12,
+              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+              border: 'none',
+              color: '#07080D',
+              fontSize: 11.5,
+              fontWeight: 700,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Insert QR
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 /**
- * LernexAI Proprietary — Native Keyboard Matrix & Quantum Shortcut Engine
- * Zero external react-hotkeys-hook dependency.
+ * Corex Studio by LernexAI — Pro-Studio Keyboard Matrix
+ * Uses Figma/Sketch-inspired studio chords (Shift+G grid, Alt+S/P style sampler,
+ * O for Oval/Ellipse, B for Brush, L for Line, F for Floating Elements).
  */
 import { useEffect } from 'react'
 import { ActiveSelection } from 'fabric'
@@ -10,12 +11,17 @@ import {
   duplicateActiveObject,
   addRect,
   addCircle,
+  addLine,
   addIText,
   enablePencil,
 } from '@/lib/shapes'
 import { copyActive, cutActive, pasteClipboard, moveZOrder } from '@/lib/clipboard'
 import { copyStyle, pasteStyle } from '@/lib/style'
-import { optimizeStageGeometry, auditAndHealCanvasContrast } from '@/lib/quantumEngine'
+import {
+  optimizeStageGeometry,
+  auditAndHealCanvasContrast,
+  applyProceduralShaderBackground,
+} from '@/lib/quantumEngine'
 import { addIsometricCube, addVectorQrBadge } from '@/lib/vectorStudio'
 
 function isEditableElementActive(): boolean {
@@ -27,7 +33,7 @@ function isEditableElementActive(): boolean {
 
 export function useStudioKeybindings() {
   const stage = useFabricCanvas()
-  const { undo, redo, setActiveTool } = useEditorStore()
+  const { undo, redo, setActiveTool, toggleFloatingWindow } = useEditorStore()
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
@@ -40,7 +46,6 @@ export function useStudioKeybindings() {
       const alt = ev.altKey
       const key = ev.key.toLowerCase()
 
-      // Allow typing inside inputs or active IText editing
       if (inFormField || editingTextOnStage) {
         if (key === 'escape' && stage) {
           stage.discardActiveObject()
@@ -49,7 +54,7 @@ export function useStudioKeybindings() {
         return
       }
 
-      // 1. Binary Ledger Undo / Redo (⌘Z / ⌘⇧Z / ⌘Y)
+      // 1. Binary DEFLATE Ledger Undo / Redo (⌘Z / ⌘⇧Z / ⌘Y)
       if (cmd && !alt && key === 'z') {
         ev.preventDefault()
         if (shift) {
@@ -65,13 +70,13 @@ export function useStudioKeybindings() {
         return
       }
 
-      // 2. Visual Attribute Copy/Paste (⌘+Alt+C / ⌘+Alt+V)
-      if (cmd && alt && key === 'c') {
+      // 2. Pro-Studio Visual Style Sampler & Applicator (Alt+S to Sample, Alt+P to Apply)
+      if (!cmd && alt && !shift && key === 's') {
         ev.preventDefault()
         if (activeObj) copyStyle(activeObj)
         return
       }
-      if (cmd && alt && key === 'v') {
+      if (!cmd && alt && !shift && key === 'p') {
         ev.preventDefault()
         if (stage && activeObj && pasteStyle(activeObj)) {
           stage.requestRenderAll()
@@ -124,14 +129,7 @@ export function useStudioKeybindings() {
         return
       }
 
-      // 5. Coordinate Grid Toggle (⌘')
-      if (cmd && ev.key === "'") {
-        ev.preventDefault()
-        useEditorStore.getState().toggleGrid()
-        return
-      }
-
-      // 6. Node Deletion
+      // 5. Node Deletion
       if (ev.key === 'Delete' || ev.key === 'Backspace') {
         if (!activeObj || !stage) return
         ev.preventDefault()
@@ -141,15 +139,20 @@ export function useStudioKeybindings() {
         return
       }
 
-      // 7. Escape Selection
+      // 6. Escape Selection
       if (ev.key === 'Escape') {
         stage?.discardActiveObject()
         stage?.requestRenderAll()
         return
       }
 
-      // 8. Quantum Studio Exclusive Shortcuts (Shift + O / H / I / Q)
+      // 7. Studio Shift Chords (Shift+G Grid, Shift+O Optimize, Shift+H Contrast, Shift+M GLSL Shader, Shift+I Cube, Shift+Q QR)
       if (shift && !cmd && !alt) {
+        if (key === 'g') {
+          ev.preventDefault()
+          useEditorStore.getState().toggleGrid()
+          return
+        }
         if (key === 'o' && stage) {
           ev.preventDefault()
           optimizeStageGeometry(stage)
@@ -158,6 +161,11 @@ export function useStudioKeybindings() {
         if (key === 'h' && stage) {
           ev.preventDefault()
           auditAndHealCanvasContrast(stage, true)
+          return
+        }
+        if (key === 'm' && stage) {
+          ev.preventDefault()
+          void applyProceduralShaderBackground(stage, 'aurora-plasma')
           return
         }
         if (key === 'i' && stage) {
@@ -172,7 +180,7 @@ export function useStudioKeybindings() {
         }
       }
 
-      // 9. Single-Key Vector Tool Switching (V / R / C / T / P)
+      // 8. Pro-Studio Single-Key Vector Tool Switching (V / R / O / L / T / B / F)
       if (!cmd && !alt && !shift) {
         if (key === 'v') {
           setActiveTool('select')
@@ -184,8 +192,13 @@ export function useStudioKeybindings() {
           setActiveTool('select')
           return
         }
-        if (key === 'c' && stage) {
+        if (key === 'o' && stage) {
           addCircle(stage)
+          setActiveTool('select')
+          return
+        }
+        if (key === 'l' && stage) {
+          addLine(stage)
           setActiveTool('select')
           return
         }
@@ -194,14 +207,19 @@ export function useStudioKeybindings() {
           setActiveTool('select')
           return
         }
-        if (key === 'p' && stage) {
+        if (key === 'b' && stage) {
           enablePencil(stage)
           setActiveTool('pencil')
           return
         }
+        if (key === 'f') {
+          ev.preventDefault()
+          toggleFloatingWindow('create')
+          return
+        }
       }
 
-      // 10. Precision Arrow Key Translation (1px / 10px)
+      // 9. Precision Arrow Key Translation (1px / 10px)
       const step = shift ? 10 : 1
       if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown' || ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
         if (!activeObj || !stage) return
@@ -216,5 +234,5 @@ export function useStudioKeybindings() {
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [stage, undo, redo, setActiveTool])
+  }, [stage, undo, redo, setActiveTool, toggleFloatingWindow])
 }

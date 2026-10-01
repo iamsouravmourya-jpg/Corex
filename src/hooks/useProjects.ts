@@ -1,25 +1,34 @@
 /**
- * LernexAI Proprietary — Reactive Native IndexedDB Vault Hook
- * Zero external dexie-react-hooks dependency.
+ * Corex Studio by LernexAI — Reactive Binary Vault Hook (OPFS + DEFLATE)
  */
 import { useState, useEffect } from 'react'
-import { db } from '@/db/db'
+import {
+  listBinaryProjects,
+  persistBinaryProject,
+  removeBinaryProject,
+  subscribeToBinaryVault,
+  type VaultTelemetry,
+} from '@/lib/storageEngine'
 import type { Project } from '@/types'
 
 export function useProjects(): Project[] | undefined {
   const [projects, setProjects] = useState<Project[] | undefined>(undefined)
 
   useEffect(() => {
-    let active = true
-    const refresh = () => {
-      void db.projects.toArray().then((list) => {
-        if (active) setProjects(list)
-      })
+    let mounted = true
+    const sync = () => {
+      listBinaryProjects()
+        .then(({ projects: list }) => {
+          if (mounted) setProjects(list)
+        })
+        .catch(() => {
+          if (mounted) setProjects([])
+        })
     }
-    refresh()
-    const unsubscribe = db.subscribe(refresh)
+    sync()
+    const unsubscribe = subscribeToBinaryVault(sync)
     return () => {
-      active = false
+      mounted = false
       unsubscribe()
     }
   }, [])
@@ -27,14 +36,33 @@ export function useProjects(): Project[] | undefined {
   return projects
 }
 
-export async function saveProject(project: Project) {
-  await db.projects.put(project)
+export function useVaultTelemetry(): VaultTelemetry | null {
+  const [telemetry, setTelemetry] = useState<VaultTelemetry | null>(null)
+
+  useEffect(() => {
+    let mounted = true
+    const sync = () => {
+      listBinaryProjects()
+        .then(({ telemetry: t }) => {
+          if (mounted) setTelemetry(t)
+        })
+        .catch(() => {})
+    }
+    sync()
+    const unsubscribe = subscribeToBinaryVault(sync)
+    return () => {
+      mounted = false
+      unsubscribe()
+    }
+  }, [])
+
+  return telemetry
 }
 
-export async function deleteProject(id: string) {
-  await db.projects.delete(id)
+export async function saveProject(project: Project): Promise<void> {
+  await persistBinaryProject(project)
 }
 
-export async function getProject(id: string) {
-  return db.projects.get(id)
+export async function deleteProject(id: string): Promise<void> {
+  await removeBinaryProject(id)
 }

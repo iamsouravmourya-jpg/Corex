@@ -37,45 +37,91 @@ import {
   BringToFront, SendToBack, MoveUp, MoveDown,
   Copy, Trash2, Group as GroupIcon, Ungroup,
   Bold, Italic, Underline, FlipHorizontal, FlipVertical, RotateCcw, Pipette, Paintbrush,
-  Scissors, Code2, Check, Sparkles, Maximize2, Wand2, Eye, Zap,
+  Scissors, Code2, Check, Sparkles, Maximize2, Wand2, Eye, Zap, ChevronDown,
 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/cn'
 
-// ── Small color swatch with popover picker ────────────────────────────────────
 function ColorSwatch({ color, onChange, label }: { color: string; onChange: (c: string) => void; label?: string }) {
   const [open, setOpen] = useState(false)
   const safeColor = color && color !== 'transparent' ? color : '#000000'
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 4 }}>
-      {label && <span style={{ fontSize: 10, color: 'var(--color-base-500)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 5 }}>
+      {label && <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>{label}</span>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <button
           onClick={() => setOpen(!open)}
           aria-label={`Pick ${label || 'color'}`}
-          style={{ width: 26, height: 26, borderRadius: 5, background: color === 'transparent' ? 'repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/10px 10px' : color,
-            border: '1.5px solid var(--color-base-600)', cursor: 'pointer', flexShrink: 0 }}
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 10,
+            background:
+              color === 'transparent'
+                ? 'repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/10px 10px'
+                : color,
+            border: 'none',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.14)',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}
         />
         <input
           value={color}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           className="input-base"
-          style={{ flex: 1, fontSize: 11, fontFamily: 'var(--font-mono)' }}
+          style={{ flex: 1, fontSize: 11.5, fontFamily: 'var(--font-mono)', borderRadius: 10, height: 32 }}
         />
       </div>
       {open && (
         <>
-          <div style={{ position: 'absolute', top: 36, left: 0, zIndex: 500,
-            padding: 10, background: 'var(--color-base-800)', border: '1px solid var(--color-base-600)',
-            borderRadius: 10, boxShadow: 'var(--shadow-float)' }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: 40,
+              left: 0,
+              zIndex: 500,
+              padding: 12,
+              background: '#121521',
+              borderRadius: 16,
+              boxShadow: 'var(--shadow-float)',
+            }}
+          >
             <QuantumColorSpectrum color={safeColor} onChange={onChange} />
-            <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
-              <button onClick={() => { onChange('transparent'); setOpen(false) }}
-                style={{ flex: 1, height: 24, background: 'var(--color-base-700)', border: '1px solid var(--color-base-600)', borderRadius: 5, color: 'var(--color-base-400)', fontSize: 10, cursor: 'pointer' }}>
-                None
+            <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+              <button
+                onClick={() => {
+                  onChange('transparent')
+                  setOpen(false)
+                }}
+                style={{
+                  flex: 1,
+                  height: 28,
+                  background: '#181C2B',
+                  border: 'none',
+                  borderRadius: 8,
+                  color: 'var(--color-base-300)',
+                  fontSize: 10.5,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Transparent
               </button>
-              <button onClick={() => setOpen(false)}
-                style={{ flex: 1, height: 24, background: 'var(--color-accent-400)', border: 'none', borderRadius: 5, color: '#fff', fontSize: 10, cursor: 'pointer', fontWeight: 600 }}>
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  flex: 1,
+                  height: 28,
+                  background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
+                  border: 'none',
+                  borderRadius: 8,
+                  color: '#07080D',
+                  fontSize: 10.5,
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                }}
+              >
                 Done
               </button>
             </div>
@@ -87,52 +133,150 @@ function ColorSwatch({ color, onChange, label }: { color: string; onChange: (c: 
   )
 }
 
-// ── Icon button helper ────────────────────────────────────────────────────────
-function IconBtn({ icon, label, onClick, active }: { icon: React.ReactNode; label: string; onClick: () => void; active?: boolean }) {
+function IconBtn({
+  icon,
+  label,
+  onClick,
+  active,
+}: {
+  icon: React.ReactNode
+  label: string
+  onClick: () => void
+  active?: boolean
+}) {
   return (
     <motion.button
-      whileTap={{ scale: 0.88 }}
+      whileTap={{ scale: 0.9 }}
       title={label}
       aria-label={label}
       onClick={onClick}
-      style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid',
-        borderColor: active ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-        background: active ? 'rgba(6,182,212,0.14)' : 'var(--color-base-750)',
-        color: active ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'all 80ms' }}
+      style={{
+        width: 32,
+        height: 32,
+        borderRadius: 10,
+        border: 'none',
+        background: active ? 'rgba(6, 182, 212, 0.2)' : '#1C2234',
+        color: active ? '#22D3EE' : '#94A3B8',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'all 120ms',
+      }}
     >
       {icon}
     </motion.button>
   )
 }
 
-// ── Section heading ───────────────────────────────────────────────────────────
-function SectionHead({ children }: { children: React.ReactNode }) {
-  return <div className="panel-heading">{children}</div>
-}
-
-// ── Row of icon buttons ───────────────────────────────────────────────────────
-function BtnRow({ children }: { children: React.ReactNode }) {
-  return <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', padding: '4px 12px 8px' }}>{children}</div>
-}
-
-// ── Segmented control ─────────────────────────────────────────────────────────
-function Segmented<T extends string>({ value, options, onChange }: {
-  value: T; options: { value: T; label: string }[]; onChange: (v: T) => void
+function Segmented<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T
+  options: { value: T; label: string }[]
+  onChange: (v: T) => void
 }) {
   return (
-    <div style={{ display: 'flex', gap: 4 }}>
-      {options.map(o => (
-        <button key={o.value} onClick={() => onChange(o.value)}
-          style={{ flex: 1, height: 26, borderRadius: 6, fontSize: 11, cursor: 'pointer',
-            border: '1px solid', transition: 'all 80ms',
-            borderColor: value === o.value ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-            background: value === o.value ? 'rgba(6,182,212,0.14)' : 'var(--color-base-750)',
-            color: value === o.value ? 'var(--color-accent-400)' : 'var(--color-base-400)' }}>
-          {o.label}
-        </button>
-      ))}
+    <div
+      style={{
+        display: 'flex',
+        gap: 4,
+        padding: 4,
+        borderRadius: 12,
+        background: '#0C0E16',
+      }}
+    >
+      {options.map((o) => {
+        const active = value === o.value
+        return (
+          <button
+            key={o.value}
+            onClick={() => onChange(o.value)}
+            style={{
+              flex: 1,
+              height: 28,
+              borderRadius: 9,
+              fontSize: 11,
+              fontWeight: active ? 700 : 600,
+              cursor: 'pointer',
+              border: 'none',
+              transition: 'all 120ms',
+              background: active ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+              color: active ? '#22D3EE' : '#94A3B8',
+            }}
+          >
+            {o.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+function ContextualPod({
+  title,
+  subtitle,
+  isOpen,
+  onToggle,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  isOpen: boolean
+  onToggle: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <div style={{ padding: '4px 0' }}>
+      <button
+        onClick={onToggle}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: isOpen ? 'rgba(255, 255, 255, 0.04)' : 'transparent',
+          border: 'none',
+          borderRadius: 14,
+          color: '#F8FAFC',
+          fontSize: 12.5,
+          fontWeight: 700,
+          cursor: 'pointer',
+          padding: '10px 12px',
+          transition: 'background 150ms',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span>{title}</span>
+          {subtitle && (
+            <span style={{ fontSize: 11, fontWeight: 500, color: '#64748B' }}>{subtitle}</span>
+          )}
+        </div>
+        <ChevronDown
+          size={14}
+          style={{
+            color: '#64748B',
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 160ms',
+          }}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '14px 6px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -202,6 +346,8 @@ export function PropertiesPanel() {
   const [hasShadow, setHasShadow] = useState(false)
   const [styleStored, setStyleStored] = useState(false)
   const [cssCopied, setCssCopied] = useState(false)
+  const [openPod, setOpenPod] = useState<string | null>('appearance')
+  const togglePod = (id: string) => setOpenPod((prev) => (prev === id ? null : id))
   // Canvas bg
   const [bgColor, setBgColor] = useState('#ffffff')
   const [bgMode, setBgMode] = useState<FillMode>('solid')
@@ -486,91 +632,186 @@ export function PropertiesPanel() {
   )
 
   return (
-    <div style={{ padding: '0 0 16px', overflowY: 'auto' }}>
-
-      {/* ── Canvas Background ── */}
-      <SectionHead>Canvas Background</SectionHead>
-      <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <Segmented value={bgMode} options={FILL_MODES}
-          onChange={m => { setBgMode(m); applyBackground(m, bgGrad, bgColor) }} />
-        {bgMode === 'solid' ? (
-          <ColorSwatch color={bgColor}
-            onChange={c => { setBgColor(c); applyBackground('solid', bgGrad, c) }} />
-        ) : (
-          <GradientFields spec={bgGrad} mode={bgMode} onChange={patchBgGradient} />
-        )}
-      </div>
-
+    <div
+      style={{
+        padding: '10px 18px 32px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        overflowY: 'auto',
+      }}
+    >
+      {/* ── Empty Selection: Open Visual Stage Flow (No Content Boxes) ── */}
       {!obj && (
         <>
-          {/* ── 1-Click Procedural Shader Surfaces ── */}
-          <SectionHead>Procedural Stage Shaders</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-            {[
-              { id: 'aurora-plasma', label: 'Aurora Plasma' },
-              { id: 'synthwave-grid', label: 'Synthwave Grid' },
-              { id: 'quantum-mesh', label: 'Quantum Mesh' },
-              { id: 'constellation', label: 'Constellation' },
-            ].map((sh) => (
-              <button
-                key={sh.id}
-                onClick={() => canvas && void applyProceduralShaderBackground(canvas, sh.id as any)}
-                className="btn-base"
-                style={{ height: 32, fontSize: 11 }}
-              >
-                <Sparkles size={12} color="#06B6D4" />
-                <span>{sh.label}</span>
-              </button>
-            ))}
+          {/* 1. Ambient Shader Backdrops (Visual Gradient Thumbnails) */}
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 12, paddingLeft: 4 }}>
+              Ambient Stage Shaders
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              {[
+                {
+                  id: 'aurora-plasma',
+                  label: 'Aurora Plasma',
+                  bg: 'radial-gradient(circle at 25% 25%, #06B6D4 0%, #14B8A6 45%, #07080D 100%)',
+                },
+                {
+                  id: 'synthwave-grid',
+                  label: 'Synthwave Grid',
+                  bg: 'linear-gradient(180deg, #0F172A 0%, #831843 55%, #F43F5E 100%)',
+                },
+                {
+                  id: 'quantum-mesh',
+                  label: 'Quantum Waves',
+                  bg: 'linear-gradient(135deg, #08090E 0%, #0891B2 50%, #2DD4BF 100%)',
+                },
+                {
+                  id: 'constellation',
+                  label: 'Starlight Mesh',
+                  bg: 'radial-gradient(circle at 70% 30%, #38BDF8 0%, #1E1B4B 55%, #07080D 100%)',
+                },
+              ].map((sh) => (
+                <button
+                  key={sh.id}
+                  onClick={() => canvas && void applyProceduralShaderBackground(canvas, sh.id as any)}
+                  style={{
+                    height: 70,
+                    borderRadius: 18,
+                    border: 'none',
+                    background: sh.bg,
+                    padding: 12,
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    cursor: 'pointer',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.32)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      color: '#F8FAFC',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                    }}
+                  >
+                    {sh.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* ── Cassowary Autonomous Smart Layout Reflow ── */}
-          <SectionHead>Autonomous Smart Reflow</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-            {[
-              { w: 1080, h: 1080, label: '1:1 Square' },
-              { w: 1080, h: 1920, label: '9:16 Reel' },
-              { w: 1280, h: 720, label: '16:9 YouTube' },
-              { w: 1584, h: 396, label: '4:1 LinkedIn' },
-            ].map((preset) => (
-              <button
-                key={preset.label}
-                onClick={() => canvas && smartReflowCanvasToNewSize(canvas, preset.w, preset.h)}
-                className="btn-base"
-                style={{ height: 32, fontSize: 11 }}
-              >
-                <Maximize2 size={11} color="#14B8A6" />
-                <span>{preset.label}</span>
-              </button>
-            ))}
-          </div>
+          {/* 2. Contextual Custom Canvas Color / Gradient Pod */}
+          <ContextualPod
+            title="Custom Stage Fill"
+            subtitle={bgMode}
+            isOpen={openPod === 'bg-fill'}
+            onToggle={() => togglePod('bg-fill')}
+          >
+            <Segmented
+              value={bgMode}
+              options={FILL_MODES}
+              onChange={(m) => {
+                setBgMode(m)
+                applyBackground(m, bgGrad, bgColor)
+              }}
+            />
+            {bgMode === 'solid' ? (
+              <ColorSwatch
+                color={bgColor}
+                onChange={(c) => {
+                  setBgColor(c)
+                  applyBackground('solid', bgGrad, c)
+                }}
+              />
+            ) : (
+              <GradientFields spec={bgGrad} mode={bgMode} onChange={patchBgGradient} />
+            )}
+          </ContextualPod>
 
-          {/* ── Stage Optimization & WCAG Contrast Healer ── */}
-          <SectionHead>Stage Health & Optimization</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+          {/* 3. Contextual Smart Aspect Ratio Reflow Pod */}
+          <ContextualPod
+            title="Smart Ratio Reflow"
+            subtitle="Auto-scale layout"
+            isOpen={openPod === 'reflow'}
+            onToggle={() => togglePod('reflow')}
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {[
+                { w: 1080, h: 1080, label: '1:1 Square', sub: '1080×1080' },
+                { w: 1080, h: 1920, label: '9:16 Story', sub: '1080×1920' },
+                { w: 1280, h: 720, label: '16:9 Video', sub: '1280×720' },
+                { w: 1584, h: 396, label: '4:1 Banner', sub: '1584×396' },
+              ].map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => canvas && smartReflowCanvasToNewSize(canvas, preset.w, preset.h)}
+                  style={{
+                    height: 48,
+                    borderRadius: 12,
+                    border: 'none',
+                    background: '#1C2234',
+                    color: '#F8FAFC',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 2,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <span style={{ fontSize: 11.5, fontWeight: 700 }}>{preset.label}</span>
+                  <span style={{ fontSize: 9.5, color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                    {preset.sub}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </ContextualPod>
+
+          {/* 4. Quick Polish & Export Tiles */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             <button
               onClick={() => canvas && optimizeStageGeometry(canvas)}
-              className="btn-base"
-              style={{ height: 32, fontSize: 11 }}
-              title="Sub-Pixel Geometry Quantizer (Shift+O)"
+              style={{
+                height: 44,
+                borderRadius: 14,
+                border: 'none',
+                background: '#151927',
+                color: '#E2E8F0',
+                fontSize: 11.5,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                cursor: 'pointer',
+              }}
             >
-              <Wand2 size={12} color="#06B6D4" />
-              <span>Optimize Nodes</span>
+              <Wand2 size={14} color="#06B6D4" />
+              <span>Optimize</span>
             </button>
             <button
               onClick={() => canvas && auditAndHealCanvasContrast(canvas, true)}
-              className="btn-base"
-              style={{ height: 32, fontSize: 11 }}
-              title="WCAG 2.1 AAA Contrast Auto-Healer (Shift+H)"
+              style={{
+                height: 44,
+                borderRadius: 14,
+                border: 'none',
+                background: '#151927',
+                color: '#E2E8F0',
+                fontSize: 11.5,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                cursor: 'pointer',
+              }}
             >
-              <Eye size={12} color="#10B981" />
+              <Eye size={14} color="#10B981" />
               <span>Heal Contrast</span>
             </button>
-          </div>
-
-          {/* ── Universal Code & Token Compiler ── */}
-          <SectionHead>Universal Stage Code Export</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
             <button
               onClick={() => {
                 if (!canvas) return
@@ -578,337 +819,546 @@ export function PropertiesPanel() {
                 setCssCopied(true)
                 setTimeout(() => setCssCopied(false), 1800)
               }}
-              className="btn-base"
-              style={{ height: 32, fontSize: 11 }}
-            >
-              {cssCopied ? <Check size={12} color="#10B981" /> : <Code2 size={12} color="#06B6D4" />}
-              <span>{cssCopied ? 'JSX Copied!' : 'Copy React JSX'}</span>
-            </button>
-            <button
-              onClick={() => {
-                if (!canvas) return
-                void navigator.clipboard?.writeText(compileCanvasToW3cDesignTokens(canvas))
-                setCssCopied(true)
-                setTimeout(() => setCssCopied(false), 1800)
+              style={{
+                height: 44,
+                borderRadius: 14,
+                border: 'none',
+                background: '#151927',
+                color: '#E2E8F0',
+                fontSize: 11.5,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                cursor: 'pointer',
               }}
-              className="btn-base"
-              style={{ height: 32, fontSize: 11 }}
             >
-              <Zap size={12} color="#F59E0B" />
-              <span>Copy W3C JSON</span>
-            </button>
-          </div>
-
-          {/* ── Quick Navigation to Studio Suites ── */}
-          <SectionHead>Studio Suites</SectionHead>
-          <div style={{ padding: '6px 12px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <button
-              onClick={() => useEditorStore.getState().setLeftDrawerTab('quantum')}
-              className="btn-base"
-              style={{ height: 34, justifyContent: 'space-between', padding: '0 12px', fontSize: 11.5 }}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Zap size={13} color="#06B6D4" /> Open 15-Engine Quantum Lab
-              </span>
-              <span style={{ fontSize: 10, color: '#06B6D4', fontFamily: 'var(--font-mono)' }}>Left Dock</span>
+              {cssCopied ? <Check size={14} color="#10B981" /> : <Code2 size={14} color="#22D3EE" />}
+              <span>{cssCopied ? 'Copied!' : 'Copy JSX'}</span>
             </button>
             <button
-              onClick={() => useEditorStore.getState().setRightActiveTab('ai')}
-              className="btn-primary btn-base"
-              style={{ height: 36, fontSize: 12 }}
+              onClick={() => useEditorStore.getState().setLeftDrawerTab('create')}
+              style={{
+                height: 44,
+                borderRadius: 14,
+                border: 'none',
+                background: '#151927',
+                color: '#E2E8F0',
+                fontSize: 11.5,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                cursor: 'pointer',
+              }}
             >
-              <Sparkles size={13} />
-              <span>Launch Autonomous AI Studio</span>
+              <Zap size={14} color="#F59E0B" />
+              <span>Add Elements</span>
             </button>
           </div>
         </>
       )}
 
+      {/* ── Active Object Selected: Borderless Progressive-Disclosure Flow ── */}
       {obj && (
         <>
-          {/* ── Position & Size ── */}
-          <SectionHead>Transform</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-            {[
-              { label: 'X', value: posX, key: 'left', set: setPosX },
-              { label: 'Y', value: posY, key: 'top', set: setPosY },
-            ].map(({ label, value, key, set }) => (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <span style={{ fontSize: 10, color: 'var(--color-base-500)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-                <input className="input-base" type="number" value={value}
-                  onChange={e => { const v = +e.target.value; set(v); update({ [key]: v }) }}
-                  style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }} />
-              </div>
-            ))}
-            {[
-              { label: 'W', value: objW, key: 'scaleX' },
-              { label: 'H', value: objH, key: 'scaleY' },
-            ].map(({ label, value, key }) => (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <span style={{ fontSize: 10, color: 'var(--color-base-500)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-                <input className="input-base" type="number" value={value}
-                  onChange={e => {
-                    const v = +e.target.value
-                    const natural = key === 'scaleX' ? (obj?.width || 1) : (obj?.height || 1)
-                    if (v <= 0 || !natural) return
-                    if (key === 'scaleX') setObjW(v); else setObjH(v)
-                    update({ [key]: v / natural })
-                  }}
-                  style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }} />
-              </div>
-            ))}
-            <div style={{ gridColumn: '1/-1' }}>
-              <Slider label="Rotation" value={rotation} min={0} max={360} step={1}
-                onChange={v => { setRotation(v); update({ angle: v }) }} showValue unit="°" />
+          {/* Quick Action Strip (Soft Tonal Flow, No Hard Box) */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              borderRadius: 18,
+              padding: 12,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}>
+              <IconBtn icon={<AlignLeft size={14} />} label="Align Left" onClick={() => alignH('left')} />
+              <IconBtn icon={<AlignCenter size={14} />} label="Align Center" onClick={() => alignH('center')} />
+              <IconBtn icon={<AlignRight size={14} />} label="Align Right" onClick={() => alignH('right')} />
+              <IconBtn icon={<AlignStartVertical size={14} />} label="Align Top" onClick={() => alignV('top')} />
+              <IconBtn icon={<AlignCenterVertical size={14} />} label="Align Middle" onClick={() => alignV('middle')} />
+              <IconBtn icon={<AlignEndVertical size={14} />} label="Align Bottom" onClick={() => alignV('bottom')} />
+              <IconBtn icon={<BringToFront size={14} />} label="Bring to Front" onClick={bringFront} />
+              <IconBtn icon={<SendToBack size={14} />} label="Send to Back" onClick={sendBack} />
             </div>
-            <div style={{ gridColumn: '1/-1', display: 'flex', gap: 4 }}>
-              <IconBtn icon={<FlipHorizontal size={13} />} label="Flip horizontal" onClick={() => applyFlip('x')} active={flipX} />
-              <IconBtn icon={<FlipVertical size={13} />} label="Flip vertical" onClick={() => applyFlip('y')} active={flipY} />
-              <button onClick={resetTransform}
-                style={{ flex: 1, height: 28, borderRadius: 5, border: '1px solid var(--color-base-600)',
-                  background: 'var(--color-base-750)', color: 'var(--color-base-400)', fontSize: 11,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-                <RotateCcw size={12} /> Reset size and angle
-              </button>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}>
+              <IconBtn icon={<Copy size={14} />} label="Copy" onClick={copyObj} />
+              <IconBtn icon={<Pipette size={14} />} label="Copy Style" onClick={copyStyleBtn} />
+              <IconBtn icon={<Paintbrush size={14} />} label="Paste Style" onClick={pasteStyleBtn} active={styleStored} />
+              <IconBtn icon={<FlipHorizontal size={14} />} label="Flip Horizontal" onClick={() => applyFlip('x')} active={flipX} />
+              <IconBtn icon={<FlipVertical size={14} />} label="Flip Vertical" onClick={() => applyFlip('y')} active={flipY} />
+              {isMulti && <IconBtn icon={<GroupIcon size={14} />} label="Group Selection" onClick={groupObjs} />}
+              {isGroup && <IconBtn icon={<Ungroup size={14} />} label="Ungroup" onClick={ungroupObjs} />}
+              <IconBtn icon={<Trash2 size={14} color="#FB7185" />} label="Delete Layer" onClick={deleteObj} />
             </div>
           </div>
 
-          {/* ── Alignment & Distribution ── */}
-          <SectionHead>Align & Distribute</SectionHead>
-          <BtnRow>
-            <IconBtn icon={<AlignLeft size={13} />} label="Align Left" onClick={() => alignH('left')} />
-            <IconBtn icon={<AlignCenter size={13} />} label="Align Center H" onClick={() => alignH('center')} />
-            <IconBtn icon={<AlignRight size={13} />} label="Align Right" onClick={() => alignH('right')} />
-            <IconBtn icon={<AlignStartVertical size={13} />} label="Align Top" onClick={() => alignV('top')} />
-            <IconBtn icon={<AlignCenterVertical size={13} />} label="Align Middle" onClick={() => alignV('middle')} />
-            <IconBtn icon={<AlignEndVertical size={13} />} label="Align Bottom" onClick={() => alignV('bottom')} />
-            <IconBtn icon={<AlignHorizontalSpaceAround size={13} />} label="Distribute Horizontally" onClick={() => canvas && distributeSelection(canvas, 'horizontal')} />
-            <IconBtn icon={<AlignVerticalSpaceAround size={13} />} label="Distribute Vertically" onClick={() => canvas && distributeSelection(canvas, 'vertical')} />
-          </BtnRow>
+          {/* Contextual Pod 1: Appearance, Fill & Opacity */}
+          <ContextualPod
+            title="Fill & Opacity"
+            subtitle={`${opacity}%`}
+            isOpen={openPod === 'appearance'}
+            onToggle={() => togglePod('appearance')}
+          >
+            {(isShape || isGroup || isText) && fillEditor}
+            <Slider
+              label="Layer Opacity"
+              value={opacity}
+              min={0}
+              max={100}
+              onChange={(v) => {
+                setOpacity(v)
+                update({ opacity: v / 100 })
+              }}
+              showValue
+              unit="%"
+            />
+          </ContextualPod>
 
-          {/* ── Z-Order ── */}
-          <SectionHead>Layer Order</SectionHead>
-          <BtnRow>
-            <IconBtn icon={<BringToFront size={13} />} label="Bring to Front" onClick={bringFront} />
-            <IconBtn icon={<MoveUp size={13} />} label="Bring Forward" onClick={bringFwd} />
-            <IconBtn icon={<MoveDown size={13} />} label="Send Backward" onClick={sendBwd} />
-            <IconBtn icon={<SendToBack size={13} />} label="Send to Back" onClick={sendBack} />
-          </BtnRow>
-
-          {/* ── Actions ── */}
-          <SectionHead>Actions</SectionHead>
-          <BtnRow>
-            <IconBtn icon={<Copy size={13} />} label="Copy" onClick={copyObj} />
-            <IconBtn icon={<Copy size={13} />} label="Paste" onClick={pasteObj} />
-            <IconBtn icon={<Trash2 size={13} />} label="Delete" onClick={deleteObj} />
-            <IconBtn icon={<Pipette size={13} />} label="Copy style" onClick={copyStyleBtn} />
-            <IconBtn icon={<Paintbrush size={13} />} label="Paste style" onClick={pasteStyleBtn} active={styleStored} />
-            {(isMulti) && <IconBtn icon={<GroupIcon size={13} />} label="Group" onClick={groupObjs} />}
-            {(isGroup) && <IconBtn icon={<Ungroup size={13} />} label="Ungroup" onClick={ungroupObjs} />}
-          </BtnRow>
-
-          {/* ── Fill (shapes & groups) ── */}
-          {(isShape || isGroup) && (
-            <>
-              <SectionHead>Fill</SectionHead>
-              <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {fillEditor}
-              </div>
-
-              <SectionHead>Stroke</SectionHead>
-              <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <ColorSwatch color={strokeColor} onChange={c => { setStrokeColor(c); update({ stroke: c }) }} />
-                <Slider label="Stroke Width" value={strokeWidth} min={0} max={30} step={0.5}
-                  onChange={v => { setStrokeWidth(v); update({ strokeWidth: v }) }} showValue unit="px" />
-              </div>
-
-              <SectionHead>Corner Radius</SectionHead>
-              <div style={{ padding: '6px 12px 10px' }}>
-                <Slider value={rx} min={0} max={200} step={1}
-                  onChange={v => { setRx(v); update({ rx: v, ry: v }) }} showValue unit="px" />
-              </div>
-            </>
-          )}
-
-          {/* ── Text properties ── */}
+          {/* Contextual Pod 2 (Text Only): Typography Studio */}
           {isText && (
-            <>
-              <SectionHead>Fill</SectionHead>
-              <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {fillEditor}
+            <ContextualPod
+              title="Typography & Font"
+              subtitle={fontFamily}
+              isOpen={openPod === 'typography'}
+              onToggle={() => togglePod('typography')}
+            >
+              <select
+                value={fontFamily}
+                onChange={async (e) => {
+                  const f = e.target.value
+                  setFontFamily(f)
+                  await loadGoogleFont(f, canvas)
+                  update({ fontFamily: f })
+                }}
+                style={{
+                  height: 36,
+                  background: '#0C0E16',
+                  border: 'none',
+                  borderRadius: 12,
+                  color: 'var(--color-base-100)',
+                  fontSize: 12,
+                  padding: '0 12px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {FONT_LIST.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>Size</span>
+                  <input
+                    className="input-base"
+                    type="number"
+                    value={fontSize}
+                    onChange={(e) => {
+                      const v = +e.target.value
+                      setFontSize(v)
+                      update({ fontSize: v })
+                    }}
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>Spacing</span>
+                  <input
+                    className="input-base"
+                    type="number"
+                    value={charSpacing}
+                    onChange={(e) => {
+                      const v = +e.target.value
+                      setCharSpacing(v)
+                      update({ charSpacing: v })
+                    }}
+                  />
+                </div>
               </div>
 
-              <SectionHead>Font</SectionHead>
-              <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <select value={fontFamily}
-                  onChange={async e => { const f = e.target.value; setFontFamily(f); await loadGoogleFont(f, canvas); update({ fontFamily: f }) }}
-                  style={{ height: 28, background: 'var(--color-base-700)', border: '1px solid var(--color-base-600)',
-                    borderRadius: 6, color: 'var(--color-base-100)', fontSize: 12, padding: '0 8px', outline: 'none', cursor: 'pointer' }}>
-                  {FONT_LIST.map(f => <option key={f} value={f}>{f}</option>)}
-                </select>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <span style={{ fontSize: 10, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Size</span>
-                    <input className="input-base" type="number" value={fontSize}
-                      onChange={e => { const v = +e.target.value; setFontSize(v); update({ fontSize: v }) }}
-                      style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }} />
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <span style={{ fontSize: 10, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Spacing</span>
-                    <input className="input-base" type="number" value={charSpacing}
-                      onChange={e => { const v = +e.target.value; setCharSpacing(v); update({ charSpacing: v }) }}
-                      style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }} />
-                  </div>
-                </div>
-
-                {/* B / I / U */}
-                <div style={{ display: 'flex', gap: 4 }}>
-                  {[
-                    { label: 'B', icon: <Bold size={12} />, active: bold, action: () => { const n = !bold; setBold(n); update({ fontWeight: n ? 'bold' : 'normal' }) } },
-                    { label: 'I', icon: <Italic size={12} />, active: italic, action: () => { const n = !italic; setItalic(n); update({ fontStyle: n ? 'italic' : 'normal' }) } },
-                    { label: 'U', icon: <Underline size={12} />, active: underline, action: () => { const n = !underline; setUnderline(n); update({ underline: n }) } },
-                  ].map(({ label, icon, active, action }) => (
-                    <IconBtn key={label} icon={icon} label={label} onClick={action} active={active} />
-                  ))}
-                </div>
-
-                {/* Alignment */}
-                <div style={{ display: 'flex', gap: 4 }}>
-                  {(['left', 'center', 'right'] as const).map(a => (
-                    <button key={a} onClick={() => { setTextAlign(a); update({ textAlign: a }) }}
-                      style={{ flex: 1, height: 28, borderRadius: 5, border: '1px solid',
-                        borderColor: textAlign === a ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                        background: textAlign === a ? 'rgba(244,63,94,0.12)' : 'var(--color-base-700)',
-                        color: textAlign === a ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-                        cursor: 'pointer', fontSize: 13, transition: 'all 80ms' }}>
-                      {a === 'left' ? '⬅' : a === 'center' ? '↔' : '➡'}
-                    </button>
-                  ))}
-                </div>
-
-                <Slider label="Line Height" value={lineHeight} min={0.8} max={3} step={0.05}
-                  onChange={v => { setLineHeight(v); update({ lineHeight: v }) }} showValue />
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[
+                  {
+                    label: 'Bold',
+                    icon: <Bold size={13} />,
+                    active: bold,
+                    action: () => {
+                      const n = !bold
+                      setBold(n)
+                      update({ fontWeight: n ? 'bold' : 'normal' })
+                    },
+                  },
+                  {
+                    label: 'Italic',
+                    icon: <Italic size={13} />,
+                    active: italic,
+                    action: () => {
+                      const n = !italic
+                      setItalic(n)
+                      update({ fontStyle: n ? 'italic' : 'normal' })
+                    },
+                  },
+                  {
+                    label: 'Underline',
+                    icon: <Underline size={13} />,
+                    active: underline,
+                    action: () => {
+                      const n = !underline
+                      setUnderline(n)
+                      update({ underline: n })
+                    },
+                  },
+                ].map(({ label, icon, active, action }) => (
+                  <IconBtn key={label} icon={icon} label={label} onClick={action} active={active} />
+                ))}
               </div>
-            </>
+
+              <Slider
+                label="Line Height"
+                value={lineHeight}
+                min={0.8}
+                max={3}
+                step={0.05}
+                onChange={(v) => {
+                  setLineHeight(v)
+                  update({ lineHeight: v })
+                }}
+                showValue
+              />
+            </ContextualPod>
           )}
 
-          {/* ── Opacity (all objects) ── */}
-          <SectionHead>Opacity</SectionHead>
-          <div style={{ padding: '6px 12px 12px' }}>
-            <Slider value={opacity} min={0} max={100}
-              onChange={v => { setOpacity(v); update({ opacity: v / 100 }) }} showValue unit="%" />
-          </div>
-
-          {/* ── Blend mode ── */}
-          <SectionHead>Blend Mode</SectionHead>
-          <div style={{ padding: '6px 12px 10px' }}>
-            <select value={blendMode}
-              onChange={e => applyBlend(e.target.value)}
-              style={{ width: '100%', height: 28, background: 'var(--color-base-700)',
-                border: '1px solid var(--color-base-600)', borderRadius: 6, color: 'var(--color-base-100)',
-                fontSize: 12, padding: '0 8px', outline: 'none', cursor: 'pointer' }}>
-              {BLEND_MODES.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-            </select>
-          </div>
-
-          {/* ── Drop shadow ── */}
-          <SectionHead>Drop Shadow</SectionHead>
-          <div style={{ padding: '6px 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <Segmented value={hasShadow ? 'on' : 'off'}
-              options={[{ value: 'on', label: 'On' }, { value: 'off', label: 'Off' }]}
-              onChange={v => { if ((v === 'on') !== hasShadow) toggleShadow() }} />
-            {hasShadow && (
-              <>
-                <ColorSwatch label="Color" color={shadow.color} onChange={c => patchShadow({ color: c })} />
-                <Slider label="Blur" value={shadow.blur} min={0} max={80} step={1}
-                  onChange={v => patchShadow({ blur: v })} showValue unit="px" />
-                <Slider label="Offset X" value={shadow.offsetX} min={-60} max={60} step={1}
-                  onChange={v => patchShadow({ offsetX: v })} showValue unit="px" />
-                <Slider label="Offset Y" value={shadow.offsetY} min={-60} max={60} step={1}
-                  onChange={v => patchShadow({ offsetY: v })} showValue unit="px" />
-                <Slider label="Shadow opacity" value={shadow.opacity} min={0} max={100} step={1}
-                  onChange={v => patchShadow({ opacity: v })} showValue unit="%" />
-              </>
-            )}
-          </div>
-
-          {/* ── Image adjustments, Chroma Cutout & LUT Shaders ── */}
+          {/* Contextual Pod 2 (Image Only): Chroma Cutout, Visual LUTs & Filters */}
           {isImage && (
-            <>
-              <SectionHead>Smart Chroma Cutout (Client-Side)</SectionHead>
-              <div style={{ padding: '4px 12px 8px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5 }}>
+            <ContextualPod
+              title="Image Cutout & Color Grading"
+              subtitle="AI-free client engine"
+              isOpen={openPod === 'image-lab'}
+              onToggle={() => togglePod('image-lab')}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
                 <button
                   onClick={() => canvas && void removeImageBackgroundClient(canvas, 'corner', 48)}
                   className="btn-base"
-                  style={{ height: 28, fontSize: 10.5 }}
-                  title="Sample corner pixel & remove background"
+                  style={{ height: 34, background: '#1C2234', fontSize: 11 }}
                 >
-                  <Scissors size={11} color="#06B6D4" /> Auto BG
+                  <Scissors size={12} color="#06B6D4" /> Auto Cut
                 </button>
                 <button
                   onClick={() => canvas && void removeImageBackgroundClient(canvas, 'light', 52)}
                   className="btn-base"
-                  style={{ height: 28, fontSize: 10.5 }}
-                  title="Remove white/light background"
+                  style={{ height: 34, background: '#1C2234', fontSize: 11 }}
                 >
                   Cut White
                 </button>
                 <button
                   onClick={() => canvas && void removeImageBackgroundClient(canvas, 'dark', 52)}
                   className="btn-base"
-                  style={{ height: 28, fontSize: 10.5 }}
-                  title="Remove dark/black background"
+                  style={{ height: 34, background: '#1C2234', fontSize: 11 }}
                 >
                   Cut Dark
                 </button>
               </div>
 
-              <SectionHead>Studio LUT Color Grading</SectionHead>
-              <div style={{ padding: '4px 12px 8px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 5 }}>
-                <button onClick={() => canvas && applyImageLutPreset(canvas, 'cyberpunk')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
-                  ⚡ Cyberpunk
-                </button>
-                <button onClick={() => canvas && applyImageLutPreset(canvas, 'noir')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
-                  🎬 Noir Mono
-                </button>
-                <button onClick={() => canvas && applyImageLutPreset(canvas, 'cinema-gold')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
-                  ✨ Cinema Gold
-                </button>
-                <button onClick={() => canvas && applyImageLutPreset(canvas, 'arctic')} className="btn-base" style={{ height: 26, fontSize: 10.5 }}>
-                  ❄️ Arctic Cool
-                </button>
+              {/* Visual Gradient LUT Swatches */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                {[
+                  {
+                    id: 'cyberpunk',
+                    label: 'Cyberpunk',
+                    bg: 'linear-gradient(135deg, #06B6D4 0%, #EC4899 100%)',
+                  },
+                  {
+                    id: 'noir',
+                    label: 'Noir Mono',
+                    bg: 'linear-gradient(135deg, #0F172A 0%, #64748B 100%)',
+                  },
+                  {
+                    id: 'cinema-gold',
+                    label: 'Cinema Gold',
+                    bg: 'linear-gradient(135deg, #78350F 0%, #F59E0B 100%)',
+                  },
+                  {
+                    id: 'arctic',
+                    label: 'Arctic Cool',
+                    bg: 'linear-gradient(135deg, #0284C7 0%, #A5F3FC 100%)',
+                  },
+                ].map((lut) => (
+                  <button
+                    key={lut.id}
+                    onClick={() => canvas && applyImageLutPreset(canvas, lut.id as any)}
+                    style={{
+                      height: 38,
+                      borderRadius: 12,
+                      border: 'none',
+                      background: lut.bg,
+                      color: '#F8FAFC',
+                      fontSize: 11,
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      textShadow: '0 1px 6px rgba(0,0,0,0.8)',
+                    }}
+                  >
+                    {lut.label}
+                  </button>
+                ))}
               </div>
 
-              <SectionHead>Image Adjustments</SectionHead>
-              <div style={{ padding: '6px 12px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <Slider label="Brightness" value={Math.round(adj.brightness * 100)} min={-100} max={100} step={1}
-                  onChange={v => setAdjustment('brightness', v / 100)} showValue />
-                <Slider label="Contrast" value={Math.round(adj.contrast * 100)} min={-100} max={100} step={1}
-                  onChange={v => setAdjustment('contrast', v / 100)} showValue />
-                <Slider label="Saturation" value={Math.round(adj.saturation * 100)} min={-100} max={100} step={1}
-                  onChange={v => setAdjustment('saturation', v / 100)} showValue />
-                <Slider label="Blur" value={Math.round(adj.blur * 100)} min={0} max={50} step={1}
-                  onChange={v => setAdjustment('blur', v / 100)} showValue />
-                <button onClick={() => { setAdj(NEUTRAL_ADJUSTMENTS); const a = canvas?.getActiveObject(); if (a && isImageObject(a)) { applyAdjustments(a, NEUTRAL_ADJUSTMENTS); canvas?.requestRenderAll(); snapshotSoon() } }}
-                  style={{ height: 26, borderRadius: 5, border: '1px solid var(--color-base-600)',
-                    background: 'var(--color-base-750)', color: 'var(--color-base-400)', fontSize: 11, cursor: 'pointer' }}>
-                  Reset adjustments
-                </button>
-              </div>
-            </>
+              <Slider
+                label="Brightness"
+                value={Math.round(adj.brightness * 100)}
+                min={-100}
+                max={100}
+                step={1}
+                onChange={(v) => setAdjustment('brightness', v / 100)}
+                showValue
+              />
+              <Slider
+                label="Contrast"
+                value={Math.round(adj.contrast * 100)}
+                min={-100}
+                max={100}
+                step={1}
+                onChange={(v) => setAdjustment('contrast', v / 100)}
+                showValue
+              />
+              <Slider
+                label="Saturation"
+                value={Math.round(adj.saturation * 100)}
+                min={-100}
+                max={100}
+                step={1}
+                onChange={(v) => setAdjustment('saturation', v / 100)}
+                showValue
+              />
+              <Slider
+                label="Blur"
+                value={Math.round(adj.blur * 100)}
+                min={0}
+                max={50}
+                step={1}
+                onChange={(v) => setAdjustment('blur', v / 100)}
+                showValue
+              />
+            </ContextualPod>
           )}
 
-          {/* ── Figma Dev Mode Live CSS Inspector ── */}
-          <SectionHead>Dev Mode · CSS Inspector</SectionHead>
-          <div style={{ padding: '6px 12px 14px' }}>
+          {/* Contextual Pod 3: Position, Dimensions & Angle */}
+          <ContextualPod
+            title="Dimensions & Position"
+            subtitle={`${objW}×${objH}`}
+            isOpen={openPod === 'transform'}
+            onToggle={() => togglePod('transform')}
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {[
+                { label: 'X Position', value: posX, key: 'left', set: setPosX },
+                { label: 'Y Position', value: posY, key: 'top', set: setPosY },
+              ].map(({ label, value, key, set }) => (
+                <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>{label}</span>
+                  <input
+                    className="input-base"
+                    type="number"
+                    value={value}
+                    onChange={(e) => {
+                      const v = +e.target.value
+                      set(v)
+                      update({ [key]: v })
+                    }}
+                  />
+                </div>
+              ))}
+              {[
+                { label: 'Width', value: objW, key: 'scaleX' },
+                { label: 'Height', value: objH, key: 'scaleY' },
+              ].map(({ label, value, key }) => (
+                <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>{label}</span>
+                  <input
+                    className="input-base"
+                    type="number"
+                    value={value}
+                    onChange={(e) => {
+                      const v = +e.target.value
+                      const natural = key === 'scaleX' ? obj?.width || 1 : obj?.height || 1
+                      if (v <= 0 || !natural) return
+                      if (key === 'scaleX') setObjW(v)
+                      else setObjH(v)
+                      update({ [key]: v / natural })
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <Slider
+              label="Rotation Angle"
+              value={rotation}
+              min={0}
+              max={360}
+              step={1}
+              onChange={(v) => {
+                setRotation(v)
+                update({ angle: v })
+              }}
+              showValue
+              unit="°"
+            />
+            <button
+              onClick={resetTransform}
+              className="btn-base"
+              style={{ height: 34, background: '#1C2234', fontSize: 11.5 }}
+            >
+              <RotateCcw size={13} /> Reset Transform
+            </button>
+          </ContextualPod>
+
+          {/* Contextual Pod 4 (Shapes): Stroke & Rounded Corners */}
+          {(isShape || isGroup) && (
+            <ContextualPod
+              title="Border & Corner Rounding"
+              subtitle={`${rx}px radius`}
+              isOpen={openPod === 'stroke'}
+              onToggle={() => togglePod('stroke')}
+            >
+              <ColorSwatch
+                label="Border Color"
+                color={strokeColor}
+                onChange={(c) => {
+                  setStrokeColor(c)
+                  update({ stroke: c })
+                }}
+              />
+              <Slider
+                label="Border Thickness"
+                value={strokeWidth}
+                min={0}
+                max={30}
+                step={0.5}
+                onChange={(v) => {
+                  setStrokeWidth(v)
+                  update({ strokeWidth: v })
+                }}
+                showValue
+                unit="px"
+              />
+              <Slider
+                label="Corner Rounding"
+                value={rx}
+                min={0}
+                max={200}
+                step={1}
+                onChange={(v) => {
+                  setRx(v)
+                  update({ rx: v, ry: v })
+                }}
+                showValue
+                unit="px"
+              />
+            </ContextualPod>
+          )}
+
+          {/* Contextual Pod 5: Drop Shadow & Blend Mode */}
+          <ContextualPod
+            title="Shadow & Blend Mode"
+            subtitle={hasShadow ? 'Active' : 'Off'}
+            isOpen={openPod === 'effects'}
+            onToggle={() => togglePod('effects')}
+          >
+            <Segmented
+              value={hasShadow ? 'on' : 'off'}
+              options={[
+                { value: 'on', label: 'Shadow On' },
+                { value: 'off', label: 'Shadow Off' },
+              ]}
+              onChange={(v) => {
+                if ((v === 'on') !== hasShadow) toggleShadow()
+              }}
+            />
+            {hasShadow && (
+              <>
+                <ColorSwatch label="Shadow Color" color={shadow.color} onChange={(c) => patchShadow({ color: c })} />
+                <Slider
+                  label="Soft Blur"
+                  value={shadow.blur}
+                  min={0}
+                  max={80}
+                  step={1}
+                  onChange={(v) => patchShadow({ blur: v })}
+                  showValue
+                  unit="px"
+                />
+                <Slider
+                  label="Offset X"
+                  value={shadow.offsetX}
+                  min={-60}
+                  max={60}
+                  step={1}
+                  onChange={(v) => patchShadow({ offsetX: v })}
+                  showValue
+                  unit="px"
+                />
+                <Slider
+                  label="Offset Y"
+                  value={shadow.offsetY}
+                  min={-60}
+                  max={60}
+                  step={1}
+                  onChange={(v) => patchShadow({ offsetY: v })}
+                  showValue
+                  unit="px"
+                />
+              </>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+              <span style={{ fontSize: 10.5, color: 'var(--color-base-400)', fontWeight: 600 }}>Blend Mode</span>
+              <select
+                value={blendMode}
+                onChange={(e) => applyBlend(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: 34,
+                  background: '#0C0E16',
+                  border: 'none',
+                  borderRadius: 10,
+                  color: 'var(--color-base-100)',
+                  fontSize: 12,
+                  padding: '0 10px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {BLEND_MODES.map((m) => (
+                  <option key={m.value} value={m.value}>
+                    {m.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </ContextualPod>
+
+          {/* Contextual Pod 6: Dev Mode CSS (Hidden until clicked!) */}
+          <ContextualPod
+            title="Inspect CSS Code"
+            subtitle="Dev Mode"
+            isOpen={openPod === 'css'}
+            onToggle={() => togglePod('css')}
+          >
             <pre
               style={{
                 margin: 0,
-                padding: '10px',
-                borderRadius: '0.5rem',
-                background: 'var(--color-ink-950)',
-                border: '1px solid var(--color-base-600)',
+                padding: 12,
+                borderRadius: 12,
+                background: '#0C0E16',
                 fontFamily: 'var(--font-mono)',
                 fontSize: 10,
                 color: '#A5F3FC',
@@ -921,14 +1371,16 @@ export function PropertiesPanel() {
             <button
               onClick={() => {
                 void navigator.clipboard?.writeText(generateDevModeCss(obj))
+                setCssCopied(true)
+                setTimeout(() => setCssCopied(false), 1800)
               }}
-              className="btn-base"
-              style={{ width: '100%', height: 28, marginTop: 6, fontSize: 11 }}
+              className="btn-primary btn-base"
+              style={{ width: '100%', height: 34, borderRadius: 12, fontSize: 11.5 }}
             >
-              <Code2 size={12} color="#06B6D4" />
-              <span>Copy Layer CSS</span>
+              {cssCopied ? <Check size={13} /> : <Code2 size={13} />}
+              <span>{cssCopied ? 'Copied to Clipboard!' : 'Copy Layer CSS'}</span>
             </button>
-          </div>
+          </ContextualPod>
         </>
       )}
     </div>

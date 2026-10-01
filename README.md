@@ -1,19 +1,19 @@
 <div align="center">
 
-# ⚡ COREX QUANTUM STUDIO (`v2.4.0`)
-### Autonomous Vector, Shader & Multimodal AI Design Engine
-**Proprietary 15-Engine Client-Resilient Architecture by LernexAI**
+# ⚡ COREX QUANTUM STUDIO (`v3.0.0`)
+### Autonomous Vector, WebGL2 GLSL Shader, OPFS Binary Vault & Multimodal AI Design Suite
+**Proprietary 18-Engine Client-Resilient Creative Architecture by LernexAI**
 
-[![Package](https://img.shields.io/badge/Package-%40lernexai%2Fcorex--quantum--studio_v2.4.0-06B6D4?style=for-the-badge&logo=npm)](https://lernexai.com)
-[![Architecture](https://img.shields.io/badge/Architecture-100%25_Serverless_Edge_SPA-14B8A6?style=for-the-badge&logo=cloudflare)](https://lernexai.com)
-[![WebGPU 8K](https://img.shields.io/badge/Compiler-WebGPU_8K_Supersampling-10B981?style=for-the-badge&logo=webgpu)](https://lernexai.com)
-[![Vault Crypto](https://img.shields.io/badge/Vault-AES_GCM_256_%2B_PBKDF2-F59E0B?style=for-the-badge&logo=keycdn)](https://lernexai.com)
+[![Package](https://img.shields.io/badge/Package-%40lernexai%2Fcorex--quantum--studio_v3.0.0-06B6D4?style=for-the-badge&logo=npm)](https://lernexai.com)
+[![UX Topology](https://img.shields.io/badge/UX_Topology-Borderless_Tonal_%2B_Floating_Glass-22D3EE?style=for-the-badge)](https://lernexai.com)
+[![WebGL2 GLSL](https://img.shields.io/badge/Shaders-WebGL2_GLSL_ES_3.00_GPU-14B8A6?style=for-the-badge&logo=opengl)](https://lernexai.com)
+[![OPFS Vault](https://img.shields.io/badge/Storage-OPFS_.cxbin_%2B_SHA256_Deflate-10B981?style=for-the-badge)](https://lernexai.com)
+[![WebGPU 8K](https://img.shields.io/badge/Compiler-10_Pipelines_%2B_8K_WebGPU-F59E0B?style=for-the-badge)](https://lernexai.com)
 [![CRDT Mesh](https://img.shields.io/badge/Sync-Lamport_ZLIB_CRDT_Mesh-8B5CF6?style=for-the-badge)](https://lernexai.com)
-[![React 19](https://img.shields.io/badge/Runtime-React_19.2_%2B_Vite_8-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![Gemini AI](https://img.shields.io/badge/AI_Core-Gemini_3.8_%2B_3.1_Flash-4285F4?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
 
 <p align="center">
-  <strong>A zero-latency, 60FPS browser-native vector, procedural shader, and autonomous AI design suite engineered by LernexAI to surpass Figma, Adobe Illustrator, CorelDRAW, and Canva. Unlocks 15 enterprise engines—from 8K WebGPU supersampled compilation, zero-server CRDT multi-tab sync, and parametric text-on-path to reverse CSS AST compilation, AES-GCM 256-bit vault cryptography, and client-side Chroma background cutouts—100% free, zero external wrappers, and serverless-ready.</strong>
+  <strong>A zero-latency, 60FPS browser-native vector, hardware WebGL2 fragment shader, and autonomous AI creative studio engineered by LernexAI to surpass Figma, Adobe Illustrator, CorelDRAW, and Canva. Built on a borderless tonal studio topology with on-demand glassmorphic floating creation pods, unlocking 18 enterprise engines—from real `#version 300 es` GPU shaders, Gielis Superformula & Lissajous math curves, CSG vector booleans, and 3D axonometric extrusion to W3C OPFS `.cxbin` binary storage, AES-GCM 256-bit cryptography, and a 10-target 8K artifact compiler.</strong>
 </p>
 
 ---
@@ -22,238 +22,239 @@
 
 ## 📑 Table of Contents
 
-1. [Executive Architectural Blueprint & Competitive Moat](#1-executive-architectural-blueprint--competitive-moat)
-2. [Industry Comparison Matrix (Corex Quantum Studio vs. Paid Suites)](#2-industry-comparison-matrix-corex-quantum-studio-vs-paid-suites)
-3. [The 15 Flagship Quantum Engines (Deep Technical & Mathematical Reference)](#3-the-15-flagship-quantum-engines-deep-technical--mathematical-reference)
-4. [System Topologies & Internal Data Flow Diagrams](#4-system-topologies--internal-data-flow-diagrams)
-   - [4.1 Hybrid Client-Serverless Runtime Topology & 100% First-Party Native Stack](#41-hybrid-client-serverless-runtime-topology--100-first-party-native-stack)
-   - [4.2 ZLIB/DEFLATE Binary Transaction Command Ledger](#42-zlibdeflate-binary-transaction-command-ledger)
-   - [4.3 Lamport Logical Clock CRDT Multi-Tab Broadcast Protocol](#43-lamport-logical-clock-crdt-multi-tab-broadcast-protocol)
-   - [4.4 Web Crypto PBKDF2-SHA256 + AES-GCM-256 Vault Envelope](#44-web-crypto-pbkdf2-sha256--aes-gcm-256-vault-envelope)
+1. [Executive Architectural Blueprint & v3.0 Creative Studio UX](#1-executive-architectural-blueprint--v30-creative-studio-ux)
+2. [Industry Comparison Matrix (Corex Quantum Studio v3.0 vs. Paid Suites)](#2-industry-comparison-matrix-corex-quantum-studio-v30-vs-paid-suites)
+3. [The 18 Flagship Quantum Engines (Deep Technical & Mathematical Reference)](#3-the-18-flagship-quantum-engines-deep-technical--mathematical-reference)
+4. [System Topologies & Internal Binary Data Flow Diagrams](#4-system-topologies--internal-binary-data-flow-diagrams)
+   - [4.1 Borderless Tonal Workspace & Contextual Floating Glass Topology](#41-borderless-tonal-workspace--contextual-floating-glass-topology)
+   - [4.2 Hardware WebGL2 GLSL ES 3.00 (`#version 300 es`) GPU Shader Pipeline](#42-hardware-webgl2-glsl-es-300-version-300-es-gpu-shader-pipeline)
+   - [4.3 W3C OPFS (`.cxbin`) Binary Deflate & SHA-256 Content-Addressable Vault](#43-w3c-opfs-cxbin-binary-deflate--sha-256-content-addressable-vault)
+   - [4.4 ZLIB/DEFLATE Binary Transaction Command Ledger & Lamport CRDT Mesh](#44-zlibdeflate-binary-transaction-command-ledger--lamport-crdt-mesh)
 5. [Complete Workspace & Engine Directory Anatomy](#5-complete-workspace--engine-directory-anatomy)
-6. [Design System Specification (`Deep Ink & Electric Cyan`)](#6-design-system-specification-deep-ink--electric-cyan)
-7. [Power-User Keyboard Command Matrix & `⌘K` Omnibar](#7-power-user-keyboard-command-matrix--k-omnibar)
+6. [Design System Specification (`Borderless Deep Ink & Electric Cyan`)](#6-design-system-specification-borderless-deep-ink--electric-cyan)
+7. [Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar](#7-pro-studio-keyboard-command-matrix--k-omnibar)
 8. [Installation, Environment Configuration & Production Build](#8-installation-environment-configuration--production-build)
 9. [Intellectual Property & Proprietary License](#9-intellectual-property--proprietary-license)
 
 ---
 
-## 1. Executive Architectural Blueprint & Competitive Moat
+## 1. Executive Architectural Blueprint & v3.0 Creative Studio UX
 
-Legacy creative software forces designers and engineers into a painful trade-off:
-* **Cloud SaaS Tools (Figma / Canva)** lock essential capabilities—background removal, Dev Mode CSS inspection, multi-ratio layout resizing, and high-DPI exports—behind recurring per-seat paywalls and mandatory cloud round-trips.
-* **Desktop Suites (Adobe Illustrator / CorelDRAW)** require multi-gigabyte local installations, heavy OS dependencies, and manual plugin ecosystems.
+Legacy design tools suffer from two structural flaws:
+* **Boxed IDE Visual Clutter**: Traditional browser editors wrap every control group in rigid 1px rectangular boxes and cram dozens of permanent widgets into static sidebars, shrinking the active canvas and inducing cognitive fatigue.
+* **Cloud Paywalls & Heavy Third-Party Wrappers**: Essential workflows—GPU shaders, background removal, vector boolean geometry, high-DPI 8K compilation, and code generation—are locked behind recurring subscriptions or bloated third-party DOM libraries.
 
-**Corex Quantum Studio (`@lernexai/corex-quantum-studio v2.4.0`)** eliminates both bottlenecks through a **Proprietary 100% Client-Resilient Workspace (`src/workspace/*`)**:
+**Corex Quantum Studio (`@lernexai/corex-quantum-studio v3.0.0`)** solves both challenges through a **Borderless Creative Studio Architecture** and an **18-Engine Native Runtime**:
 
-* **Dual-Rail Collapsible Left Creation Dock (`VectorToolRail.tsx`)**: Combines a compact 64px Primary Icon Rail with a smooth 308px Slide-In / Slide-Out Creation Drawer featuring 5 dedicated modules: *Creation Studio*, *Quantum Blueprints*, *Parametric Asset Vault*, *15-Engine Quantum Lab*, and *Local Project Vault*.
-* **Collapsible 3-Mode Right Inspector & AI Dock (`StudioInspectorDeck.tsx`)**: Spacious, uncrowded 320px dock with 3 clean modes (*Inspector*, *Hierarchy with live node count*, and *AI Studio*) + an intelligent **Stage Command Center** when no object is selected.
-* **Native 60FPS Stage Matrix with Floating HUD (`QuantumStageCanvas.tsx`)**: Hardware-composited 2D/WebGL stage with focal-point zoom math, infinite viewport panning, Electric Cyan (`#06B6D4`) magnetic laser guides, and a sleek Bottom-Center Floating Glass HUD (*Zoom, 100%, Fit, Grid ⌘', Optimize ⇧O, Heal Contrast ⇧H*).
-* **ZLIB Binary State Compression (`commandLedger.ts`)**: Instead of storing uncompressed JSON strings in RAM, every undo/redo transaction is deflated into a compact `Uint8Array` binary packet via `pako`, reducing memory consumption by up to **94%**.
-* **Zero External Download Wrappers (`export.ts`)**: Uses a native browser `ObjectURL` binary stream dispatcher (`dispatchBinaryDownload`) coupled with hardware supersampling up to **8K resolution**.
-* **Hybrid AI Execution (`AiChatPanel.tsx` + `serverlessAi.ts`)**: Connects to Google **Gemini 3.8 Flash** and **Gemini 3.1 Flash Image Preview** when an API key is configured, and seamlessly switches to a deterministic client-side generative engine on static/serverless edge deployments.
+* **Zero-Border Tonal Surface Hierarchy (`src/index.css`)**: Eliminates harsh `1px solid` perimeter lines across panels and cards. Spatial separation is achieved purely through calibrated luminance shifts (`#07080D` Canvas Void → `#0C0E16` Dock Surface → `#141826` Soft Interactive Pods) and generous vertical breathing room.
+* **Unified Left Navigation & Scene Hierarchy (`VectorToolRail.tsx` + `SceneNodeTree.tsx`)**: Follows industry-standard spatial ergonomics by pairing a `68px` Primary Vector & Floating Trigger Rail with a dedicated `256px` Left Scene Hierarchy Tree & OPFS Binary Vault Explorer (`LocalVaultExplorer.tsx`).
+* **Contextual Glassmorphic Floating Pop-Out Windows (`activeFloatingWindow`)**: Heavy creation suites (*Creative Elements & Shaders*, *Quantum Blueprints*, *Parametric Vector Lab*, *18-Engine Quantum Lab*, and *Corex AI Studio*) never block the permanent layout. They materialize as soft `rounded-3xl` (`backdrop-filter: blur(28px)`) floating glass windows over the active stage only when tapped, and automatically dismiss on `Escape`, backdrop click, or element insertion.
+* **Dedicated Streamlined Right Properties Deck (`StudioInspectorDeck.tsx` + `LayerParameterMatrix.tsx`)**: Freed from tab-switching between Layers, Properties, and AI, the right deck (`320px`) is 100% dedicated to live object transformation, visual gradient/shader thumbnails, typography, chroma cutouts, and Dev Mode CSS inspection.
+* **Organic Soft-Edge Controls (`rounded-xl` / `rounded-2xl`)**: Every button, numeric field, color swatch, and floating HUD pill uses smooth `12px–24px` curvature and visual gradient preview thumbnails.
 
 ---
 
-## 2. Industry Comparison Matrix (Corex Quantum Studio vs. Paid Suites)
+## 2. Industry Comparison Matrix (Corex Quantum Studio v3.0 vs. Paid Suites)
 
-| Architectural Capability | **Corex Quantum Studio (`v2.4.0`)** | Figma | Adobe Illustrator | CorelDRAW | Canva |
+| Architectural Capability | **Corex Quantum Studio (`v3.0.0`)** | Figma | Adobe Illustrator | CorelDRAW | Canva |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Runtime Model** | ✅ **100% Serverless Edge SPA** | ☁️ Cloud-Locked | 💻 Heavy Desktop App | 💻 Heavy Desktop App | ☁️ Cloud-Locked |
-| **Dual-Rail Slide-Out Creation Dock**| ✅ **Built-in Collapsible 308px Drawer**| ❌ Fixed Sidebar | ⚠️ Floating Windows | ⚠️ Docker Panels | ❌ Static Side Panel |
-| **WebGPU 8x (8K) Supersampling** | ✅ **Built-in Free (`1x`–`8x`)** | ⚠️ Up to 4x | ✅ Desktop Only | ✅ Desktop Only | 💰 Paid Pro (3x max) |
-| **Zero-Server CRDT Multi-Tab Sync** | ✅ **Lamport + ZLIB Broadcast** | ☁️ Central Server | ❌ None | ❌ None | ☁️ Central Server |
-| **Parametric Text-on-Path Lab** | ✅ **Ring / Sine Wave / Arch** | ❌ Plugin Required | ✅ Manual Path Tool | ✅ Manual Path Tool | ⚠️ Basic Curve Only |
-| **CSS → Vector Reverse Compiler** | ✅ **1-Click CSS AST → Node** | ❌ Inspect Only | ❌ None | ❌ None | ❌ None |
-| **Sub-Pixel Geometry Quantizer** | ✅ **1-Click Node Optimizer (`⇧O`)** | ❌ Plugin Required | ⚠️ Simplify Menu | ⚠️ Reduce Nodes | ❌ None |
-| **Procedural Shader Backgrounds** | ✅ **4 Mathematical Shaders** | ❌ Static Fills | ❌ Static Meshes | ❌ Static Fills | ❌ None |
-| **AES-GCM 256-Bit Crypto Vault** | ✅ **Web Crypto PBKDF2-SHA256** | ❌ Cloud Plaintext | ❌ Unencrypted | ❌ Unencrypted | ❌ Cloud Plaintext |
-| **Cassowary Smart Layout Reflow** | ✅ **1-Click Multi-Ratio Reflow**| ⚠️ Manual AutoLayout| ❌ Manual Resize | ❌ Manual Resize | 💰 Paid Magic Switch |
-| **Client-Side Chroma BG Cutout** | ✅ **Zero-Server Alpha Cutout** | ❌ Paid Plugin | ❌ Photoshop Needed | ⚠️ Photo-Paint | 💰 Paid Pro Only |
-| **React JSX & W3C Token Compiler**| ✅ **1-Click `.tsx` & `.json`** | 💰 Paid Dev Seat | ❌ None | ❌ None | ❌ None |
-| **Client-Side Vector QR Studio** | ✅ **Pure Vector `Rect` Matrix (`⇧Q`)**| ❌ Plugin Required | ❌ Plugin Required | ⚠️ Barcode Wizard | ⚠️ Raster Only |
-| **WCAG 2.1 AAA Contrast Healer** | ✅ **1-Click Auto-Heal (`⇧H`)** | ❌ Plugin Required | ❌ None | ❌ None | ❌ None |
+| **Workspace Ergonomics** | ✅ **Borderless Tonal + Floating Glass Pods** | ⚠️ Boxed Sidebars | ⚠️ Heavy Dockers | ⚠️ Legacy Dockers | ❌ Static Sidebars |
+| **GPU Fragment Shaders** | ✅ **WebGL2 GLSL ES 3.00 (`#version 300 es`)** | ❌ Static Fills | ❌ CPU Effects | ❌ Static Fills | ❌ None |
+| **Parametric Math Curves** | ✅ **Gielis Superformula & Lissajous Lab** | ❌ Plugin Required | ❌ Script Required | ⚠️ Basic Spirals | ❌ None |
+| **CSG Vector Booleans & 3D** | ✅ **Union/Subtract/XOR + 3D Extruder** | ✅ Basic Booleans | ✅ Pathfinder | ✅ Shaping Docker | ❌ None |
+| **Local Storage Engine** | ✅ **W3C OPFS `.cxbin` + SHA-256 Digest** | ☁️ Cloud-Locked | 💻 OS File Only | 💻 OS File Only | ☁️ Cloud-Locked |
+| **10-Pipeline Output Compiler**| ✅ **8K PNG, SVG, PDF, PPTX, TSX, HTML5, GLSL**| 💰 Paid Dev Mode | ⚠️ Raster/Vector | ⚠️ Raster/Vector | 💰 Paid Pro Only |
+| **Zero-Server CRDT Sync** | ✅ **Lamport Clock + ZLIB Broadcast** | ☁️ Central Server | ❌ None | ❌ None | ☁️ Central Server |
+| **AES-GCM 256-Bit Crypto Vault**| ✅ **Web Crypto PBKDF2-SHA256 (`.enc`)** | ❌ Cloud Plaintext | ❌ Unencrypted | ❌ Unencrypted | ❌ Cloud Plaintext |
+| **Client-Side Chroma Cutout** | ✅ **Euclidean RGB Alpha Ramp Cutout** | ❌ Paid Plugin | ❌ Photoshop Needed| ⚠️ Photo-Paint | 💰 Paid Pro Only |
+| **WCAG 2.1 AAA Auto-Healer** | ✅ **1-Click Luminance Healer (`⇧H`)** | ❌ Plugin Required | ❌ None | ❌ None | ❌ None |
 
 ---
 
-## 3. The 15 Flagship Quantum Engines (Deep Technical & Mathematical Reference)
+## 3. The 18 Flagship Quantum Engines (Deep Technical & Mathematical Reference)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                               COREX QUANTUM STUDIO — 15-ENGINE ARCHITECTURE                              │
+│                               COREX QUANTUM STUDIO v3.0 — 18-ENGINE MATRIX                               │
 ├──────────────────────────────────┬───────────────────────────────────┬───────────────────────────────────┤
-│ 01. WebGPU 8K Raster Compiler    │ 06. Procedural Shader Lab         │ 11. Parametric Guilloche & 3D     │
-│ 02. Lamport CRDT Binary Mesh     │ 07. AES-GCM 256-Bit Crypto Vault  │ 12. Client-Side Vector QR Studio  │
-│ 03. Parametric Typography Lab    │ 08. Cassowary Smart Layout Reflow │ 13. Data-Viz & Device Mockup Lab  │
-│ 04. CSS → Vector Reverse Compiler│ 09. Chroma BG Cutout & LUT Shaders│ 14. WCAG AAA Contrast Auto-Healer │
-│ 05. Sub-Pixel Geometry Quantizer │ 10. React JSX & W3C Token Exporter│ 15. Gemini 3.8/3.1 + Serverless AI│
+│ 01. WebGPU 8K Raster Compiler    │ 07. W3C OPFS .cxbin Binary Vault  │ 13. CSG Vector Boolean Solver     │
+│ 02. Lamport CRDT Binary Mesh     │ 08. AES-GCM 256-Bit Crypto Vault  │ 14. 3D Axonometric Depth Extruder │
+│ 03. Parametric Typography Lab    │ 09. Cassowary Smart Layout Reflow │ 15. Guilloche & Golden Spiral Lab │
+│ 04. CSS → Vector Reverse Compiler│ 10. Chroma BG Cutout & LUT Shaders│ 16. Vector QR & SVG Icon Badges   │
+│ 05. Sub-Pixel Geometry Quantizer │ 11. Gielis Superformula Math Lab  │ 17. 10-Target Code/HTML5 Compiler │
+│ 06. WebGL2 GLSL ES 3.00 Shaders  │ 12. Lissajous Harmonic Wave Lab   │ 18. Gemini 3.8/3.1 + Serverless AI│
 └──────────────────────────────────┴───────────────────────────────────┴───────────────────────────────────┘
 ```
 
 ### Engine 01 — WebGPU / OffscreenCanvas 8K Hardware Supersampling
 * **Implementation**: `src/lib/quantumEngine.ts` (`detectHardwareRasterBackend`) & `src/workspace/compiler/ArtifactCompilerDialog.tsx`
-* **Mechanism**: Probes `navigator.gpu` (WebGPU Hardware) and `OffscreenCanvas` (WebGL2 Compositor) to expose `1x`, `2x`, `3x`, `4x (4K UHD)`, and `8x (8K Master)` supersampling multipliers. Streams compiled blobs directly to disk via `dispatchBinaryDownload` (`src/lib/export.ts`).
+* **Mechanism**: Probes `navigator.gpu` (`WebGPU Hardware`, up to `16384px`) and `OffscreenCanvas` (`WebGL2 Compositor`, up to `8192px`) to unlock `1x`, `2x`, `3x`, `4x (4K UHD)`, and `8x (8K Master)` supersampling multipliers with zero watermarks.
 
 ### Engine 02 — P2P Conflict-Free Replicated Data Types (CRDT) Mesh
 * **Implementation**: `src/lib/crdtSync.ts` (`CorexCrdtMesh`) & `src/workspace/stage/QuantumStageCanvas.tsx`
-* **Mechanism**: Maintains a monotonically increasing **Lamport Logical Clock** ($L_i = \max(L_i, L_{\text{remote}}) + 1$) over `BroadcastChannel('corex_crdt_mesh_v2')`. Every stage mutation (`object:added`, `object:modified`, `object:removed`) deflates the scene graph via `pako.deflate` and broadcasts a binary `CRDT_DELTA` frame across all open browser tabs in real time.
+* **Mechanism**: Maintains a monotonically increasing **Lamport Logical Clock** ($L_i = \max(L_i, L_{\text{remote}}) + 1$) over `BroadcastChannel('corex_crdt_mesh_v2')`. Every stage mutation deflates the scene graph via `pako.deflate` and broadcasts a binary `CRDT_DELTA` packet across open tabs at 60FPS.
 
 ### Engine 03 — Parametric Typography Laboratory (Procedural Text-on-Path)
-* **Implementation**: `src/lib/quantumEngine.ts` (`addParametricTextOnPath`) & `src/workspace/dock/VectorToolRail.tsx` / `QuantumShaderSuite.tsx`
+* **Implementation**: `src/lib/quantumEngine.ts` (`addParametricTextOnPath`)
 * **Mathematical Formulation**:
-  * **Circular Ring Seal**:
-    $$\theta_i = i \cdot \frac{2\pi}{N} - \frac{\pi}{2}, \quad x_i = R\cos(\theta_i), \quad y_i = R\sin(\theta_i), \quad \alpha_i = \theta_i \cdot \frac{180}{\pi} + 90^\circ$$
-  * **Harmonic Sine Wave**:
-    $$x_i = i \cdot \Delta s - \frac{W}{2}, \quad y_i = A\sin\left(\frac{2\pi i}{N-1}\right), \quad \alpha_i = A'\cos\left(\frac{2\pi i}{N-1}\right)$$
-  * **Editorial Arch Crest**: Distributes glyphs along a $\frac{3\pi}{4}$ circular arc with tangent-normal rotation.
+  * **Circular Ring Seal**: $\theta_i = i \cdot \frac{2\pi}{N} - \frac{\pi}{2}, \quad (x_i, y_i) = (R\cos\theta_i, R\sin\theta_i), \quad \alpha_i = \theta_i \cdot \frac{180}{\pi} + 90^\circ$
+  * **Harmonic Sine Wave**: $x_i = i\Delta s - \frac{W}{2}, \quad y_i = A\sin\left(\frac{2\pi i}{N-1}\right), \quad \alpha_i = A'\cos\left(\frac{2\pi i}{N-1}\right)$
+  * **Editorial Arch Crest**: Distributes glyphs along a $\frac{3\pi}{4}$ circular crest with tangent-normal rotation.
 
-### Engine 04 — AI-Driven CSS-to-Parametric Vector Reverse Compiler
-* **Implementation**: `src/lib/quantumEngine.ts` (`compileCssToVectorNode`) & `src/workspace/inspector/QuantumShaderSuite.tsx`
-* **Mechanism**: Parses raw production CSS declarations (`width`, `height`, `background: linear-gradient(...)`, `border-radius`, `border`, `color`, `font-size`, `opacity`, `transform: rotate(...)`) and synthesizes live, editable vector `Rect` or `IText` nodes with polar gradient fills directly on the artboard.
+### Engine 04 — AI-Driven CSS-to-Parametric Vector Reverse AST Compiler
+* **Implementation**: `src/lib/quantumEngine.ts` (`compileCssToVectorNode`)
+* **Mechanism**: Parses raw production CSS rules (`width`, `height`, `background: linear-gradient(...)`, `border-radius`, `border`, `color`, `font-size`, `transform: rotate(...)`) and synthesizes editable vector `Rect` or `IText` nodes on the stage.
 
-### Engine 05 — Sub-Pixel Vector Geometry Quantizer & Optimizer
-* **Implementation**: `src/lib/quantumEngine.ts` (`optimizeStageGeometry`) & hotkey `Shift+O` (`src/hooks/useStudioKeybindings.ts`)
-* **Mechanism**: Quantizes floating-point affine transform attributes (`left`, `top`, `scaleX`, `scaleY`, `angle`) to sub-pixel precision, eliminating floating-point drift and compacting serialized scene graph size.
+### Engine 05 — Sub-Pixel Vector Geometry Quantizer & Node Optimizer
+* **Implementation**: `src/lib/quantumEngine.ts` (`optimizeStageGeometry`) & hotkey `Shift+O`
+* **Mechanism**: Quantizes affine transformation matrices (`left`, `top`, `scaleX`, `scaleY`, `angle`) to sub-pixel precision, eliminating floating-point drift and compacting serialized payload size.
 
-### Engine 06 — Procedural Generative Shader Background Lab
-* **Implementation**: `src/lib/quantumEngine.ts` (`applyProceduralShaderBackground`) & `src/workspace/dock/VectorToolRail.tsx` / `LayerParameterMatrix.tsx`
-* **Presets**:
-  1. **`aurora-plasma`**: Multi-stop radial luminance interference fields on `#08090E` Deep Ink.
-  2. **`synthwave-grid`**: Non-linear perspective horizon grid ($y_j = y_0 + (j/10)^{1.8} \cdot \Delta H$) with solar core.
-  3. **`quantum-mesh`**: 18 phase-shifted harmonic quadratic/cubic Bezier wave paths.
-  4. **`constellation`**: Deterministic pseudo-random particle network with connected vector edges.
+### Engine 06 — Hardware WebGL2 GLSL ES 3.00 (`#version 300 es`) Fragment Shader Engine
+* **Implementation**: `src/lib/glslShaderEngine.ts` (`renderGlslShaderToDataUrl`, `applyGlslShaderToStage`, `getGlslFragmentKernelSource`)
+* **GPU Fragment Kernels**:
+  1. **`aurora-plasma`**: 5-octave Domain-Warped Fractal Brownian Motion ($f(\mathbf{p}) = \text{fbm}(\mathbf{p} + w \cdot \text{fbm}(\mathbf{p} + \text{fbm}(\mathbf{p})))$) with rotation matrix $\begin{pmatrix} 0.8 & -0.6 \\ 0.6 & 0.8 \end{pmatrix}$.
+  2. **`synthwave-grid`**: 3D ray-projected perspective horizon grid ($z = \frac{0.18}{\max(0.48 - v_y, 0.002)}$) with scanline-cutout solar disk.
+  3. **`quantum-mesh`**: Inigo Quilez cosine thin-film interference palette ($\mathbf{a} + \mathbf{b}\cos(2\pi(\mathbf{c}t + \mathbf{d}))$) with iterative harmonic domain distortion.
+  4. **`constellation`**: 9-cell neighborhood Voronoi cellular distance topology ($e = d_2 - d_1$) fused with FBM deep-space nebula filaments.
 
-### Engine 07 — Web Crypto API `AES-GCM 256-Bit` Encrypted Local Vault
-* **Implementation**: `src/lib/cryptoVault.ts` (`encryptProjectPayload`, `decryptProjectPayload`) & `src/workspace/inspector/QuantumShaderSuite.tsx`
-* **Cryptographic Standard**:
-  * **Key Derivation**: `window.crypto.subtle.deriveKey` using `PBKDF2-SHA256`, **100,000 iterations**, and a 128-bit random salt.
-  * **Authenticated Encryption**: `AES-GCM` (256-bit key, 96-bit random IV) producing tamper-proof `.corex.enc` JSON envelopes.
+### Engine 07 — W3C OPFS (`.cxbin`) Binary Disk Vault & SHA-256 Digest
+* **Implementation**: `src/lib/storageEngine.ts` (`persistBinaryProject`, `listBinaryProjects`, `removeBinaryProject`)
+* **Mechanism**: Compresses project scene graphs via RFC 1951 `pako.deflate` into `Uint8Array` binary streams, computes a cryptographic **SHA-256 content-addressable hex digest** via `crypto.subtle.digest('SHA-256', ...)`, and writes `.cxbin` binary artifacts directly to the W3C **Origin Private File System (`navigator.storage.getDirectory()`)** with automatic IndexedDB binary store fallback.
 
-### Engine 08 — Cassowary-Inspired Autonomous Responsive Layout Reflow
-* **Implementation**: `src/lib/quantumEngine.ts` (`smartReflowCanvasToNewSize`) & `src/workspace/inspector/LayerParameterMatrix.tsx`
-* **Mechanism**: Preserves each node's normalized anchor center ($c_x = \frac{x + w/2}{W_0}, c_y = \frac{y + h/2}{H_0}$) and applies uniform aspect-safe scaling ($s = \min(W_1/W_0, H_1/H_0)$) when switching between `1:1 Square (1080×1080)`, `9:16 Story (1080×1920)`, `16:9 YouTube Cover (1280×720)`, and `4:1 LinkedIn Banner (1584×396)`.
+### Engine 08 — Web Crypto API `AES-GCM 256-Bit` Encrypted Local Vault
+* **Implementation**: `src/lib/cryptoVault.ts` (`encryptProjectPayload`, `decryptProjectPayload`)
+* **Cryptographic Standard**: Derives a 256-bit key via `PBKDF2-SHA256` (**100,000 iterations**, 128-bit random salt) and encrypts the scene graph with `AES-GCM` (96-bit IV) into tamper-proof `.corex.enc` envelopes.
 
-### Engine 09 — Zero-Knowledge Client-Side Chroma BG Cutout & Studio LUTs
-* **Implementation**: `src/lib/vectorStudio.ts` (`removeImageBackgroundClient`, `applyImageLutPreset`) & `src/workspace/inspector/LayerParameterMatrix.tsx`
-* **Mechanism**: Computes Euclidean RGB distance $D = \sqrt{(R - R_0)^2 + (G - G_0)^2 + (B - B_0)^2}$ in an offscreen HTML5 `<canvas>` buffer with smooth alpha-ramp feathering (`Auto BG`, `Cut White`, `Cut Dark`), paired with 1-click **Cyberpunk**, **Noir Mono**, **Cinema Gold**, and **Arctic Cool** LUT shaders.
+### Engine 09 — Cassowary-Inspired Autonomous Responsive Layout Reflow
+* **Implementation**: `src/lib/quantumEngine.ts` (`smartReflowCanvasToNewSize`)
+* **Mechanism**: Preserves normalized anchor centers ($c_x, c_y \in [0,1]$) and applies aspect-safe uniform scaling when reflowing between `1:1 Square`, `9:16 Story`, `16:9 YouTube`, and `4:1 LinkedIn` artboards.
 
-### Engine 10 — Universal Node Pipeline Exporter (`React JSX` & `W3C Design Tokens`)
-* **Implementation**: `src/lib/quantumEngine.ts` (`compileCanvasToReactTailwindJsx`, `compileCanvasToW3cDesignTokens`) & `src/workspace/compiler/ArtifactCompilerDialog.tsx`
-* **Mechanism**: Compiles the entire stage into either a standalone **React 19 TypeScript component (`.tsx`)** or a **W3C Design Token Standard JSON artifact (`.tokens.json`)**.
+### Engine 10 — Zero-Knowledge Client-Side Chroma BG Cutout & Studio LUTs
+* **Implementation**: `src/lib/vectorStudio.ts` (`removeImageBackgroundClient`, `applyImageLutPreset`)
+* **Mechanism**: Computes Euclidean RGB distance $D = \sqrt{(R - R_0)^2 + (G - G_0)^2 + (B - B_0)^2}$ with feathered alpha-ramp transitions in an offscreen canvas, paired with 1-click **Cyberpunk**, **Noir Mono**, **Cinema Gold**, and **Arctic Cool** LUT shaders.
 
-### Engine 11 — Parametric Polygons, Guilloche Rosettes & 3D Isometric Cubes
-* **Implementation**: `src/lib/vectorStudio.ts` & `src/workspace/dock/VectorToolRail.tsx` / `ParametricAssetVault.tsx`
-* **Mechanism**: Generates $N$-pointed starburst seals, regular polygons (Hexagon, Octagon), 3-face shaded **3D Isometric Cubes** (`Shift+I`), **Corel-style Guilloche Spirograph Rosettes** ($r(t) = R + A\sin(k t)$), and **Golden Ratio ($\varphi = 1.618$) Fibonacci Spirals**.
+### Engine 11 — Gielis Superformula Parametric Vector Synthesizer
+* **Implementation**: `src/lib/vectorStudio.ts` (`addSuperformulaVector`)
+* **Mathematical Formulation**: Evaluates Johan Gielis's generalized polar superformula across 320 angular steps:
+  $$r(\theta) = \left( \left| \frac{\cos\left(\frac{m\theta}{4}\right)}{a} \right|^{n_2} + \left| \frac{\sin\left(\frac{m\theta}{4}\right)}{b} \right|^{n_3} \right)^{-\frac{1}{n_1}}$$
+  Synthesizes complex rotational symmetries ($m \in \{5, 6, 8, 12\}$) as closed SVG `Path` nodes.
 
-### Engine 12 — 100% Client-Side Vector QR Code Matrix Generator
-* **Implementation**: `src/lib/vectorStudio.ts` (`addVectorQrBadge`) & `src/workspace/dock/VectorToolRail.tsx` / `ParametricAssetVault.tsx` (`Shift+Q`)
-* **Mechanism**: Encodes any URL or text payload into a 21×21 Finder-Pattern + deterministic FNV-1a hashed data matrix composed of pure scalable vector `Rect` nodes.
+### Engine 12 — Lissajous Harmonic Phase-Locked Oscillation Generator
+* **Implementation**: `src/lib/vectorStudio.ts` (`addLissajousCurve`)
+* **Mathematical Formulation**: Evaluates parametric harmonic equations across 360 phase steps:
+  $$x(t) = R\sin(a t + \delta), \quad y(t) = R\sin(b t)$$
+  Supports frequency ratios $3:2$, $3:4$, $5:4$, and $5:6$ for oscilloscope-grade vector art.
 
-### Engine 13 — Parametric Data-Viz & Native Device Mockup Studio
-* **Implementation**: `src/lib/quantumEngine.ts` (`addVectorDataVizWidget`) & `src/workspace/dock/VectorToolRail.tsx` / `QuantumShaderSuite.tsx`
-* **Mechanism**: 1-click insertion of editable vector **KPI Metric Cards**, **Multi-Column Bar Charts**, **Donut Progress Rings**, and **macOS Studio Browser Mockup Frames**.
+### Engine 13 — Constructive Solid Geometry (CSG) Vector Boolean Solver
+* **Implementation**: `src/lib/quantumEngine.ts` (`applyVectorBooleanOperation`)
+* **Mechanism**: Synthesizes compound even-odd winding (`fillRule: 'evenodd'`) and cubic Bezier boolean contours for **Boolean Union (Metaball Weld)**, **Boolean Subtract (Crescent Portal)**, **Boolean Intersect (Vesica Piscis Lens)**, and **Boolean XOR Difference**.
 
-### Engine 14 — WCAG 2.1 AA/AAA Luminance Contrast Auditor & Auto-Healer
-* **Implementation**: `src/lib/quantumEngine.ts` (`auditAndHealCanvasContrast`) & hotkey `Shift+H`
-* **Mechanism**: Evaluates W3C relative luminance $L = 0.2126R_{\text{lin}} + 0.7152G_{\text{lin}} + 0.0722B_{\text{lin}}$ and contrast ratio $CR = (L_{\max} + 0.05)/(L_{\min} + 0.05)$, automatically healing any text node below $4.5:1$ to AAA compliance.
+### Engine 14 — 3D Axonometric Depth Relief Extruder & Shaded Isometric Cubes
+* **Implementation**: `src/lib/quantumEngine.ts` (`extrudeActiveNode3D`) & `src/lib/vectorStudio.ts` (`addIsometricCube`)
+* **Mechanism**: Clones any selected stage node across $N \in [6, 28]$ axonometric depth slices $(\Delta x, \Delta y)$ with alternating directional shading and progressive opacity attenuation, grouping them into a unified 3D relief stack.
 
-### Engine 15 — Multimodal Gemini 3.8/3.1 Flash AI + Serverless Fallback Core
+### Engine 15 — Parametric Guilloche Spirographs & Golden Ratio ($\varphi = 1.618$) Lab
+* **Implementation**: `src/lib/vectorStudio.ts` (`addProceduralMesh`)
+* **Mechanism**: Generates 12-layer cubic Bezier **Cyber Wave Meshes**, currency-grade **Guilloche Spirograph Rosettes** ($r(t) = R + A\sin(kt)$), **Concentric Vector Halos**, and **Golden Ratio ($\varphi = 1.618$) Fibonacci Spirals**.
+
+### Engine 16 — Client-Side Vector QR Matrix & Pure SVG Vector Icon Badges
+* **Implementation**: `src/lib/vectorStudio.ts` (`addVectorQrBadge`, `addSvgVectorIconBadge`)
+* **Mechanism**: Encodes URLs into a 21×21 Finder-Pattern + FNV-1a hashed vector `Rect` matrix (`Shift+Q`), alongside 8 pure mathematical SVG `Path` icon badges (zero raster/emoji dependencies).
+
+### Engine 17 — 10-Pipeline Universal Artifact, Code & Shader Compiler
+* **Implementation**: `src/workspace/compiler/ArtifactCompilerDialog.tsx` & `src/lib/quantumEngine.ts`
+* **10 Export Targets**:
+  1. **`PNG`** (`1x`–`8x` 8K WebGPU Supersampled + Alpha Transparency)
+  2. **`JPEG`** (Calibrated Studio Quality)
+  3. **`SVG`** (Pure Mathematical XML Vector)
+  4. **`PDF`** (96 DPI Print-Calibrated Vector Document)
+  5. **`PPTX`** (Native Editable PowerPoint Slide Deck)
+  6. **`React JSX (.tsx)`** (Standalone React 19 + Tailwind TypeScript Component)
+  7. **`W3C Tokens (.tokens.json)`** (W3C Design Token Standard JSON)
+  8. **`HTML5 Bundle (.html)`** (Self-Contained Zero-Dependency Interactive Web Page)
+  9. **`GLSL Kernel (.frag)`** (Raw `#version 300 es` WebGL2 Fragment Shader Source)
+  10. **`CSS Module (.module.css)`** (Scoped Production Stylesheet for All Stage Nodes)
+
+### Engine 18 — Multimodal Gemini 3.8/3.1 Flash AI + Serverless Fallback Core
 * **Implementation**: `server.ts`, `src/components/ai/AiChatPanel.tsx` & `src/lib/serverlessAi.ts`
-* **Mechanism**: Provides 4 AI workflows (**Design Copilot**, **Text-to-Design Layout Generator**, **Image AI Studio**, and **Vision Design Doctor**) powered by `@google/genai` with automatic zero-error fallback to `serverlessAi.ts` when running purely client-side.
+* **Mechanism**: Delivers 4 autonomous AI workflows (**Design Copilot**, **Text-to-Design Vector Synthesizer**, **Gemini 3.1 Flash Image Studio**, and **Vision Design Doctor**) inside a contextual floating glass window with automatic zero-error fallback to `serverlessAi.ts`.
 
 ---
 
-## 4. System Topologies & Internal Data Flow Diagrams
+## 4. System Topologies & Internal Binary Data Flow Diagrams
 
-### 4.1 Hybrid Client-Serverless Runtime Topology & 100% First-Party Native Stack
-
-Unlike boilerplate editors that rely on heavy third-party wrappers (`Dexie.js`, `@dnd-kit`, `Radix UI`, `react-colorful`, `react-hotkeys-hook`, `file-saver`), **Corex Quantum Studio (`v2.4.0`)** implements its own **First-Party LernexAI Native Runtime Stack**:
-
-| Subsystem Layer | LernexAI First-Party Implementation | Replaced Legacy Wrapper |
-| :--- | :--- | :--- |
-| **Local Database Vault** | Native W3C `IDBDatabase` + `EventTarget` (`src/db/db.ts`) | *Zero `dexie` / `dexie-react-hooks`* |
-| **Z-Index Hierarchy Tree** | Native HTML5 Drag-Reorder & Z-Stack (`SceneNodeTree.tsx`) | *Zero `@dnd-kit/core` / `sortable`* |
-| **Color Spectrum Engine** | `QuantumColorSpectrum.tsx` (24-Swatch Matrix + HSV Input) | *Zero `react-colorful`* |
-| **UI Primitives & Tabs** | Native `Slider.tsx`, `Tooltip.tsx` & `StudioInspectorDeck.tsx` | *Zero `@radix-ui/*` packages* |
-| **Keyboard Command Matrix**| Deterministic `keydown` state machine (`useStudioKeybindings.ts`)| *Zero `react-hotkeys-hook`* |
-| **Binary Stream Downloader**| Native `URL.createObjectURL` Stream (`dispatchBinaryDownload`) | *Zero `file-saver`* |
-| **Creation & Inspector Docks**| Dual-Rail Collapsible Left Drawer & 3-Mode Right Inspector | *Zero cramped or hidden tabs* |
-| **Artboards & Typefaces** | **15 Studio Artboard Presets** & **36 Google Font Typefaces** | *Expanded beyond 9/25 limits* |
+### 4.1 Borderless Tonal Workspace & Contextual Floating Glass Topology
 
 ```
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                            COREX QUANTUM STUDIO v2.4.0 (@lernexai)                                     │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │
-                 ┌──────────────────────────────────┴──────────────────────────────────┐
-                 ▼                                                                     ▼
-┌─────────────────────────────────────────────────┐                 ┌────────────────────────────────────┐
-│      100% CLIENT-SIDE QUANTUM WORKSPACE         │                 │       OPTIONAL CLOUD AI PROXY      │
-│   src/workspace/* + src/lib/* + Zustand Store   │                 │     server.ts + @google/genai      │
-└────────────────────────┬────────────────────────┘                 └─────────────────┬──────────────────┘
-                         │                                                            │
-    ┌────────────────────┼────────────────────┬────────────────────┐                  ▼
-    ▼                    ▼                    ▼                    ▼      ┌──────────────────────────────┐
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌───────────────┐      │  GEMINI 3.8 & 3.1 FLASH API  │
-│QuantumStage  │ │ZLIB pako     │ │Web Crypto    │ │Artifact       │      │ ├─ /api/ai/generate-design   │
-│Canvas 60FPS  │ │Uint8Array    │ │AES-GCM-256   │ │Compiler 8K    │      │ ├─ /api/ai/generate-image    │
-│+ CRDT Mesh   │ │Command Ledger│ │PBKDF2 Vault  │ │JSX/SVG/PDF/PPT│      │ └─ /api/ai/critique-canvas   │
-└──────────────┘ └──────────────┘ └──────────────┘ └───────────────┘      └──────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  STUDIO ACTION HEADER (StudioActionHeader.tsx)                                                           │
+│  [Corex Emblem] [Project Title] [15 Artboards] [Undo/Redo] [⌘K Omnibar] [GLSL/Path/QR/AI] [Compile 8K]   │
+├──────────┬────────────────────────┬─────────────────────────────────────────────────┬────────────────────┤
+│ PRIMARY  │ SCENE HIERARCHY &      │                                                 │ DEDICATED RIGHT    │
+│ VECTOR   │ OPFS VAULT SIDEBAR     │       INFINITE 60FPS QUANTUM STAGE MATRIX       │ PROPERTIES DECK    │
+│ RAIL     │ (256px Collapsible)    │            (QuantumStageCanvas.tsx)             │ (320px Streamlined)│
+│ (68px)   │                        │                                                 │                    │
+│          │ [Layers] [Saved .cxbin]│   ┌─────────────────────────────────────────┐   │ • Quick Stage Setup│
+│ [Select] │                        │   │ CONTEXTUAL FLOATING GLASS WINDOW        │   │ • 6-Way Alignment  │
+│ [Rect]   │ • Typography Layer     │   │ (Drops over stage only when summoned)   │   │ • X/Y/W/H/Angle    │
+│ [Ellipse]│ • CSG Boolean Union    │   │  - Creative Elements & GLSL Swatches    │   │ • Visual Gradients │
+│ [Line]   │ • GLSL Aurora Shader   │   │  - Quantum Blueprints Gallery           │   │ • 36 Google Fonts  │
+│ [Text]   │                        │   │  - Parametric Vector & Math Lab         │   │ • Chroma Cutout    │
+│ [Brush]  │ ────────────────────── │   │  - 18-Engine Quantum Lab & 3D Extruder  │   │ • Dev Mode CSS AST │
+│          │ OPFS Disk Telemetry:   │   │  - Corex AI Studio (Gemini 3.8 / 3.1)   │   │                    │
+│ ──────── │ -78% DEFLATE · SHA-256 │   └─────────────────────────────────────────┘   │                    │
+│ FLOATING │                        │                                                 │                    │
+│ TRIGGERS │                        │        [ -  100%  + | Fit | Grid | ⇧O | ⇧H ]    │                    │
+├──────────┴────────────────────────┴─────────────────────────────────────────────────┴────────────────────┤
+│  STAGE TELEMETRY FOOTER (StageTelemetryFooter.tsx): Cursor X/Y · Active Tool · Node Count · Zoom Slider  │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 ZLIB/DEFLATE Binary Transaction Command Ledger
+### 4.2 Hardware WebGL2 GLSL ES 3.00 (`#version 300 es`) GPU Shader Pipeline
 
 ```
-[ Stage Vector Mutation (Add / Transform / Shader / Cutout) ]
-                              │
-                              ▼
-[ Serialize Scene Graph with Custom Props (__uid, corexLabel) ]
-                              │
-                              ▼
-[ encodeSceneTransaction() -> pako.deflate(json) -> Uint8Array ]
-                              │
-                              ▼
-[ Push Binary Packet to transactionLedger (64-Frame Ring Buffer) ]
-                              │
-               ┌──────────────┴──────────────┐
-               ▼                             ▼
-       [ ⌘Z Undo Trigger ]           [ ⌘⇧Z Redo Trigger ]
-               │                             │
-               └──────────────┬──────────────┘
-                              ▼
-[ decodeSceneTransaction() -> pako.inflate(bytes) -> loadFromJSON() ]
+[ User Selects Preset & Uniforms (u_seed, u_scale, u_warp, u_hueShift) ]
+                                    │
+                                    ▼
+[ Allocate Offscreen WebGL2RenderingContext (preserveDrawingBuffer: true) ]
+                                    │
+                                    ▼
+[ Compile #version 300 es Vertex & Fragment Kernels (5-Octave FBM / Voronoi / Ray Grid) ]
+                                    │
+                                    ▼
+[ Bind Fullscreen Quad [-1,-1 .. 1,1] -> gl.drawArrays(TRIANGLE_STRIP, 0, 4) ]
+                                    │
+                                    ▼
+[ Stream GPU Framebuffer to FabricImage Surface (cx_glsl_*) at Z-Index 0 ]
 ```
 
-### 4.3 Lamport Logical Clock CRDT Multi-Tab Broadcast Protocol
+### 4.3 W3C OPFS (`.cxbin`) Binary Deflate & SHA-256 Content-Addressable Vault
 
 ```
-┌───────────────────────────┐                                   ┌───────────────────────────┐
-│   WORKSPACE TAB INSTANCE  │                                   │   PEER TAB INSTANCE       │
-│   peerId: "peer_a91f02"   │                                   │   peerId: "peer_c48b19"   │
-└─────────────┬─────────────┘                                   └─────────────┬─────────────┘
-              │                                                               │
-              │── 1. Broadcast HELLO (lamportClock: 0) ──────────────────────>│
-              │<─ 2. Broadcast ACK   (lamportClock: 0) ───────────────────────│
-              │                                                               │
-   [ User Modifies Layer ]                                                    │
-   lamportClock += 1                                                          │
-   compressed = deflate(scene)                                                │
-              │── 3. CRDT_DELTA (lamportClock: 1, Uint8Array[]) ─────────────>│
-              │                                                 Verify msg.clock >= localClock
-              │                                                 localClock = msg.clock + 1
-              │                                                 inflate(msg.compressedGraph)
-              │                                                 stage.loadFromJSON() @ 60FPS
+[ Stage Scene Graph JSON ] ──> [ TextEncoder -> UTF-8 Uint8Array ]
+                                        │
+                                        ▼
+                       [ pako.deflate(bytes, { level: 6 }) ]
+                                        │
+                 ┌──────────────────────┴──────────────────────┐
+                 ▼                                             ▼
+[ crypto.subtle.digest('SHA-256') ]           [ navigator.storage.getDirectory() ]
+[ 48-Bit Content-Addressable Hash ]           [ Write /corex-binary-vault/{id}.cxbin ]
+                 │                                             │
+                 └──────────────────────┬──────────────────────┘
+                                        ▼
+               [ Sync VaultTelemetry (Raw vs. Compressed Bytes %) ]
 ```
 
-### 4.4 Web Crypto PBKDF2-SHA256 + AES-GCM-256 Vault Envelope
+### 4.4 ZLIB/DEFLATE Binary Transaction Command Ledger & Lamport CRDT Mesh
 
 ```
-[ Passphrase Input ] ──> [ PBKDF2-SHA256 (100,000 Iterations + 16-Byte Random Salt) ]
-                                                    │
-                                                    ▼
-                                    [ 256-Bit AES-GCM CryptoKey ]
-                                                    │
-[ Scene Graph JSON ] ──> [ crypto.subtle.encrypt(AES-GCM, 12-Byte IV) ] ──> [ .corex.enc Artifact ]
+[ Stage Mutation ] ──> [ encodeSceneTransaction() -> pako.deflate() -> Uint8Array ]
+                                        │
+                 ┌──────────────────────┴──────────────────────┐
+                 ▼                                             ▼
+[ 64-Frame Binary Ring Buffer ]               [ BroadcastChannel('corex_crdt_mesh_v2') ]
+[ ⌘Z Undo / ⌘⇧Z Redo -> pako.inflate() ]      [ Lamport Clock L_i = max(L_i, L_rem) + 1 ]
 ```
 
 ---
@@ -263,12 +264,11 @@ Unlike boilerplate editors that rely on heavy third-party wrappers (`Dexie.js`, 
 ```
 .
 ├── LICENSE                                      # LernexAI Proprietary Software License
-├── lernex.config.json                           # LernexAI Quantum Runtime & Engine Manifest
-├── package.json                                 # @lernexai/corex-quantum-studio v2.4.0 manifest
-├── server.ts                                    # Optional Express 5 AI & Secure Compiler Proxy
-├── vite.config.ts                               # Vite 8 build config (sourcemap: false, vendor chunking)
-├── vercel.json                                  # Serverless & Static Edge SPA routing config
-├── index.html                                   # Studio entry HTML with OpenGraph & Google Fonts
+├── lernex.config.json                           # Corex Quantum Studio v3.0.0-quantum Engine Manifest
+├── package.json                                 # @lernexai/corex-quantum-studio v3.0.0 manifest
+├── server.ts                                    # Express 5 Hybrid Gemini AI & Vector Compiler Server
+├── vite.config.ts                               # Vite 8 build config (sourcemap: false, manual chunking)
+├── index.html                                   # Studio HTML entry with OpenGraph & Google Fonts
 ├── public/
 │   ├── corex-icon.svg                           # Corex Studio by LernexAI vector emblem
 │   └── favicon.svg                              # Browser tab vector icon
@@ -276,116 +276,114 @@ Unlike boilerplate editors that rely on heavy third-party wrappers (`Dexie.js`, 
 └── src/
     ├── main.tsx                                 # React 19 Concurrent root entry
     ├── App.tsx                                  # View router (LandingPage <-> QuantumStudioShell)
-    ├── index.css                                # Deep Ink (#08090E) & Electric Cyan (#06B6D4) tokens
+    ├── index.css                                # Borderless Deep Ink (#07080D) & Electric Cyan (#06B6D4) tokens
     │
-    ├── workspace/                               # Proprietary LernexAI Quantum Workspace Modules
+    ├── workspace/                               # Proprietary LernexAI Borderless Workspace Modules
     │   ├── header/
-    │   │   └── StudioActionHeader.tsx           # Brand lockup, 15 Artboard picker, ⌘K trigger, Quick Suite Bar & Export
+    │   │   └── StudioActionHeader.tsx           # Brand lockup, 15 Artboards, ⌘K trigger, Floating Launchers & Export
     │   ├── dock/
-    │   │   └── VectorToolRail.tsx               # Dual-Rail Collapsible Left Dock (64px Icon Rail + 308px Slide-Out Drawer)
+    │   │   └── VectorToolRail.tsx               # 68px Primary Rail + 256px Hierarchy Sidebar + Floating Glass Windows
     │   ├── stage/
-    │   │   └── QuantumStageCanvas.tsx           # 60FPS Stage matrix, focal zoom, CRDT sync, laser guides & Floating Glass HUD
+    │   │   └── QuantumStageCanvas.tsx           # 60FPS Stage matrix, focal zoom, CRDT sync, laser guides & Floating HUD
     │   ├── compiler/
-    │   │   └── ArtifactCompilerDialog.tsx       # 1x–8x (8K) PNG/JPEG, SVG, PDF, PPTX, React JSX & W3C JSON
+    │   │   └── ArtifactCompilerDialog.tsx       # 10-Pipeline Compiler (8K PNG, JPEG, SVG, PDF, PPTX, TSX, JSON, HTML5, GLSL, CSS)
     │   ├── telemetry/
     │   │   └── StageTelemetryFooter.tsx         # Live X/Y cursor coordinates, node count & zoom controls
     │   └── inspector/
-    │       ├── StudioInspectorDeck.tsx          # Collapsible 3-Mode Right Dock: Inspector, Hierarchy, AI Studio
-    │       ├── LayerParameterMatrix.tsx         # Transform, Align/Distribute, Shaders, Cutout, Dev CSS & Stage Command Center
-    │       ├── QuantumShaderSuite.tsx           # Path Text, Shaders, CSS->Vector Compiler, Smart Reflow & AES Vault
-    │       ├── SceneNodeTree.tsx                # Native HTML5 drag-reorder hierarchy, step up/down & inline corexLabel editor
-    │       ├── BlueprintGalleryDeck.tsx         # Multi-Category Quantum Blueprints with live search & category pills
-    │       ├── ParametricAssetVault.tsx         # Polygons, 3D Cube, Guilloche Meshes, Vector QR & 8 Glyph sets
-    │       └── LocalVaultExplorer.tsx           # Local IndexedDB project vault browser
+    │       ├── StudioInspectorDeck.tsx          # Dedicated Streamlined Right Properties Deck (320px)
+    │       ├── LayerParameterMatrix.tsx         # Soft-edge Transform, Align, Visual Swatches, Cutout & Dev CSS
+    │       ├── QuantumShaderSuite.tsx           # 18-Engine Lab: GLSL Shaders, CSG Booleans, 3D Extruder, Math Curves & AES Vault
+    │       ├── SceneNodeTree.tsx                # Left Scene Hierarchy Tree with native HTML5 drag-reorder & inline rename
+    │       ├── BlueprintGalleryDeck.tsx         # Borderless rounded-2xl Quantum Blueprints gallery
+    │       ├── ParametricAssetVault.tsx         # Polygons, 3D Cube, Guilloche, Superformula, Lissajous, SVG Badges & QR
+    │       └── LocalVaultExplorer.tsx           # W3C OPFS (.cxbin) & SHA-256 Binary Vault Explorer with live telemetry
     │
     ├── components/
     │   ├── landing/
-    │   │   └── LandingPage.tsx                  # Interactive studio preview, Bento showcase & 60FPS telemetry
+    │   │   └── LandingPage.tsx                  # Interactive v3.0 studio preview, 18-Engine Bento & benchmarks
     │   ├── auth/
     │   │   └── AuthModal.tsx                    # Google Demo OAuth & Email credentials modal
     │   ├── command/
-    │   │   └── CommandPalette.tsx               # ⌘K / Ctrl+K Omnibar with 20+ instant studio actions
+    │   │   └── CommandPalette.tsx               # Borderless rounded-3xl ⌘K Omnibar with 24+ Quantum actions
     │   ├── ai/
-    │   │   └── AiChatPanel.tsx                  # Copilot, Text-to-Design, Image AI & Vision Design Doctor
+    │   │   └── AiChatPanel.tsx                  # Floating Copilot, Text-to-Design, Image AI & Vision Design Doctor
     │   └── ui/
-    │       ├── Input.tsx                        # Studio input primitive
-    │       ├── Slider.tsx                       # Native Precision numeric slider primitive
-    │       ├── Tooltip.tsx                      # Native Studio tooltip with shortcut badge
-    │       └── QuantumColorSpectrum.tsx         # Native 24-swatch matrix + Full HSV Hardware Spectrum Picker
+    │       ├── Input.tsx                        # Soft-edge studio input primitive
+    │       ├── Slider.tsx                       # Native precision range slider primitive
+    │       ├── Tooltip.tsx                      # Borderless rounded-xl tooltip with shortcut badge
+    │       └── QuantumColorSpectrum.tsx         # 24-swatch rounded matrix + Full HSV Hardware Spectrum Picker
     │
-    ├── lib/                                     # Core Mathematical, Vector, Cryptographic & Compiler Engines
-    │   ├── quantumEngine.ts                     # WebGPU 8K, Path Text, CSS Compiler, Shaders, Reflow, JSX & WCAG
-    │   ├── vectorStudio.ts                      # Starbursts, Polygons, 3D Cube, Guilloche, QR, Cutout & Dev CSS
-    │   ├── crdtSync.ts                          # BroadcastChannel + Lamport Clock + ZLIB CRDT Mesh Engine
+    ├── lib/                                     # 18 Core Mathematical, GPU Shader, Crypto & Compiler Engines
+    │   ├── glslShaderEngine.ts                  # Hardware WebGL2 GLSL ES 3.00 (#version 300 es) GPU Fragment Engine
+    │   ├── storageEngine.ts                     # W3C OPFS (.cxbin) + DEFLATE + SHA-256 Binary Storage Engine
+    │   ├── quantumEngine.ts                     # 8K WebGPU, Path Text, CSS AST, CSG Booleans, 3D Extruder, TSX/HTML5/CSS
+    │   ├── vectorStudio.ts                      # Superformula, Lissajous, Guilloche, 3D Cube, SVG Badges, QR & Chroma Cutout
+    │   ├── crdtSync.ts                          # BroadcastChannel + Lamport Logical Clock + ZLIB CRDT Mesh
     │   ├── cryptoVault.ts                       # Web Crypto API PBKDF2-SHA256 + AES-GCM 256-Bit Cryptography
-    │   ├── commandLedger.ts                     # ZLIB/DEFLATE (pako) Uint8Array Binary Command Ledger
-    │   ├── serverlessAi.ts                      # 100% Client-Side Serverless Generative AI Engine
-    │   ├── snapping.ts                          # Magnetic Vector Spatial Solver (Electric Cyan #06B6D4 guides)
+    │   ├── commandLedger.ts                     # ZLIB/DEFLATE (pako) Uint8Array 64-Frame Binary Command Ledger
+    │   ├── serverlessAi.ts                      # Deterministic Client-Side Generative AI Fallback Engine
+    │   ├── snapping.ts                          # Magnetic Vector Spatial Solver (Electric Cyan #06B6D4 laser guides)
     │   ├── appearance.ts                        # Polar coordinate gradients, drop shadows & 16 blend modes
     │   ├── export.ts                            # Native Binary Stream Downloader (dispatchBinaryDownload), PDF & PPTX
-    │   ├── clipboard.ts                         # Deep node clone, cut, paste & z-order stack operations
+    │   ├── clipboard.ts                         # Deep node clone, cut, paste & Z-order stack operations
     │   ├── imageFilters.ts                      # Live WebGL/Canvas brightness, contrast, saturation & blur pipeline
     │   ├── shapes.ts                            # Vector Node Factory (cx_* UIDs)
-    │   ├── style.ts                             # Visual appearance attribute cloner
+    │   ├── style.ts                             # Visual appearance attribute sampler & applicator
     │   ├── motion.ts                            # Spring physics animation presets
     │   └── cn.ts                                # Classnames utility
     │
     ├── store/
-    │   └── editorStore.ts                       # Zustand 5 store with binary transaction ledger & dock states
-    ├── db/
-    │   └── db.ts                                # Native W3C IndexedDB + EventTarget reactive persistence layer
+    │   └── editorStore.ts                       # Zustand 5 store with binary ledger, hierarchy sidebar & floating window state
     ├── hooks/
     │   ├── useFabricCanvas.ts                   # SceneGraph runtime & viewport transform hooks
-    │   ├── useStudioKeybindings.ts              # Native global hotkey & Quantum shortcut dispatcher
-    │   └── useProjects.ts                       # Reactive Native IndexedDB project hooks
+    │   ├── useStudioKeybindings.ts              # Pro-Studio keyboard matrix (V/R/O/L/T/B/F, Alt+S/P, Shift+G/M/O/H/I/Q)
+    │   └── useProjects.ts                       # Reactive W3C OPFS / Binary Vault hooks & telemetry
     ├── data/
     │   └── fontList.ts                          # 36 Curated Google Fonts catalog & dynamic loader
     └── types/
-        └── index.ts                             # Strict TypeScript interfaces & 15 canvas presets
+        └── index.ts                             # Strict TypeScript interfaces & 15 studio artboard presets
 ```
 
 ---
 
-## 6. Design System Specification (`Deep Ink & Electric Cyan`)
+## 6. Design System Specification (`Borderless Deep Ink & Electric Cyan`)
 
 | Token Name | Hex Value | Architectural Role |
 | :--- | :--- | :--- |
-| `--color-ink-950` | `#08090E` | Primary Midnight Ink Canvas & Viewport Backdrop |
-| `--color-ink-900` | `#0D0F17` | Header, Telemetry Footer, Left Rail & Inspector Surface |
-| `--color-ink-800` | `#11141C` | Elevated Card, Modal & Slide-Out Drawer Surface |
-| `--color-ink-700` | `#1A1E2A` | Interactive Control & Input Field Surface |
+| `--color-ink-950` | `#07080D` | Primary Infinite Stage Void & Deepest Canvas Backdrop |
+| `--color-ink-900` | `#0C0E16` | Primary Left Rail, Hierarchy Sidebar & Right Properties Surface |
+| `--color-ink-800` | `#111522` | Floating Glassmorphic Window & Elevated Header Surface |
+| `--color-ink-700` | `#181C2B` | Soft Interactive Control, Input Field & Accordion Pod Surface |
 | `--color-accent-cyan` | `#06B6D4` | Primary Electric Cyan Focus, Laser Guides & Active Indicators |
-| `--color-accent-teal` | `#14B8A6` | Secondary Teal Gradient & Mesh Highlight |
-| `--color-accent-emerald`| `#10B981` | Cryptographic Vault & WCAG AAA Compliance Indicator |
-| `--color-accent-amber` | `#F59E0B` | Golden Ratio Spiral & High-CTR Highlight |
-| `--color-accent-rose` | `#F43F5E` | Danger / Destructive Action & Swiss Editorial Accent |
-| `--font-sans` | `Plus Jakarta Sans` | Geometric UI & Display Typography (`12.5px` base) |
+| `--color-accent-teal` | `#14B8A6` | Secondary Teal Gradient & Procedural Mesh Highlight |
+| `--color-accent-emerald`| `#10B981` | OPFS Binary Vault, AES-GCM Crypto & WCAG AAA Compliance Badge |
+| `--color-accent-amber` | `#F59E0B` | Golden Ratio Spiral ($\varphi$) & High-CTR Accent |
+| `--font-sans` | `Plus Jakarta Sans` | Geometric Studio UI & Display Typography |
 | `--font-serif` | `Playfair Display` | High-Contrast Editorial Italic Serif |
-| `--font-mono` | `JetBrains Mono` | Coordinate Telemetry, CSS AST & Binary Ledger Inspector |
+| `--font-mono` | `JetBrains Mono` | Coordinate Telemetry, GLSL Kernels, SHA-256 Digests & CSS AST |
 
 ---
 
-## 7. Power-User Keyboard Command Matrix & `⌘K` Omnibar
+## 7. Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar
 
-| Shortcut (macOS / Windows) | Quantum Studio Operation | Target Subsystem |
+| Shortcut (macOS / Windows) | Quantum Studio v3.0 Operation | Target Engine / Subsystem |
 | :--- | :--- | :--- |
-| **`⌘K` / `Ctrl+K`** | **Launch Omnibar Command Palette** | `CommandPalette.tsx` (20+ Instant Actions) |
-| **`Shift + O`** | **Sub-Pixel Geometry & Node Optimizer** | `quantumEngine.ts` (`optimizeStageGeometry`) |
-| **`Shift + H`** | **WCAG 2.1 AAA Contrast Auto-Healer** | `quantumEngine.ts` (`auditAndHealCanvasContrast`) |
+| **`⌘K` / `Ctrl+K`** | **Launch 24-Command Quantum Omnibar** | `CommandPalette.tsx` |
+| **`F`** | **Toggle Floating Creative Elements & Shaders** | `VectorToolRail.tsx` (`activeFloatingWindow`) |
+| **`V` / `R` / `O` / `L` / `T` / `B`**| Select, Rectangle, Oval/Ellipse, Line, Text, Brush | `useStudioKeybindings.ts` |
+| **`Alt + S` / `Alt + P`** | **Sample Node Style / Apply Node Style** | `style.ts` (`copyStyle`, `pasteStyle`) |
+| **`Shift + M`** | **Compile WebGL2 Aurora Plasma Fragment Shader** | `glslShaderEngine.ts` (`#version 300 es`) |
+| **`Shift + G`** | **Toggle 20px / 100px Cyan Coordinate Grid** | `QuantumStageCanvas.tsx` |
+| **`Shift + O`** | **Sub-Pixel Geometry & Node Quantizer** | `quantumEngine.ts` (`optimizeStageGeometry`) |
+| **`Shift + H`** | **WCAG 2.1 AAA Luminance Contrast Auto-Healer** | `quantumEngine.ts` (`auditAndHealCanvasContrast`) |
 | **`Shift + I`** | **Insert 3D Shaded Isometric Cube** | `vectorStudio.ts` (`addIsometricCube`) |
 | **`Shift + Q`** | **Insert Scalable Vector QR Matrix Badge** | `vectorStudio.ts` (`addVectorQrBadge`) |
-| **`V` / `R` / `C` / `T` / `P`** | Select, Rectangle, Circle, Rich Text, Pencil | `useStudioKeybindings.ts` |
-| **`Delete` / `Backspace`** | Delete Active Node(s) | `useStudioKeybindings.ts` |
-| **`⌘D` / `Ctrl+D`** | Offset Clone (`+24px` X/Y) | `shapes.ts` (`duplicateActiveObject`) |
-| **`⌘C` / `⌘X` / `⌘V`** | Copy, Cut & Paste Scene Nodes | `clipboard.ts` |
-| **`⌘+Alt+C` / `⌘+Alt+V`** | Copy & Paste Visual Appearance Attributes | `style.ts` |
-| **`⌘A` / `Ctrl+A`** | Select All Stage Nodes (`ActiveSelection`) | `useStudioKeybindings.ts` |
-| **`⌘]` / `⌘[`** | Step Forward / Step Backward in Z-Order | `clipboard.ts` (`moveZOrder`) |
-| **`⌘⇧]` / `⌘⇧[`** | Bring to Absolute Front / Send to Back | `clipboard.ts` (`moveZOrder`) |
-| **`⌘Z` / `⌘⇧Z`** | 64-Frame ZLIB Binary Undo / Redo | `commandLedger.ts` & `editorStore.ts` |
-| **`⌘'` / `Ctrl+'`** | Toggle 20px / 100px Cyan Coordinate Grid | `QuantumStageCanvas.tsx` |
-| **`Space + Drag`** | Infinite Focal-Point Stage Pan | `QuantumStageCanvas.tsx` |
-| **`Arrow Keys` / `⇧ + Arrows`**| `1px` Micro Nudge / `10px` Fast Nudge | `useStudioKeybindings.ts` |
+| **`⌘Z` / `⌘⇧Z` / `⌘Y`** | **64-Frame ZLIB Binary Undo / Redo** | `commandLedger.ts` (`Uint8Array` Ring Buffer) |
+| **`⌘D` / `Ctrl+D`** | **Offset Clone (`+24px` X/Y)** | `shapes.ts` (`duplicateActiveObject`) |
+| **`⌘C` / `⌘X` / `⌘V`** | **Copy, Cut & Paste Scene Nodes** | `clipboard.ts` |
+| **`⌘]` / `⌘[` / `⌘⇧]` / `⌘⇧[`** | **Z-Order Step Forward / Back / Front / Back** | `clipboard.ts` (`moveZOrder`) |
+| **`Space + Drag`** | **Infinite Focal-Point Stage Pan** | `QuantumStageCanvas.tsx` |
+| **`Arrow Keys` / `⇧ + Arrows`** | **`1px` Micro Nudge / `10px` Fast Nudge** | `useStudioKeybindings.ts` |
 
 ---
 
@@ -395,7 +393,7 @@ Unlike boilerplate editors that rely on heavy third-party wrappers (`Dexie.js`, 
 # 1. Install dependencies
 npm install --legacy-peer-deps
 
-# 2. (Optional) Configure Gemini API key for live cloud AI routes
+# 2. (Optional) Configure Gemini API key for cloud AI routes
 cp .env.example .env
 # Add GEMINI_API_KEY=your_key_here
 # Note: Without an API key, Corex automatically runs its 100% Client-Side Serverless AI Engine!
@@ -403,7 +401,7 @@ cp .env.example .env
 # 3. Start development server on port 3000
 npm run dev
 
-# 4. Run TypeScript strict type verification
+# 4. Run TypeScript strict verification
 npm run lint
 
 # 5. Compile production bundle (sourcemap: false, vendor-chunked, 100% static/serverless ready)
@@ -421,12 +419,13 @@ npm run build
 
 Copyright (c) 2026 LernexAI (Sourav Maurya). All Rights Reserved.
 
-Corex Quantum Studio (@lernexai/corex-quantum-studio), its workspace architecture
-(src/workspace/*), Dual-Rail Collapsible Left Creation Dock, 3-Mode Right Inspector,
-Floating Stage HUD, ZLIB binary command ledger, P2P Lamport CRDT synchronization
-mesh, parametric vector & shader laboratories, reverse CSS AST compiler, and
-Web Crypto AES-GCM-256 vault implementation are the proprietary intellectual
-property of LernexAI.
+Corex Quantum Studio v3.0 (@lernexai/corex-quantum-studio), its borderless tonal
+workspace architecture (src/workspace/*), contextual glassmorphic floating pods,
+hardware WebGL2 GLSL ES 3.00 fragment shader engine, W3C OPFS (.cxbin) binary
+deflate vault, Gielis Superformula & Lissajous mathematical synthesizers, CSG
+vector boolean solver, 3D axonometric depth extruder, ZLIB binary command ledger,
+P2P Lamport CRDT mesh, and 10-pipeline 8K artifact compiler are the proprietary
+intellectual property of LernexAI.
 
 Unauthorized reproduction, reverse engineering, redistribution, or commercial
 exploitation without prior written authorization from LernexAI is strictly

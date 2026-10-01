@@ -1,7 +1,10 @@
 /**
- * LernexAI Proprietary — Dual-Rail Collapsible Left Creation Dock
- * Combines a 64px Primary Icon Rail with a 308px Slide-In / Slide-Out Creation Drawer.
+ * LernexAI Proprietary — Unified Left Navigation Framework & Contextual Floating Windows
+ * - Left Rail (64px): Direct Vector Tools + Floating Window Launchers
+ * - Left Hierarchy Tree (264px): Classic industry-standard Layers & Project Pages tree
+ * - Glassmorphic Floating Pop-Out Windows: Drop over the active workspace only when tapped
  */
+import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IText } from 'fabric'
 import { nanoid } from 'nanoid'
@@ -19,16 +22,17 @@ import {
   LayoutTemplate,
   Shapes,
   Zap,
+  Layers,
   FolderKanban,
   PanelLeftClose,
   PanelLeftOpen,
   Sparkles,
-  BarChart3,
   Box,
   QrCode,
+  X,
 } from 'lucide-react'
 import { Tooltip } from '@/components/ui/Tooltip'
-import { useEditorStore, type LeftDrawerTab } from '@/store/editorStore'
+import { useEditorStore, type FloatingWindowType } from '@/store/editorStore'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import {
   addRect,
@@ -46,60 +50,92 @@ import {
   addVectorDataVizWidget,
 } from '@/lib/quantumEngine'
 import { addIsometricCube, addVectorQrBadge } from '@/lib/vectorStudio'
+import { LayersPanel } from '@/workspace/inspector/SceneNodeTree'
 import { TemplatePanel } from '@/workspace/inspector/BlueprintGalleryDeck'
 import { StickerPanel } from '@/workspace/inspector/ParametricAssetVault'
 import { QuantumLabPanel } from '@/workspace/inspector/QuantumShaderSuite'
 import { ProjectsPanel } from '@/workspace/inspector/LocalVaultExplorer'
+import { AiChatPanel } from '@/components/ai/AiChatPanel'
 import type { ToolType } from '@/types'
 
-const DRAWER_MODULES: {
-  id: Exclude<LeftDrawerTab, null>
-  label: string
-  title: string
-  subtitle: string
-  icon: React.ReactNode
-}[] = [
+const SHADER_VISUAL_THUMBS = [
   {
-    id: 'create',
-    label: 'Create',
-    title: 'Creation Studio',
-    subtitle: 'Vectors, Typography, Shaders & Data-Viz',
-    icon: <PlusSquare size={17} strokeWidth={1.75} />,
+    id: 'aurora-plasma',
+    label: 'Aurora Plasma',
+    gradient: 'radial-gradient(circle at 25% 25%, #06B6D4 0%, #14B8A6 45%, #07080D 100%)',
   },
   {
-    id: 'blueprints',
-    label: 'Presets',
-    title: 'Quantum Blueprints',
-    subtitle: 'Multi-category editable stage layouts',
-    icon: <LayoutTemplate size={17} strokeWidth={1.75} />,
+    id: 'synthwave-grid',
+    label: 'Synthwave Horizon',
+    gradient: 'linear-gradient(180deg, #0F172A 0%, #831843 55%, #F43F5E 100%)',
   },
   {
-    id: 'vectors',
-    label: 'Vectors',
-    title: 'Parametric Asset Vault',
-    subtitle: 'Polygons, 3D Cubes, Guilloche, QR & Glyphs',
-    icon: <Shapes size={17} strokeWidth={1.75} />,
+    id: 'quantum-mesh',
+    label: 'Quantum Waves',
+    gradient: 'linear-gradient(135deg, #08090E 0%, #0891B2 50%, #2DD4BF 100%)',
   },
   {
-    id: 'quantum',
-    label: 'Quantum',
-    title: '15-Engine Quantum Lab',
-    subtitle: 'CSS Compiler, Smart Reflow & AES-256 Vault',
-    icon: <Zap size={17} strokeWidth={1.75} />,
+    id: 'constellation',
+    label: 'Starlight Mesh',
+    gradient: 'radial-gradient(circle at 70% 30%, #38BDF8 0%, #1E1B4B 55%, #07080D 100%)',
   },
-  {
-    id: 'vault',
-    label: 'Vault',
-    title: 'Local Project Vault',
-    subtitle: 'IndexedDB persistent workspaces',
-    icon: <FolderKanban size={17} strokeWidth={1.75} />,
+] as const
+
+const FLOATING_WINDOW_META: Record<
+  Exclude<FloatingWindowType, null>,
+  { title: string; subtitle: string; width: number }
+> = {
+  create: {
+    title: 'Creative Elements & Shaders',
+    subtitle: 'Tap any element to drop onto the canvas',
+    width: 420,
   },
-]
+  blueprints: {
+    title: 'Studio Blueprints',
+    subtitle: 'Multi-layer starter compositions',
+    width: 460,
+  },
+  vectors: {
+    title: 'Parametric Vectors, QR & Glyphs',
+    subtitle: 'Polygons, Guilloche meshes, QR matrix & icons',
+    width: 420,
+  },
+  quantum: {
+    title: 'Quantum Studio Engines',
+    subtitle: 'Curve text, smart reflow, CSS compiler & AES vault',
+    width: 420,
+  },
+  ai: {
+    title: 'Autonomous AI Studio',
+    subtitle: 'Copilot, Text-to-Design, Image AI & Design Doctor',
+    width: 390,
+  },
+}
 
 export function Toolbar() {
-  const { activeTool, setActiveTool, leftDrawerTab, toggleLeftDrawer, setLeftDrawerTab } =
-    useEditorStore()
+  const {
+    activeTool,
+    setActiveTool,
+    isHierarchyOpen,
+    toggleHierarchySidebar,
+    leftSidebarView,
+    setLeftSidebarView,
+    activeFloatingWindow,
+    setActiveFloatingWindow,
+    toggleFloatingWindow,
+    layers,
+  } = useEditorStore()
   const canvas = useFabricCanvas()
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && activeFloatingWindow) {
+        setActiveFloatingWindow(null)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activeFloatingWindow, setActiveFloatingWindow])
 
   const activateStageTool = (tool: ToolType) => {
     if (!canvas) return
@@ -183,124 +219,70 @@ export function Toolbar() {
     canvas.setActiveObject(node)
     canvas.requestRenderAll()
     useEditorStore.getState().snapshot()
+    setActiveFloatingWindow(null)
   }
 
-  const activeModuleMeta = DRAWER_MODULES.find((m) => m.id === leftDrawerTab)
+  const activeWindowMeta = activeFloatingWindow ? FLOATING_WINDOW_META[activeFloatingWindow] : null
 
   return (
     <div style={{ display: 'flex', height: '100%', flexShrink: 0, position: 'relative', zIndex: 30 }}>
-      {/* ── Primary 64px Vertical Studio Rail ── */}
+      {/* ── 1. Leftmost Creative Tool Rail (64px, Borderless Tonal Surface) ── */}
       <aside
         style={{
           width: 64,
-          background: '#0D0F17',
-          borderRight: '1px solid var(--color-base-600)',
+          background: '#0A0C13',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: '10px 6px',
+          padding: '12px 8px',
           gap: 6,
           flexShrink: 0,
           userSelect: 'none',
         }}
       >
-        {/* Slide-Out Drawer Module Triggers */}
-        {DRAWER_MODULES.map((mod) => {
-          const isOpen = leftDrawerTab === mod.id
+        {/* Direct Stage Cursor & Vector Primitives */}
+        {[
+          { id: 'select', label: 'Select', key: 'V', icon: <MousePointer2 size={17} /> },
+          { id: 'rect', label: 'Rectangle', key: 'R', icon: <Square size={17} /> },
+          { id: 'circle', label: 'Circle', key: 'C', icon: <Circle size={17} /> },
+          { id: 'triangle', label: 'Triangle', key: '△', icon: <Triangle size={17} /> },
+          { id: 'line', label: 'Line', key: 'L', icon: <Minus size={17} /> },
+          { id: 'text', label: 'Text', key: 'T', icon: <Type size={17} /> },
+          { id: 'pencil', label: 'Brush', key: 'P', icon: <PenLine size={17} /> },
+        ].map((tool) => {
+          const isSelected = activeTool === tool.id
           return (
-            <button
-              key={mod.id}
-              onClick={() => toggleLeftDrawer(mod.id)}
-              title={`${mod.title} (Click to toggle drawer)`}
-              style={{
-                width: 52,
-                height: 48,
-                borderRadius: '0.625rem',
-                border: isOpen ? '1px solid rgba(6, 182, 212, 0.45)' : '1px solid transparent',
-                background: isOpen ? 'rgba(6, 182, 212, 0.14)' : 'transparent',
-                color: isOpen ? '#22D3EE' : '#94A3B8',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 3,
-                cursor: 'pointer',
-                transition: 'all 140ms ease',
-                position: 'relative',
-              }}
-            >
-              {isOpen && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 10,
-                    bottom: 10,
-                    width: 3,
-                    borderRadius: '0 3px 3px 0',
-                    background: 'linear-gradient(180deg, #06B6D4, #14B8A6)',
-                  }}
-                />
-              )}
-              {mod.icon}
-              <span style={{ fontSize: 9.5, fontWeight: isOpen ? 700 : 600, letterSpacing: '0.01em' }}>
-                {mod.label}
-              </span>
-            </button>
+            <Tooltip key={tool.id} content={tool.label} shortcut={tool.key} side="right">
+              <button
+                onClick={() => activateStageTool(tool.id as ToolType)}
+                style={{
+                  width: 44,
+                  height: 40,
+                  borderRadius: 14,
+                  border: 'none',
+                  background: isSelected ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+                  color: isSelected ? '#22D3EE' : '#94A3B8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 140ms',
+                }}
+              >
+                {tool.icon}
+              </button>
+            </Tooltip>
           )
         })}
 
-        <div style={{ width: 34, height: 1, background: 'var(--color-base-600)', margin: '4px 0' }} />
-
-        {/* Direct Stage Cursor & Drawing Tools */}
-        <Tooltip content="Select & Transform" shortcut="V" side="right">
-          <button
-            onClick={() => activateStageTool('select')}
-            style={{
-              width: 44,
-              height: 36,
-              borderRadius: '0.5rem',
-              border: activeTool === 'select' ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid transparent',
-              background: activeTool === 'select' ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
-              color: activeTool === 'select' ? '#06B6D4' : '#94A3B8',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <MousePointer2 size={16} />
-          </button>
-        </Tooltip>
-
-        <Tooltip content="Freehand Brush" shortcut="P" side="right">
-          <button
-            onClick={() => activateStageTool('pencil')}
-            style={{
-              width: 44,
-              height: 36,
-              borderRadius: '0.5rem',
-              border: activeTool === 'pencil' ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid transparent',
-              background: activeTool === 'pencil' ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
-              color: activeTool === 'pencil' ? '#06B6D4' : '#94A3B8',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <PenLine size={16} />
-          </button>
-        </Tooltip>
-
-        <Tooltip content="Upload Image Asset" shortcut="I" side="right">
+        <Tooltip content="Upload Media" shortcut="I" side="right">
           <button
             onClick={triggerImageUpload}
             style={{
               width: 44,
-              height: 36,
-              borderRadius: '0.5rem',
-              border: '1px solid transparent',
+              height: 40,
+              borderRadius: 14,
+              border: 'none',
               background: 'transparent',
               color: '#94A3B8',
               display: 'flex',
@@ -309,52 +291,93 @@ export function Toolbar() {
               cursor: 'pointer',
             }}
           >
-            <Image size={16} />
+            <Image size={17} />
           </button>
         </Tooltip>
 
-        {/* Bottom Slide-In / Slide-Out Toggle Button */}
-        <div style={{ marginTop: 'auto', paddingTop: 6 }}>
+        {/* Contextual Floating Pop-Out Window Launchers */}
+        <div
+          style={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+            padding: 5,
+            borderRadius: 18,
+            background: '#111522',
+          }}
+        >
+          {[
+            { id: 'create', label: 'Creative Elements', icon: <PlusSquare size={17} />, color: '#06B6D4' },
+            { id: 'blueprints', label: 'Studio Blueprints', icon: <LayoutTemplate size={17} />, color: '#22D3EE' },
+            { id: 'vectors', label: 'Vectors, QR & Glyphs', icon: <Shapes size={17} />, color: '#14B8A6' },
+            { id: 'quantum', label: 'Quantum Lab', icon: <Zap size={17} />, color: '#F59E0B' },
+            { id: 'ai', label: 'AI Studio Copilot', icon: <Sparkles size={17} />, color: '#38BDF8' },
+          ].map((pop) => {
+            const isOpen = activeFloatingWindow === pop.id
+            return (
+              <Tooltip key={pop.id} content={pop.label} side="right">
+                <button
+                  onClick={() => toggleFloatingWindow(pop.id as Exclude<FloatingWindowType, null>)}
+                  style={{
+                    width: 40,
+                    height: 38,
+                    borderRadius: 13,
+                    border: 'none',
+                    background: isOpen ? 'rgba(6, 182, 212, 0.22)' : 'transparent',
+                    color: isOpen ? '#22D3EE' : pop.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 150ms',
+                  }}
+                >
+                  {pop.icon}
+                </button>
+              </Tooltip>
+            )
+          })}
+        </div>
+
+        {/* Toggle Left Hierarchy Tree */}
+        <div style={{ marginTop: 'auto' }}>
           <Tooltip
-            content={leftDrawerTab ? 'Collapse Left Sidebar' : 'Expand Left Sidebar'}
+            content={isHierarchyOpen ? 'Hide Layers Tree' : 'Show Layers Tree'}
             side="right"
           >
             <button
-              onClick={() =>
-                setLeftDrawerTab(leftDrawerTab ? null : 'create')
-              }
-              aria-label="Toggle Left Sidebar Drawer"
+              onClick={toggleHierarchySidebar}
               style={{
                 width: 44,
-                height: 38,
-                borderRadius: '0.5rem',
-                border: '1px solid var(--color-base-600)',
-                background: '#11141C',
-                color: leftDrawerTab ? '#06B6D4' : '#94A3B8',
+                height: 40,
+                borderRadius: 14,
+                border: 'none',
+                background: '#111522',
+                color: isHierarchyOpen ? '#22D3EE' : '#94A3B8',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
               }}
             >
-              {leftDrawerTab ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+              {isHierarchyOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
             </button>
           </Tooltip>
         </div>
       </aside>
 
-      {/* ── Collapsible Slide-Out Feature Drawer (308px) ── */}
+      {/* ── 2. Classic Left Scene Hierarchy & Pages Tree (260px, Borderless Tonal Flow) ── */}
       <AnimatePresence initial={false}>
-        {leftDrawerTab && (
+        {isHierarchyOpen && (
           <motion.section
-            key="left-slide-drawer"
+            key="left-hierarchy-tree"
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 308, opacity: 1 }}
+            animate={{ width: 260, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              background: '#0D0F17',
-              borderRight: '1px solid var(--color-base-600)',
+              background: '#0D101A',
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
@@ -362,340 +385,374 @@ export function Toolbar() {
               flexShrink: 0,
             }}
           >
-            {/* Drawer Header with Collapse Button */}
-            <div
+            {/* Soft Segmented Switcher: Layers vs Saved Workspaces */}
+            <div style={{ padding: '14px 14px 8px', width: 260, flexShrink: 0 }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 4,
+                  padding: 4,
+                  borderRadius: 14,
+                  background: '#141826',
+                }}
+              >
+                <button
+                  onClick={() => setLeftSidebarView('layers')}
+                  style={{
+                    height: 30,
+                    borderRadius: 10,
+                    border: 'none',
+                    background:
+                      leftSidebarView === 'layers' ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+                    color: leftSidebarView === 'layers' ? '#22D3EE' : '#94A3B8',
+                    fontSize: 11.5,
+                    fontWeight: leftSidebarView === 'layers' ? 700 : 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Layers size={13} />
+                  <span>Layers</span>
+                  {layers.length > 0 && (
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontFamily: 'var(--font-mono)',
+                        color: leftSidebarView === 'layers' ? '#22D3EE' : '#64748B',
+                      }}
+                    >
+                      {layers.length}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setLeftSidebarView('vault')}
+                  style={{
+                    height: 30,
+                    borderRadius: 10,
+                    border: 'none',
+                    background:
+                      leftSidebarView === 'vault' ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+                    color: leftSidebarView === 'vault' ? '#22D3EE' : '#94A3B8',
+                    fontSize: 11.5,
+                    fontWeight: leftSidebarView === 'vault' ? 700 : 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <FolderKanban size={13} />
+                  <span>Projects</span>
+                </button>
+              </div>
+            </div>
+
+            <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', width: 260 }}>
+              {leftSidebarView === 'layers' ? <LayersPanel /> : <ProjectsPanel />}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
+
+      {/* ── 3. Contextual Glassmorphic Floating Pop-Out Windows Over Active Workspace ── */}
+      <AnimatePresence>
+        {activeFloatingWindow && activeWindowMeta && (
+          <>
+            {/* Subtle click-away backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveFloatingWindow(null)}
               style={{
-                padding: '12px 14px 10px',
-                borderBottom: '1px solid var(--color-base-600)',
+                position: 'fixed',
+                inset: 0,
+                zIndex: 80,
+                background: 'rgba(4, 6, 12, 0.25)',
+              }}
+            />
+
+            <motion.div
+              key={activeFloatingWindow}
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.96 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: 'fixed',
+                top: 72,
+                left: isHierarchyOpen ? 340 : 80,
+                width: activeWindowMeta.width,
+                maxHeight: 'calc(100vh - 116px)',
+                zIndex: 90,
+                background: 'rgba(15, 18, 29, 0.88)',
+                backdropFilter: 'blur(28px) saturate(1.6)',
+                borderRadius: 24,
+                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.65), 0 4px 20px rgba(6, 182, 212, 0.12)',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: '#11141C',
-                flexShrink: 0,
+                flexDirection: 'column',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#F8FAFC', lineHeight: 1.2 }}>
-                  {activeModuleMeta?.title}
-                </div>
-                <div style={{ fontSize: 10.5, color: '#64748B', marginTop: 2 }}>
-                  {activeModuleMeta?.subtitle}
-                </div>
-              </div>
-              <button
-                onClick={() => setLeftDrawerTab(null)}
-                title="Slide sidebar inside"
+              {/* Floating Window Header */}
+              <div
                 style={{
-                  height: 26,
-                  padding: '0 8px',
-                  borderRadius: 6,
-                  background: '#1A1E2A',
-                  border: '1px solid var(--color-base-600)',
-                  color: '#94A3B8',
-                  fontSize: 10.5,
-                  fontWeight: 600,
-                  cursor: 'pointer',
+                  padding: '18px 20px 12px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 4,
+                  justifyContent: 'space-between',
                   flexShrink: 0,
                 }}
               >
-                <PanelLeftClose size={12} />
-                <span>Hide</span>
-              </button>
-            </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#F8FAFC', lineHeight: 1.2 }}>
+                    {activeWindowMeta.title}
+                  </div>
+                  <div style={{ fontSize: 11.5, color: '#94A3B8', marginTop: 3 }}>
+                    {activeWindowMeta.subtitle}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveFloatingWindow(null)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 12,
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: 'none',
+                    color: '#CBD5E1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                  title="Close window (Esc)"
+                >
+                  <X size={15} />
+                </button>
+              </div>
 
-            {/* Drawer Body */}
-            <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', width: 308 }}>
-              {leftDrawerTab === 'create' && (
-                <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {/* 1. Vector Shapes & Primitives */}
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: '#94A3B8',
-                        marginBottom: 8,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <span>01. Vector Primitives</span>
-                      <span style={{ fontSize: 10, color: '#64748B', fontFamily: 'var(--font-mono)' }}>
-                        1-Click Insert
-                      </span>
+              {/* Floating Window Body */}
+              <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', paddingBottom: 16 }}>
+                {activeFloatingWindow === 'create' && (
+                  <div style={{ padding: '4px 20px 12px', display: 'flex', flexDirection: 'column', gap: 22 }}>
+                    {/* Section 1: Ambient Shader Backdrops */}
+                    <div>
+                      <div style={{ fontSize: 11.5, fontWeight: 600, color: '#94A3B8', marginBottom: 10 }}>
+                        Ambient Shader Backdrops
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        {SHADER_VISUAL_THUMBS.map((sw) => (
+                          <button
+                            key={sw.id}
+                            onClick={() => {
+                              if (!canvas) return
+                              void applyProceduralShaderBackground(canvas, sw.id)
+                              setActiveFloatingWindow(null)
+                            }}
+                            style={{
+                              height: 74,
+                              borderRadius: 16,
+                              border: 'none',
+                              background: sw.gradient,
+                              padding: 12,
+                              display: 'flex',
+                              alignItems: 'flex-end',
+                              cursor: 'pointer',
+                              boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 11.5,
+                                fontWeight: 700,
+                                color: '#F8FAFC',
+                                textShadow: '0 2px 8px rgba(0,0,0,0.85)',
+                              }}
+                            >
+                              {sw.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-                      {[
-                        { label: 'Rectangle', key: 'R', icon: <Square size={15} />, run: () => activateStageTool('rect') },
-                        { label: 'Circle', key: 'C', icon: <Circle size={15} />, run: () => activateStageTool('circle') },
-                        { label: 'Triangle', key: '△', icon: <Triangle size={15} />, run: () => activateStageTool('triangle') },
-                        { label: 'Line', key: 'L', icon: <Minus size={15} />, run: () => activateStageTool('line') },
-                        { label: 'Arrow', key: '→', icon: <ArrowRight size={15} />, run: () => activateStageTool('arrow') },
-                        { label: '3D Cube', key: '⇧I', icon: <Box size={15} />, run: () => canvas && addIsometricCube(canvas) },
-                        { label: 'Vector QR', key: '⇧Q', icon: <QrCode size={15} />, run: () => canvas && addVectorQrBadge(canvas, 'https://lernexai.com') },
-                        { label: 'Freehand', key: 'P', icon: <PenLine size={15} />, run: () => activateStageTool('pencil') },
-                        { label: 'Upload Img', key: 'I', icon: <Image size={15} />, run: triggerImageUpload },
-                      ].map((item) => (
+
+                    {/* Section 2: Typography & Path Text */}
+                    <div>
+                      <div style={{ fontSize: 11.5, fontWeight: 600, color: '#94A3B8', marginBottom: 10 }}>
+                        Typography & Curve Text
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                         <button
-                          key={item.label}
-                          onClick={item.run}
-                          className="btn-base"
+                          onClick={() =>
+                            insertPresetTypography(
+                              'STUDIO HEADLINE',
+                              56,
+                              'Plus Jakarta Sans',
+                              '800',
+                              '#F8FAFC',
+                              'Display Heading',
+                            )
+                          }
                           style={{
-                            height: 54,
-                            flexDirection: 'column',
-                            gap: 4,
-                            padding: '6px 4px',
-                            fontSize: 10.5,
+                            height: 48,
+                            borderRadius: 14,
+                            border: 'none',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            color: '#F8FAFC',
+                            fontSize: 13,
+                            fontWeight: 800,
+                            cursor: 'pointer',
                           }}
                         >
-                          <span style={{ color: '#06B6D4' }}>{item.icon}</span>
-                          <span>{item.label}</span>
+                          Display Heading
                         </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 2. Typography Hierarchy Stack */}
-                  <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', marginBottom: 8 }}>
-                      02. Typography Hierarchy
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      <button
-                        onClick={() =>
-                          insertPresetTypography(
-                            'QUANTUM HEADLINE',
-                            56,
-                            'Plus Jakarta Sans',
-                            '800',
-                            '#F8FAFC',
-                            'Hero Display Heading',
-                          )
-                        }
-                        className="btn-base"
-                        style={{
-                          height: 40,
-                          justifyContent: 'space-between',
-                          padding: '0 12px',
-                        }}
-                      >
-                        <span style={{ fontSize: 14, fontWeight: 800, color: '#F8FAFC' }}>
-                          Add Display Heading
-                        </span>
-                        <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: '#06B6D4' }}>
-                          56px Bold
-                        </span>
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          insertPresetTypography(
-                            'Editorial Serif Statement',
-                            46,
-                            'Playfair Display',
-                            '700',
-                            '#F8FAFC',
-                            'Editorial Serif Heading',
-                            true,
-                          )
-                        }
-                        className="btn-base"
-                        style={{
-                          height: 38,
-                          justifyContent: 'space-between',
-                          padding: '0 12px',
-                        }}
-                      >
-                        <span
+                        <button
+                          onClick={() =>
+                            insertPresetTypography(
+                              'Editorial Serif',
+                              46,
+                              'Playfair Display',
+                              '700',
+                              '#F8FAFC',
+                              'Editorial Serif',
+                              true,
+                            )
+                          }
                           style={{
+                            height: 48,
+                            borderRadius: 14,
+                            border: 'none',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            color: '#F8FAFC',
                             fontSize: 14,
                             fontFamily: 'Playfair Display, serif',
                             fontStyle: 'italic',
                             fontWeight: 700,
-                            color: '#F8FAFC',
+                            cursor: 'pointer',
                           }}
                         >
-                          Add Editorial Serif
-                        </span>
-                        <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: '#14B8A6' }}>
-                          46px Italic
-                        </span>
-                      </button>
+                          Editorial Serif
+                        </button>
+                      </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                        <button
-                          onClick={() =>
-                            insertPresetTypography(
-                              'Section Subheading',
-                              28,
-                              'Plus Jakarta Sans',
-                              '600',
-                              '#CBD5E1',
-                              'Subheading Layer',
-                            )
-                          }
-                          className="btn-base"
-                          style={{ height: 34, fontSize: 11.5 }}
-                        >
-                          <Type size={13} color="#06B6D4" /> Subheading
-                        </button>
-                        <button
-                          onClick={() =>
-                            insertPresetTypography(
-                              'Clean body paragraph copy ready for your layout.',
-                              18,
-                              'Plus Jakarta Sans',
-                              '400',
-                              '#94A3B8',
-                              'Body Text Layer',
-                            )
-                          }
-                          className="btn-base"
-                          style={{ height: 34, fontSize: 11.5 }}
-                        >
-                          <Type size={13} color="#14B8A6" /> Body Copy
-                        </button>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(3, 1fr)',
+                          gap: 8,
+                          marginTop: 8,
+                        }}
+                      >
+                        {[
+                          { label: '◎ Ring Seal', mode: 'circle' as const, color: '#06B6D4' },
+                          { label: '〰 Sine Wave', mode: 'wave' as const, color: '#14B8A6' },
+                          { label: '⌒ Arch Crest', mode: 'arch' as const, color: '#F59E0B' },
+                        ].map((pt) => (
+                          <button
+                            key={pt.label}
+                            onClick={() => {
+                              if (!canvas) return
+                              addParametricTextOnPath(
+                                canvas,
+                                'COREX QUANTUM STUDIO • ',
+                                pt.mode,
+                                pt.color,
+                              )
+                              setActiveFloatingWindow(null)
+                            }}
+                            style={{
+                              height: 40,
+                              borderRadius: 12,
+                              border: 'none',
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              color: '#E2E8F0',
+                              fontSize: 11.5,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {pt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Section 3: Data-Viz, 3D & QR */}
+                    <div>
+                      <div style={{ fontSize: 11.5, fontWeight: 600, color: '#94A3B8', marginBottom: 10 }}>
+                        Charts, 3D & Smart Objects
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                        {[
+                          {
+                            label: 'KPI Card',
+                            run: () => canvas && addVectorDataVizWidget(canvas, 'kpi-card'),
+                          },
+                          {
+                            label: 'Bar Chart',
+                            run: () => canvas && addVectorDataVizWidget(canvas, 'bar-chart'),
+                          },
+                          {
+                            label: 'Donut Ring',
+                            run: () => canvas && addVectorDataVizWidget(canvas, 'donut-ring'),
+                          },
+                          {
+                            label: 'Browser Frame',
+                            run: () => canvas && addVectorDataVizWidget(canvas, 'macbook-window'),
+                          },
+                          {
+                            label: '3D Cube',
+                            run: () => canvas && addIsometricCube(canvas),
+                          },
+                          {
+                            label: 'Vector QR',
+                            run: () => canvas && addVectorQrBadge(canvas, 'https://lernexai.com'),
+                          },
+                        ].map((item) => (
+                          <button
+                            key={item.label}
+                            onClick={() => {
+                              item.run()
+                              setActiveFloatingWindow(null)
+                            }}
+                            style={{
+                              height: 44,
+                              borderRadius: 14,
+                              border: 'none',
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              color: '#E2E8F0',
+                              fontSize: 11.5,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* 3. Parametric Text-on-Path */}
-                  <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', marginBottom: 8 }}>
-                      03. Parametric Text-on-Path
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-                      <button
-                        onClick={() =>
-                          canvas &&
-                          addParametricTextOnPath(
-                            canvas,
-                            'COREX QUANTUM STUDIO • LERNEXAI • ',
-                            'circle',
-                            '#06B6D4',
-                          )
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        ◎ Ring Seal
-                      </button>
-                      <button
-                        onClick={() =>
-                          canvas &&
-                          addParametricTextOnPath(canvas, 'QUANTUM WAVE MOTION', 'wave', '#14B8A6')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        〰 Sine Wave
-                      </button>
-                      <button
-                        onClick={() =>
-                          canvas &&
-                          addParametricTextOnPath(canvas, 'LERNEXAI STUDIO', 'arch', '#F59E0B')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        ⌒ Arch Crest
-                      </button>
-                    </div>
+                {activeFloatingWindow === 'blueprints' && <TemplatePanel />}
+                {activeFloatingWindow === 'vectors' && <StickerPanel />}
+                {activeFloatingWindow === 'quantum' && <QuantumLabPanel />}
+                {activeFloatingWindow === 'ai' && (
+                  <div style={{ height: 520 }}>
+                    <AiChatPanel />
                   </div>
-
-                  {/* 4. Data-Viz & Device Mockup Cards */}
-                  <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', marginBottom: 8 }}>
-                      04. Data-Viz & Device Mockups
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                      <button
-                        onClick={() => canvas && addVectorDataVizWidget(canvas, 'kpi-card')}
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        <BarChart3 size={13} color="#10B981" /> KPI Metric Card
-                      </button>
-                      <button
-                        onClick={() => canvas && addVectorDataVizWidget(canvas, 'bar-chart')}
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        <BarChart3 size={13} color="#06B6D4" /> Vector Bar Chart
-                      </button>
-                      <button
-                        onClick={() => canvas && addVectorDataVizWidget(canvas, 'donut-ring')}
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        <Sparkles size={13} color="#14B8A6" /> Donut Progress
-                      </button>
-                      <button
-                        onClick={() => canvas && addVectorDataVizWidget(canvas, 'macbook-window')}
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        <Square size={13} color="#F59E0B" /> Studio Window
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* 5. Procedural Shader Backdrops */}
-                  <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', marginBottom: 8 }}>
-                      05. Procedural Shader Backdrops
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                      <button
-                        onClick={() =>
-                          canvas && void applyProceduralShaderBackground(canvas, 'aurora-plasma')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        Aurora Plasma
-                      </button>
-                      <button
-                        onClick={() =>
-                          canvas && void applyProceduralShaderBackground(canvas, 'synthwave-grid')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        Synthwave Grid
-                      </button>
-                      <button
-                        onClick={() =>
-                          canvas && void applyProceduralShaderBackground(canvas, 'quantum-mesh')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        Quantum Mesh
-                      </button>
-                      <button
-                        onClick={() =>
-                          canvas && void applyProceduralShaderBackground(canvas, 'constellation')
-                        }
-                        className="btn-base"
-                        style={{ height: 34, fontSize: 11 }}
-                      >
-                        Constellation
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {leftDrawerTab === 'blueprints' && <TemplatePanel />}
-              {leftDrawerTab === 'vectors' && <StickerPanel />}
-              {leftDrawerTab === 'quantum' && <QuantumLabPanel />}
-              {leftDrawerTab === 'vault' && <ProjectsPanel />}
-            </div>
-          </motion.section>
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

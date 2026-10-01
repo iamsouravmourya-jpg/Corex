@@ -107,7 +107,7 @@ export function ProjectsPanel() {
         variants={staggerContainerVariants}
         initial="hidden"
         animate="visible"
-        style={{ padding: '0 12px', display: 'flex', flexDirection: 'column', gap: 8 }}
+        style={{ padding: '0 14px', display: 'flex', flexDirection: 'column', gap: 10 }}
       >
         {projects?.map((project) => (
           <motion.div
@@ -116,19 +116,22 @@ export function ProjectsPanel() {
             onClick={() => setConfirmLoad(project)}
             style={{
               display: 'flex',
-              gap: 10,
-              padding: 8,
-              borderRadius: 8,
+              gap: 12,
+              padding: 10,
+              borderRadius: 16,
               cursor: 'pointer',
-              background: currentProjectId === project.id ? 'var(--color-base-750)' : 'var(--color-base-800)',
-              border: currentProjectId === project.id ? '1px solid var(--color-accent-400)' : '1px solid var(--color-base-600)',
+              background:
+                currentProjectId === project.id
+                  ? 'rgba(6, 182, 212, 0.16)'
+                  : 'rgba(255, 255, 255, 0.03)',
+              border: 'none',
               transition: 'all 150ms',
             }}
           >
             {/* Thumbnail */}
             <img
               src={project.thumbnail}
-              style={{ width: 52, height: 40, objectFit: 'cover', borderRadius: 4, flexShrink: 0, background: '#333' }}
+              style={{ width: 56, height: 44, objectFit: 'cover', borderRadius: 10, flexShrink: 0, background: '#181C2B' }}
               alt={project.name}
             />
             <div style={{ flex: 1, minWidth: 0 }}>

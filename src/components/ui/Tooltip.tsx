@@ -1,6 +1,6 @@
 /**
- * LernexAI Proprietary — Native Studio Tooltip Primitive
- * Zero external @radix-ui/react-tooltip dependency.
+ * LernexAI Proprietary — Native Soft-Edge Studio Tooltip Primitive
+ * Zero external @radix-ui/react-tooltip dependency and zero border lines.
  */
 import React, { useState } from 'react'
 
@@ -16,15 +16,15 @@ export function Tooltip({ content, shortcut, side = 'top', children }: TooltipPr
 
   const getPositionStyle = (): React.CSSProperties => {
     if (side === 'right') {
-      return { left: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' }
+      return { left: 'calc(100% + 10px)', top: '50%', transform: 'translateY(-50%)' }
     }
     if (side === 'bottom') {
-      return { top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' }
+      return { top: 'calc(100% + 10px)', left: '50%', transform: 'translateX(-50%)' }
     }
     if (side === 'left') {
-      return { right: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' }
+      return { right: 'calc(100% + 10px)', top: '50%', transform: 'translateY(-50%)' }
     }
-    return { bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' }
+    return { bottom: 'calc(100% + 10px)', left: '50%', transform: 'translateX(-50%)' }
   }
 
   return (
@@ -44,15 +44,14 @@ export function Tooltip({ content, shortcut, side = 'top', children }: TooltipPr
             ...getPositionStyle(),
             zIndex: 9999,
             pointerEvents: 'none',
-            background: '#0D0F17',
-            border: '1px solid #1A1E2A',
-            borderRadius: '0.5rem',
-            padding: '5px 9px',
+            background: '#111522',
+            borderRadius: 11,
+            padding: '6px 11px',
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 7,
             whiteSpace: 'nowrap',
-            boxShadow: '0 10px 24px rgba(8, 9, 14, 0.85)',
+            boxShadow: '0 14px 32px rgba(0, 0, 0, 0.72)',
           }}
         >
           <span style={{ fontSize: 11, fontWeight: 600, color: '#F8FAFC' }}>{content}</span>
@@ -61,10 +60,10 @@ export function Tooltip({ content, shortcut, side = 'top', children }: TooltipPr
               style={{
                 fontSize: 9.5,
                 fontFamily: 'var(--font-mono)',
-                color: '#06B6D4',
-                background: 'rgba(6, 182, 212, 0.14)',
-                padding: '1px 5px',
-                borderRadius: 4,
+                color: '#22D3EE',
+                background: 'rgba(6, 182, 212, 0.16)',
+                padding: '2px 6px',
+                borderRadius: 6,
               }}
             >
               {shortcut}

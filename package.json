@@ -1,8 +1,8 @@
 {
   "name": "@lernexai/corex-quantum-studio",
   "private": true,
-  "version": "2.4.0",
-  "description": "LernexAI Proprietary 15-Engine Vector, Shader & Autonomous AI Design Suite",
+  "version": "3.0.0",
+  "description": "LernexAI Proprietary 18-Engine Vector, WebGL2 GLSL Shader, OPFS Binary Vault & Autonomous AI Design Suite",
   "author": "Sourav Maurya <iamsouravmaurya@gmail.com> (LernexAI)",
   "license": "UNLICENSED",
   "type": "module",

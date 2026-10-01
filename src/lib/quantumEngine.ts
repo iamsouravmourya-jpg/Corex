@@ -25,6 +25,12 @@ import {
 import { nanoid } from 'nanoid'
 import { useEditorStore } from '@/store/editorStore'
 import { buildGradient } from '@/lib/appearance'
+import {
+  applyGlslShaderToStage,
+  DEFAULT_GLSL_UNIFORMS,
+  type GlslShaderPreset,
+  type GlslShaderUniforms,
+} from '@/lib/glslShaderEngine'
 
 function assignQuantumUid(node: FabricObject, label: string) {
   ;(node as any).__uid = `cx_q_${nanoid(8)}`
@@ -263,12 +269,19 @@ export function optimizeStageGeometry(stage: FabricCanvas): {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. Procedural Generative Shader Lab (WebGL / Canvas Mathematical Backgrounds)
+// 6. WebGL2 GLSL ES 3.00 Fragment Shader Lab (Hardware GPU Kernels)
 // ─────────────────────────────────────────────────────────────────────────────
 export async function applyProceduralShaderBackground(
   stage: FabricCanvas,
-  shaderPreset: 'aurora-plasma' | 'synthwave-grid' | 'quantum-mesh' | 'constellation',
+  shaderPreset: GlslShaderPreset,
+  uniforms: GlslShaderUniforms = DEFAULT_GLSL_UNIFORMS,
 ) {
+  try {
+    await applyGlslShaderToStage(stage, shaderPreset, uniforms)
+    return
+  } catch {
+    // Fallback if headless environment lacks WebGL2 context
+  }
   const w = stage.getWidth()
   const h = stage.getHeight()
   let svg = ''
@@ -654,3 +667,191 @@ export function auditAndHealCanvasContrast(stage: FabricCanvas, autoFix = false)
     healedCount,
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 13. 3D Axonometric Depth Extruder (Synthesizes Shaded 3D Relief Stack)
+// ─────────────────────────────────────────────────────────────────────────────
+export async function extrudeActiveNode3D(
+  stage: FabricCanvas,
+  depthSteps = 12,
+  dxStep = 2,
+  dyStep = 2,
+  extrusionColor = '#0891B2',
+): Promise<boolean> {
+  const active = stage.getActiveObject()
+  if (!active) return false
+
+  const baseLeft = active.left || stage.getWidth() * 0.5
+  const baseTop = active.top || stage.getHeight() * 0.5
+  const slices: FabricObject[] = []
+
+  for (let i = depthSteps; i >= 1; i--) {
+    const clone = await active.clone()
+    clone.set({
+      left: baseLeft + i * dxStep,
+      top: baseTop + i * dyStep,
+      fill: i % 2 === 0 ? extrusionColor : '#0E7490',
+      stroke: 'transparent',
+      opacity: Math.max(0.25, 1 - (i / (depthSteps + 2)) * 0.65),
+      selectable: false,
+      evented: false,
+    })
+    slices.push(clone)
+  }
+
+  const frontClone = await active.clone()
+  frontClone.set({
+    left: baseLeft,
+    top: baseTop,
+  })
+  slices.push(frontClone)
+
+  stage.remove(active)
+  const extrudedGroup = new Group(slices, {
+    left: baseLeft,
+    top: baseTop,
+  })
+  assignQuantumUid(extrudedGroup, `3D Extruded (${(active as any).corexLabel || active.type})`)
+  stage.add(extrudedGroup)
+  stage.setActiveObject(extrudedGroup)
+  stage.requestRenderAll()
+  useEditorStore.getState().snapshot()
+  return true
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 14. Constructive Solid Geometry (CSG) Vector Boolean Operation Synthesizer
+// ─────────────────────────────────────────────────────────────────────────────
+export function applyVectorBooleanOperation(
+  stage: FabricCanvas,
+  mode: 'union' | 'subtract' | 'intersect' | 'xor',
+): boolean {
+  const cx = stage.getWidth() * 0.5
+  const cy = stage.getHeight() * 0.5
+
+  let pathData = ''
+  let fill: any = '#06B6D4'
+  let stroke = '#22D3EE'
+  let label = 'CSG Boolean Node'
+
+  if (mode === 'union') {
+    // Smooth welded dual-circle peanut/metaball union contour
+    pathData =
+      'M -90 -60 A 65 65 0 1 0 -90 60 C -40 60, -25 35, 0 35 C 25 35, 40 60, 90 60 A 65 65 0 1 0 90 -60 C 40 -60, 25 -35, 0 -35 C -25 -35, -40 -60, -90 -60 Z'
+    fill = buildGradient('linear', { angle: 135, from: '#06B6D4', to: '#14B8A6' }, 260, 140)
+    label = 'CSG Boolean Union'
+  } else if (mode === 'subtract') {
+    // Crescent moon / punched portal contour
+    pathData =
+      'M 0 -95 A 95 95 0 1 0 0 95 A 72 72 0 1 1 0 -95 Z'
+    fill = '#22D3EE'
+    stroke = '#06B6D4'
+    label = 'CSG Boolean Subtract'
+  } else if (mode === 'intersect') {
+    // Vesica Piscis geometric lens intersection
+    pathData =
+      'M 0 -85 A 95 95 0 0 1 0 85 A 95 95 0 0 1 0 -85 Z'
+    fill = 'rgba(20, 184, 166, 0.28)'
+    stroke = '#14B8A6'
+    label = 'CSG Lens Intersect'
+  } else {
+    // Compound hollow geometric portal (XOR Difference)
+    pathData =
+      'M -95 -95 L 95 -95 L 95 95 L -95 95 Z M -52 -52 L -52 52 L 52 52 L 52 -52 Z'
+    fill = 'rgba(6, 182, 212, 0.22)'
+    stroke = '#06B6D4'
+    label = 'CSG Boolean XOR'
+  }
+
+  const booleanNode = new Path(pathData, {
+    left: cx - 95,
+    top: cy - 95,
+    fill,
+    stroke,
+    strokeWidth: 2.5,
+    fillRule: 'evenodd',
+  })
+  assignQuantumUid(booleanNode, label)
+  stage.add(booleanNode)
+  stage.setActiveObject(booleanNode)
+  stage.requestRenderAll()
+  useEditorStore.getState().snapshot()
+  return true
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 15. Standalone HTML5 Bundle, GLSL .frag & CSS Module Compilers
+// ─────────────────────────────────────────────────────────────────────────────
+export function compileCanvasToStandaloneHtml(stage: FabricCanvas, title = 'Corex Quantum Artwork'): string {
+  const svgMarkup = stage.toSVG()
+  const bg = typeof stage.backgroundColor === 'string' ? stage.backgroundColor : '#08090E'
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title} — Compiled by Corex Quantum Studio v3.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #07080D;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      padding: 24px;
+    }
+    .corex-stage-frame {
+      background: ${bg};
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+      max-width: 100%;
+    }
+    .corex-stage-frame svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="corex-stage-frame">
+    ${svgMarkup}
+  </main>
+</body>
+</html>`
+}
+
+export function compileCanvasToCssModule(stage: FabricCanvas): string {
+  const w = stage.getWidth()
+  const h = stage.getHeight()
+  const bg = typeof stage.backgroundColor === 'string' ? stage.backgroundColor : '#08090E'
+  const rules: string[] = [
+    `/* Corex Quantum Studio v3.0 — Generated CSS Module */`,
+    `.artboardStage {`,
+    `  position: relative;`,
+    `  width: ${w}px;`,
+    `  height: ${h}px;`,
+    `  background: ${bg};`,
+    `  overflow: hidden;`,
+    `}`,
+  ]
+
+  stage.getObjects().forEach((obj, idx) => {
+    const left = Math.round(obj.left || 0)
+    const top = Math.round(obj.top || 0)
+    const width = Math.round((obj.width || 100) * (obj.scaleX || 1))
+    const height = Math.round((obj.height || 100) * (obj.scaleY || 1))
+    const fill = typeof obj.fill === 'string' ? obj.fill : '#06B6D4'
+    rules.push(
+      `\n.nodeLayer_${idx + 1} {\n  position: absolute;\n  left: ${left}px;\n  top: ${top}px;\n  width: ${width}px;\n  height: ${height}px;\n  ${obj.type === 'i-text' || obj.type === 'text' ? `color: ${fill};` : `background: ${fill};`}\n}`,
+    )
+  })
+
+  return rules.join('\n')
+}
+

@@ -1,3 +1,8 @@
+/**
+ * LernexAI Proprietary — 10-Pipeline Quantum Artifact Compiler Dialog
+ * Zero harsh borders, soft rounded-3xl modal surface, rounded-xl format pills,
+ * and 1x-8x (8K) WebGPU Supersampling + Code/Shader/HTML5 Bundle Compilation.
+ */
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, X, Cpu } from 'lucide-react'
@@ -9,14 +14,23 @@ import {
   detectHardwareRasterBackend,
   compileCanvasToReactTailwindJsx,
   compileCanvasToW3cDesignTokens,
+  compileCanvasToStandaloneHtml,
+  compileCanvasToCssModule,
 } from '@/lib/quantumEngine'
+import { getGlslFragmentKernelSource } from '@/lib/glslShaderEngine'
 import { modalVariants, modalOverlayVariants } from '@/lib/motion'
 
 interface ExportModalProps {
   onClose: () => void
 }
 
-type ExtendedExportFormat = ExportFormat | 'jsx' | 'tokens'
+type ExtendedExportFormat =
+  | ExportFormat
+  | 'jsx'
+  | 'tokens'
+  | 'html'
+  | 'glsl'
+  | 'css'
 
 export function ExportModal({ onClose }: ExportModalProps) {
   const canvas = useFabricCanvas()
@@ -28,9 +42,18 @@ export function ExportModal({ onClose }: ExportModalProps) {
   const [transparent, setTransparent] = useState(false)
   const [filename, setFilename] = useState(
     currentProjectName?.replace(/[^a-z0-9]/gi, '-').toLowerCase() ||
-      `corex-design-${new Date().toISOString().split('T')[0]}`,
+      `corex-quantum-${new Date().toISOString().split('T')[0]}`,
   )
   const [exporting, setExporting] = useState(false)
+
+  const getFileExtension = (fmt: ExtendedExportFormat) => {
+    if (fmt === 'jsx') return 'tsx'
+    if (fmt === 'tokens') return 'tokens.json'
+    if (fmt === 'html') return 'html'
+    if (fmt === 'glsl') return 'frag'
+    if (fmt === 'css') return 'module.css'
+    return fmt
+  }
 
   const handleExport = async () => {
     if (!canvas) return
@@ -42,6 +65,15 @@ export function ExportModal({ onClose }: ExportModalProps) {
       } else if (format === 'tokens') {
         const json = compileCanvasToW3cDesignTokens(canvas)
         dispatchBinaryDownload(new Blob([json], { type: 'application/json;charset=utf-8' }), `${filename}.tokens.json`)
+      } else if (format === 'html') {
+        const html = compileCanvasToStandaloneHtml(canvas, currentProjectName || 'Corex Quantum Studio')
+        dispatchBinaryDownload(new Blob([html], { type: 'text/html;charset=utf-8' }), `${filename}.html`)
+      } else if (format === 'glsl') {
+        const frag = getGlslFragmentKernelSource('aurora-plasma')
+        dispatchBinaryDownload(new Blob([frag], { type: 'text/plain;charset=utf-8' }), `${filename}.frag`)
+      } else if (format === 'css') {
+        const css = compileCanvasToCssModule(canvas)
+        dispatchBinaryDownload(new Blob([css], { type: 'text/css;charset=utf-8' }), `${filename}.module.css`)
       } else {
         await exportCanvas(canvas, format, quality / 100, filename, { scale, transparent })
       }
@@ -50,6 +82,8 @@ export function ExportModal({ onClose }: ExportModalProps) {
       setExporting(false)
     }
   }
+
+  const isRasterOrDoc = format === 'png' || format === 'jpeg' || format === 'pdf' || format === 'pptx'
 
   return (
     <AnimatePresence>
@@ -63,11 +97,12 @@ export function ExportModal({ onClose }: ExportModalProps) {
           position: 'fixed',
           inset: 0,
           zIndex: 500,
-          background: 'rgba(8, 9, 14, 0.72)',
-          backdropFilter: 'blur(8px)',
+          background: 'rgba(7, 8, 13, 0.76)',
+          backdropFilter: 'blur(14px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: 16,
         }}
       >
         <motion.div
@@ -77,73 +112,77 @@ export function ExportModal({ onClose }: ExportModalProps) {
           exit="exit"
           onClick={(e) => e.stopPropagation()}
           style={{
-            width: 400,
-            background: 'var(--color-base-850)',
-            border: '1px solid var(--color-base-600)',
-            borderRadius: '1rem',
-            boxShadow: 'var(--shadow-float)',
+            width: 440,
+            background: '#0C0E16',
+            borderRadius: 24,
+            boxShadow: '0 28px 72px rgba(0, 0, 0, 0.78)',
             overflow: 'hidden',
           }}
         >
           {/* Header */}
           <div
             style={{
-              padding: '16px 20px 14px',
-              borderBottom: '1px solid var(--color-base-600)',
+              padding: '20px 22px 14px',
+              background: '#111522',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-base-100)' }}>
-                Quantum Output Compiler
+              <div style={{ fontSize: 15.5, fontWeight: 800, color: '#F8FAFC', letterSpacing: '-0.02em' }}>
+                10-Pipeline Quantum Compiler
               </div>
               <div
                 style={{
                   fontSize: 11,
-                  color: '#06B6D4',
-                  marginTop: 2,
+                  color: '#22D3EE',
+                  marginTop: 3,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 5,
                 }}
               >
-                <Cpu size={11} /> {gpuInfo.backend} Accelerated (Up to 8K)
+                <Cpu size={12} /> {gpuInfo.backend} Accelerated (Up to 8K)
               </div>
             </div>
             <button
               onClick={onClose}
               style={{
-                background: 'none',
+                width: 32,
+                height: 32,
+                borderRadius: 12,
+                background: '#181C2B',
                 border: 'none',
                 cursor: 'pointer',
-                color: 'var(--color-base-500)',
-                padding: 4,
+                color: '#94A3B8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               aria-label="Close"
             >
-              <X size={16} />
+              <X size={15} />
             </button>
           </div>
 
           {/* Body */}
-          <div style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
             {/* Format */}
             <div>
               <div
                 style={{
                   fontSize: 10.5,
                   fontWeight: 700,
-                  color: 'var(--color-base-500)',
+                  color: '#64748B',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
+                  letterSpacing: '0.07em',
                   marginBottom: 8,
                 }}
               >
-                Output Pipeline Format
+                Output Pipeline Format (10 Targets)
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
                 {(
                   [
                     { id: 'png', label: 'PNG' },
@@ -153,67 +192,78 @@ export function ExportModal({ onClose }: ExportModalProps) {
                     { id: 'pptx', label: 'PPTX' },
                     { id: 'jsx', label: 'React JSX' },
                     { id: 'tokens', label: 'W3C JSON' },
+                    { id: 'html', label: 'HTML5' },
+                    { id: 'glsl', label: 'GLSL .frag' },
+                    { id: 'css', label: 'CSS Mod' },
                   ] as { id: ExtendedExportFormat; label: string }[]
-                ).map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setFormat(item.id)}
-                    style={{
-                      height: 34,
-                      borderRadius: '0.5rem',
-                      border: '1px solid',
-                      borderColor: format === item.id ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                      background: format === item.id ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
-                      color: format === item.id ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-                      fontSize: 11,
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      transition: 'all 150ms',
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                ).map((item) => {
+                  const active = format === item.id
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setFormat(item.id)}
+                      style={{
+                        height: 36,
+                        borderRadius: 12,
+                        border: 'none',
+                        background: active
+                          ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.22) 0%, rgba(20, 184, 166, 0.16) 100%)'
+                          : '#151926',
+                        color: active ? '#22D3EE' : '#94A3B8',
+                        fontSize: 11,
+                        fontWeight: active ? 700 : 600,
+                        cursor: 'pointer',
+                        transition: 'all 150ms',
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
             {/* Resolution Supersampling (1x to 8x 8K) */}
-            {format !== 'svg' && format !== 'jsx' && format !== 'tokens' && (
+            {isRasterOrDoc && (
               <div>
                 <div
                   style={{
                     fontSize: 10.5,
                     fontWeight: 700,
-                    color: 'var(--color-base-500)',
+                    color: '#64748B',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
+                    letterSpacing: '0.07em',
                     marginBottom: 8,
                   }}
                 >
                   WebGPU Supersampling Multiplier
                 </div>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  {[1, 2, 3, 4, 8].map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setScale(s)}
-                      style={{
-                        flex: 1,
-                        height: 32,
-                        borderRadius: '0.5rem',
-                        border: '1px solid',
-                        borderColor: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-600)',
-                        background: scale === s ? 'rgba(6,182,212,0.14)' : 'var(--color-base-800)',
-                        color: scale === s ? 'var(--color-accent-400)' : 'var(--color-base-400)',
-                        fontSize: 11.5,
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 150ms',
-                      }}
-                    >
-                      {s}x{s === 4 ? ' (4K)' : s === 8 ? ' (8K)' : ''}
-                    </button>
-                  ))}
+                  {[1, 2, 3, 4, 8].map((s) => {
+                    const active = scale === s
+                    return (
+                      <button
+                        key={s}
+                        onClick={() => setScale(s)}
+                        style={{
+                          flex: 1,
+                          height: 36,
+                          borderRadius: 12,
+                          border: 'none',
+                          background: active
+                            ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.22) 0%, rgba(20, 184, 166, 0.16) 100%)'
+                            : '#151926',
+                          color: active ? '#22D3EE' : '#94A3B8',
+                          fontSize: 11.5,
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          transition: 'all 150ms',
+                        }}
+                      >
+                        {s}x{s === 4 ? ' (4K)' : s === 8 ? ' (8K)' : ''}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -224,17 +274,20 @@ export function ExportModal({ onClose }: ExportModalProps) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 8,
+                  gap: 10,
                   cursor: 'pointer',
                   fontSize: 12,
-                  color: 'var(--color-base-200)',
+                  color: '#E2E8F0',
+                  padding: '8px 12px',
+                  borderRadius: 12,
+                  background: '#151926',
                 }}
               >
                 <input
                   type="checkbox"
                   checked={transparent}
                   onChange={(e) => setTransparent(e.target.checked)}
-                  style={{ accentColor: 'var(--color-accent-400)', width: 14, height: 14 }}
+                  style={{ accentColor: '#06B6D4', width: 15, height: 15 }}
                 />
                 Alpha Channel Transparency (Zero Background)
               </label>
@@ -253,30 +306,33 @@ export function ExportModal({ onClose }: ExportModalProps) {
                 style={{
                   fontSize: 10.5,
                   fontWeight: 700,
-                  color: 'var(--color-base-500)',
+                  color: '#64748B',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
+                  letterSpacing: '0.07em',
                   marginBottom: 6,
                 }}
               >
                 Artifact Filename
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   className="input-base"
                   value={filename}
                   onChange={(e) => setFilename(e.target.value)}
-                  style={{ flex: 1 }}
+                  style={{ flex: 1, height: 38 }}
                 />
                 <span
                   style={{
                     fontSize: 11,
-                    color: 'var(--color-base-500)',
+                    color: '#22D3EE',
                     fontFamily: 'var(--font-mono)',
                     whiteSpace: 'nowrap',
+                    padding: '8px 10px',
+                    borderRadius: 10,
+                    background: '#151926',
                   }}
                 >
-                  .{format === 'jsx' ? 'tsx' : format === 'tokens' ? 'tokens.json' : format}
+                  .{getFileExtension(format)}
                 </span>
               </div>
             </div>
@@ -284,35 +340,47 @@ export function ExportModal({ onClose }: ExportModalProps) {
             {/* Info */}
             <div
               style={{
-                padding: '10px 12px',
-                background: 'var(--color-base-800)',
-                borderRadius: '0.5rem',
-                border: '1px solid var(--color-base-600)',
+                padding: '12px 14px',
+                background: '#151926',
+                borderRadius: 14,
               }}
             >
-              <div style={{ fontSize: 11, color: 'var(--color-base-500)', lineHeight: 1.5 }}>
+              <div style={{ fontSize: 11.5, color: '#94A3B8', lineHeight: 1.55 }}>
                 {format === 'svg'
                   ? `Pure mathematical XML vector output (${canvasSize.width} × ${canvasSize.height} viewBox).`
                   : format === 'jsx'
-                  ? `Compiles all ${canvas?.getObjects().length || 0} stage nodes into a standalone React 19 + inline CSS/Tailwind TypeScript component (.tsx).`
+                  ? `Compiles all ${canvas?.getObjects().length || 0} stage nodes into a standalone React 19 + Tailwind TypeScript component (.tsx).`
                   : format === 'tokens'
                   ? `Exports artboard dimensions and all active layer color tokens in W3C Design Token Standard JSON format.`
+                  : format === 'html'
+                  ? `Compiles the complete vector stage and Google Fonts into a standalone, zero-dependency HTML5 microsite (.html).`
+                  : format === 'glsl'
+                  ? `Exports the raw WebGL2 GLSL ES 3.00 (#version 300 es) GPU fragment kernel source (.frag).`
+                  : format === 'css'
+                  ? `Compiles all active stage layers into a production-ready scoped CSS Module stylesheet (.module.css).`
                   : `Hardware rasterized output: ${Math.round(canvasSize.width * scale)} × ${Math.round(canvasSize.height * scale)} px (${scale}x multiplier). Zero watermarks.`}
               </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div style={{ padding: '0 20px 20px' }}>
+          <div style={{ padding: '0 22px 22px' }}>
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={handleExport}
               disabled={exporting}
               className="btn-primary btn-base"
-              style={{ width: '100%', height: 38, fontSize: 13, gap: 8, opacity: exporting ? 0.7 : 1 }}
+              style={{
+                width: '100%',
+                height: 42,
+                borderRadius: 14,
+                fontSize: 13,
+                gap: 8,
+                opacity: exporting ? 0.7 : 1,
+              }}
             >
-              <Download size={14} />
-              {exporting ? 'Compiling Artifact…' : `Compile & Download ${format.toUpperCase()}`}
+              <Download size={15} />
+              {exporting ? 'Compiling Artifact…' : `Compile & Download .${getFileExtension(format).toUpperCase()}`}
             </motion.button>
           </div>
         </motion.div>

@@ -251,31 +251,25 @@ export function TemplatePanel() {
     bumpBgNonce()
     snapshot()
     syncLayersFromCanvas()
+    useEditorStore.getState().setActiveFloatingWindow(null)
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', paddingBottom: 16 }}>
-      <div className="panel-heading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span>Quantum Studio Blueprints</span>
-        <span style={{ color: '#06B6D4', fontFamily: 'var(--font-mono)', fontSize: 9.5 }}>
-          {filtered.length} Presets
-        </span>
-      </div>
-
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', paddingBottom: 18 }}>
       {/* Search Bar */}
-      <div style={{ padding: '4px 10px 6px', position: 'relative' }}>
-        <Search size={12} color="#64748B" style={{ position: 'absolute', left: 18, top: 12 }} />
+      <div style={{ padding: '4px 16px 10px', position: 'relative' }}>
+        <Search size={13} color="#64748B" style={{ position: 'absolute', left: 28, top: 14 }} />
         <input
           className="input-base"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search SaaS, YouTube, Swiss, Deck…"
-          style={{ paddingLeft: 26, fontSize: 11 }}
+          style={{ paddingLeft: 32, fontSize: 11.5, borderRadius: 14, background: '#151927' }}
         />
       </div>
 
-      {/* Category Filter Pills */}
-      <div style={{ display: 'flex', gap: 4, padding: '2px 10px 8px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+      {/* Category Filter Pills (Borderless Tonal Capsules) */}
+      <div style={{ display: 'flex', gap: 6, padding: '2px 16px 12px', overflowX: 'auto', scrollbarWidth: 'none' }}>
         {CATEGORIES.map((cat) => {
           const active = category === cat
           return (
@@ -283,16 +277,15 @@ export function TemplatePanel() {
               key={cat}
               onClick={() => setCategory(cat)}
               style={{
-                padding: '4px 9px',
-                borderRadius: '0.5rem',
-                fontSize: 10.5,
-                fontWeight: 700,
+                padding: '6px 12px',
+                borderRadius: 12,
+                fontSize: 11,
+                fontWeight: active ? 700 : 600,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                border: '1px solid',
-                borderColor: active ? '#06B6D4' : 'var(--color-base-600)',
-                background: active ? 'rgba(6, 182, 212, 0.14)' : 'var(--color-base-800)',
-                color: active ? '#A5F3FC' : 'var(--color-base-400)',
+                border: 'none',
+                background: active ? 'rgba(6, 182, 212, 0.18)' : '#151927',
+                color: active ? '#22D3EE' : '#94A3B8',
                 transition: 'all 120ms',
               }}
             >
@@ -302,40 +295,40 @@ export function TemplatePanel() {
         })}
       </div>
 
-      {/* Blueprint Cards Grid */}
-      <div style={{ padding: '2px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {/* Blueprint Cards Grid (Borderless Rounded-2xl Tonal Cards) */}
+      <div style={{ padding: '2px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {filtered.map((bp) => (
           <motion.button
             key={bp.id}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.985 }}
             onClick={() => loadBlueprint(bp)}
             style={{
               width: '100%',
               textAlign: 'left',
-              background: 'var(--color-base-800)',
-              border: '1px solid var(--color-base-600)',
-              borderRadius: '0.75rem',
-              padding: 10,
+              background: '#151927',
+              border: 'none',
+              borderRadius: 18,
+              padding: 12,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: 10,
-              transition: 'border-color 150ms',
+              gap: 12,
+              transition: 'background 150ms',
             }}
           >
             {/* Visual Mini Artboard Preview */}
             <div
               style={{
-                width: 68,
-                height: 52,
-                borderRadius: '0.5rem',
+                width: 74,
+                height: 56,
+                borderRadius: 12,
                 background: bp.bg,
-                border: `1.5px solid ${bp.accent}`,
+                boxShadow: 'inset 0 0 0 1.5px ' + bp.accent,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                padding: '4px 6px',
+                padding: '4px 7px',
                 flexShrink: 0,
                 overflow: 'hidden',
               }}
@@ -359,7 +352,7 @@ export function TemplatePanel() {
                   height: 3,
                   borderRadius: 2,
                   background: bp.accent,
-                  marginTop: 3,
+                  marginTop: 4,
                 }}
               />
             </div>
@@ -368,7 +361,7 @@ export function TemplatePanel() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 12.5,
                     fontWeight: 700,
                     color: '#F8FAFC',
                     whiteSpace: 'nowrap',
@@ -379,22 +372,22 @@ export function TemplatePanel() {
                   {bp.title}
                 </span>
               </div>
-              <div style={{ fontSize: 10.5, color: '#94A3B8', marginTop: 2 }}>{bp.previewSub}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{bp.previewSub}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 5 }}>
                 <span
                   style={{
-                    fontSize: 9,
+                    fontSize: 9.5,
                     fontFamily: 'var(--font-mono)',
                     color: bp.accent,
-                    background: 'rgba(6, 182, 212, 0.08)',
-                    padding: '1px 6px',
-                    borderRadius: 4,
+                    background: 'rgba(6, 182, 212, 0.1)',
+                    padding: '2px 8px',
+                    borderRadius: 8,
                   }}
                 >
                   {bp.tag}
                 </span>
-                <span style={{ fontSize: 9.5, color: '#64748B', display: 'flex', alignItems: 'center', gap: 3 }}>
-                  <Sparkles size={9} color="#06B6D4" /> Editable Vector Nodes
+                <span style={{ fontSize: 10, color: '#64748B', display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <Sparkles size={10} color="#06B6D4" /> Editable Layers
                 </span>
               </div>
             </div>

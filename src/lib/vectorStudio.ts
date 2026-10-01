@@ -560,3 +560,125 @@ export function generateDevModeCss(obj: FabricObject | null): string {
   }
   return lines.join('\n')
 }
+
+/**
+ * Gielis Superformula Parametric Vector Generator:
+ * r(θ) = ( |cos(m*θ/4)/a|^n2 + |sin(m*θ/4)/b|^n3 )^(-1/n1)
+ */
+export function addSuperformulaVector(
+  stage: FabricCanvas,
+  m = 6,
+  n1 = 0.3,
+  n2 = 1.7,
+  n3 = 1.7,
+  radius = 110,
+  stroke = '#06B6D4',
+) {
+  const steps = 320
+  let d = ''
+  for (let i = 0; i <= steps; i++) {
+    const theta = (i / steps) * Math.PI * 2
+    const t1 = Math.pow(Math.abs(Math.cos((m * theta) / 4)), n2)
+    const t2 = Math.pow(Math.abs(Math.sin((m * theta) / 4)), n3)
+    const r = Math.pow(t1 + t2, -1 / Math.max(n1, 0.05))
+    const x = r * radius * Math.cos(theta)
+    const y = r * radius * Math.sin(theta)
+    d += i === 0 ? `M ${x.toFixed(2)} ${y.toFixed(2)} ` : `L ${x.toFixed(2)} ${y.toFixed(2)} `
+  }
+  d += 'Z'
+
+  const node = new Path(d, {
+    left: stage.getWidth() * 0.5 - radius,
+    top: stage.getHeight() * 0.5 - radius,
+    fill: 'rgba(6, 182, 212, 0.14)',
+    stroke,
+    strokeWidth: 2.5,
+  })
+  stampUid(node, `Superformula (m=${m})`)
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  useEditorStore.getState().snapshot()
+  return node
+}
+
+/**
+ * Lissajous Harmonic Phase Curve Generator:
+ * x(t) = A * sin(a*t + δ), y(t) = B * sin(b*t)
+ */
+export function addLissajousCurve(
+  stage: FabricCanvas,
+  freqA = 3,
+  freqB = 4,
+  deltaDeg = 90,
+  radius = 120,
+  stroke = '#14B8A6',
+) {
+  const steps = 360
+  const delta = (deltaDeg * Math.PI) / 180
+  let d = ''
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2
+    const x = radius * Math.sin(freqA * t + delta)
+    const y = radius * Math.sin(freqB * t)
+    d += i === 0 ? `M ${x.toFixed(2)} ${y.toFixed(2)} ` : `L ${x.toFixed(2)} ${y.toFixed(2)} `
+  }
+  d += 'Z'
+
+  const node = new Path(d, {
+    left: stage.getWidth() * 0.5 - radius,
+    top: stage.getHeight() * 0.5 - radius,
+    fill: 'transparent',
+    stroke,
+    strokeWidth: 2.5,
+  })
+  stampUid(node, `Lissajous (${freqA}:${freqB})`)
+  stage.add(node)
+  stage.setActiveObject(node)
+  stage.requestRenderAll()
+  useEditorStore.getState().snapshot()
+  return node
+}
+
+/**
+ * Pure SVG Vector Icon Badge Generator (Replaces static text glyphs with real SVG Path nodes).
+ */
+export function addSvgVectorIconBadge(
+  stage: FabricCanvas,
+  pathData: string,
+  label: string,
+  accentColor = '#06B6D4',
+) {
+  const frame = new Rect({
+    left: 0,
+    top: 0,
+    width: 96,
+    height: 96,
+    rx: 24,
+    ry: 24,
+    fill: '#111522',
+    stroke: accentColor,
+    strokeWidth: 2,
+  })
+  const iconPath = new Path(pathData, {
+    fill: 'transparent',
+    stroke: accentColor,
+    strokeWidth: 2.2,
+    strokeLineCap: 'round',
+    strokeLineJoin: 'round',
+    scaleX: 2.2,
+    scaleY: 2.2,
+    left: 22,
+    top: 22,
+  })
+  const badgeGroup = new Group([frame, iconPath], {
+    left: stage.getWidth() * 0.5 - 48,
+    top: stage.getHeight() * 0.5 - 48,
+  })
+  stampUid(badgeGroup, `Vector Icon (${label})`)
+  stage.add(badgeGroup)
+  stage.setActiveObject(badgeGroup)
+  stage.requestRenderAll()
+  useEditorStore.getState().snapshot()
+  return badgeGroup
+}

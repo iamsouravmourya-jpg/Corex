@@ -23,41 +23,41 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
   const w = canvasSize.width || 1080
   const h = canvasSize.height || 1080
 
-  let bg = '#09090B'
-  let primaryColor = '#F43F5E'
-  let secondaryColor = '#8B5CF6'
+  let bg = '#08090E'
+  let primaryColor = '#06B6D4'
+  let secondaryColor = '#14B8A6'
   let title = 'DESIGN BEYOND BOUNDARIES'
-  let subtitle = 'High Performance Design Studio'
-  let badgeText = 'NEW RELEASE'
+  let subtitle = '18-Engine Quantum Vector & Shader Studio'
+  let badgeText = 'COREX QUANTUM v3.0'
 
   if (p.includes('sale') || p.includes('discount') || p.includes('black friday')) {
-    bg = '#0C0A09'
-    primaryColor = '#EF4444'
+    bg = '#08090E'
+    primaryColor = '#F43F5E'
     secondaryColor = '#F59E0B'
-    title = 'MEGA SUMMER SALE'
-    subtitle = 'UP TO 50% OFF ALL ITEMS'
+    title = 'MEGA QUANTUM SALE'
+    subtitle = 'UP TO 50% OFF PRO ARTIFACTS'
     badgeText = 'LIMITED TIME'
   } else if (p.includes('tech') || p.includes('podcast') || p.includes('saas') || p.includes('app')) {
-    bg = '#030712'
-    primaryColor = '#38BDF8'
-    secondaryColor = '#818CF8'
-    title = 'THE FUTURE OF TECH'
-    subtitle = 'Episode 42: Next-Gen AI Workflows'
+    bg = '#08090E'
+    primaryColor = '#06B6D4'
+    secondaryColor = '#14B8A6'
+    title = 'THE FUTURE OF DESIGN'
+    subtitle = 'Episode 42: WebGL2 Shaders & Autonomous AI'
     badgeText = 'EPISODE LIVE'
   } else if (p.includes('coffee') || p.includes('minimal') || p.includes('cafe')) {
-    bg = '#1C1917'
-    primaryColor = '#D97706'
-    secondaryColor = '#FBBF24'
-    title = 'ARTISAN COFFEE'
-    subtitle = 'Roasted Daily • 100% Organic'
-    badgeText = 'SPECIAL BLEND'
+    bg = '#0D0F17'
+    primaryColor = '#F59E0B'
+    secondaryColor = '#10B981'
+    title = 'ARTISAN ROASTERY'
+    subtitle = 'Crafted Daily • 100% Single Origin'
+    badgeText = 'SPECIAL RESERVE'
   } else if (p.includes('gym') || p.includes('fitness') || p.includes('workout')) {
-    bg = '#111827'
+    bg = '#08090E'
     primaryColor = '#10B981'
     secondaryColor = '#06B6D4'
     title = 'UNLEASH YOUR POWER'
-    subtitle = 'Transform Your Body in 30 Days'
-    badgeText = 'JOIN TODAY'
+    subtitle = 'High-Velocity Performance Training'
+    badgeText = 'JOIN STUDIO'
   }
 
   return {
@@ -71,30 +71,30 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
         top: h * 0.12,
         width: w * 0.84,
         height: h * 0.76,
-        fill: 'rgba(255, 255, 255, 0.03)',
+        fill: '#0D0F17',
         stroke: primaryColor,
         strokeWidth: 2,
-        opacity: 0.85,
+        opacity: 0.92,
       },
       // Accent Floating Badge
       {
         type: 'rect',
         left: w * 0.14,
         top: h * 0.22,
-        width: 140,
-        height: 32,
+        width: 170,
+        height: 34,
         fill: primaryColor,
         opacity: 1,
       },
       {
         type: 'text',
-        left: w * 0.14 + 12,
-        top: h * 0.22 + 8,
+        left: w * 0.14 + 14,
+        top: h * 0.22 + 9,
         text: badgeText,
         fontSize: 13,
-        fontFamily: 'Sora',
+        fontFamily: 'Plus Jakarta Sans',
         fontWeight: '800',
-        color: '#FFFFFF',
+        color: '#08090E',
         textAlign: 'left',
       },
       // Main Heading
@@ -104,9 +104,9 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
         top: h * 0.32,
         text: title,
         fontSize: Math.min(54, Math.floor(w * 0.06)),
-        fontFamily: 'Sora',
+        fontFamily: 'Plus Jakarta Sans',
         fontWeight: '800',
-        color: '#FFFFFF',
+        color: '#F8FAFC',
         textAlign: 'left',
       },
       // Subtitle
@@ -116,8 +116,8 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
         top: h * 0.48,
         text: subtitle,
         fontSize: Math.min(24, Math.floor(w * 0.03)),
-        fontFamily: 'Inter',
-        fontWeight: '400',
+        fontFamily: 'Plus Jakarta Sans',
+        fontWeight: '500',
         color: '#94A3B8',
         textAlign: 'left',
       },
@@ -128,27 +128,27 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
         top: h * 0.26,
         radius: Math.floor(w * 0.1),
         fill: secondaryColor,
-        opacity: 0.18,
+        opacity: 0.2,
       },
       // CTA Pill Button
       {
         type: 'rect',
         left: w * 0.14,
         top: h * 0.62,
-        width: 180,
-        height: 44,
+        width: 190,
+        height: 46,
         fill: primaryColor,
         opacity: 1,
       },
       {
         type: 'text',
         left: w * 0.14 + 24,
-        top: h * 0.62 + 12,
-        text: 'GET STARTED →',
+        top: h * 0.62 + 13,
+        text: 'EXPLORE STUDIO →',
         fontSize: 14,
-        fontFamily: 'Sora',
-        fontWeight: '700',
-        color: '#FFFFFF',
+        fontFamily: 'Plus Jakarta Sans',
+        fontWeight: '800',
+        color: '#08090E',
         textAlign: 'left',
       },
     ],

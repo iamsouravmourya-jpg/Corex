@@ -230,7 +230,7 @@ export function LandingPage() {
             marginBottom: 20,
           }}
         >
-          COREX STUDIO 2.0 &nbsp;·&nbsp; LERNEXAI PROPRIETARY ENGINE &nbsp;·&nbsp; GEMINI 3.8 FLASH VISION
+          COREX QUANTUM STUDIO v3.0 &nbsp;·&nbsp; 18-ENGINE LERNEXAI CORE &nbsp;·&nbsp; WEBGL2 GLSL + OPFS VAULT
         </motion.div>
 
         {/* Display Headline Combining Plus Jakarta Sans + Playfair Display */}
@@ -249,7 +249,7 @@ export function LandingPage() {
             color: '#F8FAFC',
           }}
         >
-          Autonomous Vector & AI Studio Engineered for{' '}
+          Autonomous Vector, GLSL Shader & AI Studio for{' '}
           <span
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
@@ -273,11 +273,11 @@ export function LandingPage() {
             fontSize: '1.05rem',
             color: '#94A3B8',
             lineHeight: 1.75,
-            maxWidth: 700,
+            maxWidth: 740,
             margin: '0 auto 36px',
           }}
         >
-          Experience a sub-millisecond 60FPS vector canvas fused with autonomous Text-to-Canvas layout synthesis, Gemini 3.1 Flash image creation, and lossless 3x multi-format exports.
+          Experience a borderless, soft-edge 60FPS vector & WebGL2 `#version 300 es` fragment shader studio fused with contextual glassmorphic floating tools, OPFS `.cxbin` binary disk storage, CSG vector booleans, 3D axonometric extrusion, and 10-pipeline 8K compilation.
         </motion.p>
 
         {/* Primary CTA Cluster */}
@@ -623,49 +623,48 @@ export function LandingPage() {
           {[
             {
               icon: <Wand2 size={20} color="#06B6D4" />,
-              kicker: 'TEXT-TO-CANVAS ENGINE',
-              title: 'Autonomous AI Layout Generator',
-              desc: 'Describe any poster, social banner, or YouTube thumbnail in natural language. Corex synthesizes editable Fabric.js vector shapes, cards, and typography hierarchies directly on your canvas.',
+              kicker: 'WEBGL2 GLSL ES 3.00 SHADERS',
+              title: 'Hardware GPU Procedural Shaders',
+              desc: 'Compiles and executes real GPU fragment kernels (#version 300 es) including 5-octave Domain-Warped FBM Aurora Plasma, 3D Ray-Projected Synthwave Horizon, and Voronoi Cellular Nebulae.',
             },
             {
               icon: <ImageIcon size={20} color="#14B8A6" />,
-              kicker: 'GEMINI 3.1 FLASH IMAGE',
-              title: 'AI Image Creation & Editing',
-              desc: 'Create bespoke illustrations, 3D icons, and product visuals from text prompts or edit existing canvas images using our integrated Gemini image generation pipeline.',
+              kicker: 'CSG BOOLEANS & 3D EXTRUSION',
+              title: 'Parametric Math & 3D Relief Lab',
+              desc: 'Synthesize Gielis Superformula stars, Lissajous harmonic phase waves, CSG Boolean Union/Subtract/Intersect/XOR contours, and 12-layer 3D axonometric relief extrusions.',
             },
             {
               icon: <ScanEye size={20} color="#10B981" />,
-              kicker: 'MULTIMODAL VISION',
-              title: 'Design Doctor Live Critique',
-              desc: 'One-click canvas snapshot inspection evaluates contrast ratios, visual hierarchy, alignment balance, and recommends instant 1-click color palette upgrades.',
+              kicker: 'GEMINI 3.8 + 3.1 FLASH AI',
+              title: 'Autonomous AI & Vision Doctor',
+              desc: 'Floating glassmorphic AI Copilot for Text-to-Canvas vector synthesis, Gemini 3.1 Flash image generation, and multimodal Vision Doctor contrast & composition diagnostics.',
             },
             {
               icon: <Sliders size={20} color="#F59E0B" />,
-              kicker: '60FPS GPU COMPOSITOR',
-              title: 'Vector Precision & Live Shaders',
-              desc: 'Full affine transformations, smart edge/center snapping guides, 16 composite blend modes, linear/radial gradient builders, and live brightness/contrast/blur filters.',
+              kicker: 'BORDERLESS CREATIVE STUDIO UX',
+              title: 'Contextual Floating Glass Pods',
+              desc: 'Zero harsh IDE borders. Left Scene Hierarchy & OPFS Vault tree paired with on-demand floating glass creation windows and a dedicated streamlined Right Properties Deck.',
             },
             {
               icon: <Download size={20} color="#F43F5E" />,
-              kicker: 'MULTI-FORMAT COMPILER',
-              title: 'Lossless 3x Studio Exports',
-              desc: 'Export supersampled 1x/2x/3x PNG & JPEG, transparent alpha cutouts, scalable vector SVG, print-ready 96DPI PDF documents, and native editable PowerPoint PPTX decks.',
+              kicker: '10-PIPELINE 8K COMPILER',
+              title: 'WebGPU 8K & Code Compilation',
+              desc: 'Compile artboards to 1x–8x (8K) PNG/JPEG, SVG, 96DPI PDF, native PPTX, React 19 .tsx components, W3C Design Tokens .json, standalone HTML5 bundles, GLSL .frag, and CSS Modules.',
             },
             {
               icon: <Shield size={20} color="#06B6D4" />,
-              kicker: 'ZERO-LATENCY VAULT',
-              title: 'Local IndexedDB + 50-Step History',
-              desc: 'Every project saves instantaneously to your browser IndexedDB with live visual thumbnails, drag-to-reorder layer trees, and a 50-step delta undo/redo stack.',
+              kicker: 'OPFS .CXBIN + AES-GCM-256 VAULT',
+              title: 'Binary Disk Vault & Lamport CRDT',
+              desc: 'Persists DEFLATE-compressed .cxbin binary artifacts with SHA-256 digests to the W3C Origin Private File System (OPFS) alongside 64-frame ZLIB undo/redo and multi-tab CRDT sync.',
             },
           ].map((feat, idx) => (
             <div
               key={idx}
               style={{
                 padding: 28,
-                borderRadius: '1rem',
+                borderRadius: 20,
                 background: '#11141C',
-                border: '1px solid #1A1E2A',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.28)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 12,
@@ -673,11 +672,10 @@ export function LandingPage() {
             >
               <div
                 style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: '0.75rem',
-                  background: '#1A1E2A',
-                  border: '1px solid rgba(6, 182, 212, 0.2)',
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  background: '#181C2B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -715,24 +713,23 @@ export function LandingPage() {
         <div
           style={{
             padding: 28,
-            borderRadius: '1rem',
+            borderRadius: 20,
             background: '#11141C',
-            border: '1px solid #1A1E2A',
           }}
         >
           <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#06B6D4', letterSpacing: '0.08em', marginBottom: 8 }}>
             PERFORMANCE BENCHMARK
           </div>
           <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
-            Why Creators Switch to Corex Studio
+            Why Creators Switch to Corex Quantum v3.0
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
-              { metric: 'Canvas Frame Rate', corex: '60FPS GPU Native', legacy: '24-30FPS DOM Lag' },
-              { metric: 'AI Layout & Image Gen', corex: 'Built-in Gemini 3.8 + 3.1', legacy: 'Paid Tier Add-on' },
-              { metric: 'Multi-Format Exports', corex: 'PNG, JPG, SVG, PDF, PPTX (3x)', legacy: 'Watermarked / Paywalled' },
-              { metric: 'Data Privacy Vault', corex: '100% Local IndexedDB', legacy: 'Forced Cloud Upload' },
-              { metric: 'Startup Latency', corex: '< 120ms Instant Load', legacy: '4-6s Heavy Bundle' },
+              { metric: 'Shader & Vector Core', corex: '60FPS + WebGL2 GLSL 3.00', legacy: 'Static 2D DOM Fills' },
+              { metric: 'Workspace Ergonomics', corex: 'Borderless + Floating Glass', legacy: 'Cluttered Boxed IDE' },
+              { metric: '10-Target Compiler', corex: '8K PNG, SVG, TSX, HTML5, GLSL', legacy: 'Paywalled / 1x-2x Only' },
+              { metric: 'Storage & Crypto Vault', corex: 'OPFS .cxbin + AES-GCM-256', legacy: 'Unencrypted Cloud Lock' },
+              { metric: 'State & P2P Sync', corex: 'ZLIB Uint8Array + Lamport CRDT', legacy: 'Heavy Server Polling' },
             ].map((row, idx) => (
               <div
                 key={idx}
@@ -740,10 +737,9 @@ export function LandingPage() {
                   display: 'grid',
                   gridTemplateColumns: '1.2fr 1.1fr 1fr',
                   alignItems: 'center',
-                  padding: '10px 14px',
-                  borderRadius: '0.5rem',
+                  padding: '12px 14px',
+                  borderRadius: 12,
                   background: '#0D0F17',
-                  border: '1px solid #1A1E2A',
                   fontSize: 12.5,
                 }}
               >
@@ -761,41 +757,39 @@ export function LandingPage() {
         <div
           style={{
             padding: 28,
-            borderRadius: '1rem',
+            borderRadius: 20,
             background: '#11141C',
-            border: '1px solid #1A1E2A',
           }}
         >
           <div style={{ fontSize: 10.5, fontFamily: "'JetBrains Mono', monospace", color: '#14B8A6', letterSpacing: '0.08em', marginBottom: 8 }}>
-            FIGMA-GRADE ERGONOMICS
+            PRO-STUDIO ERGONOMICS
           </div>
           <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
             Zero-Friction Keyboard Command Matrix
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {[
-              { key: 'V / R / C / T', action: 'Select, Rect, Circle, Text' },
-              { key: '⌘ + D', action: 'Instant Duplicate Layer' },
-              { key: '⌘ + Z / ⌘ + ⇧ + Z', action: '50-Step Undo & Redo' },
-              { key: '⌘ + Alt + C / V', action: 'Copy & Paste Object Style' },
-              { key: '⌘ + ] / [', action: 'Z-Order Forward / Backward' },
-              { key: "⌘ + '", action: 'Toggle Precision Grid' },
-              { key: 'Shift + Arrows', action: '10px Precision Nudge' },
-              { key: 'Space + Drag', action: 'Infinite Canvas Pan' },
+              { key: 'V / R / O / L / T / B', action: 'Select, Rect, Oval, Line, Text, Brush' },
+              { key: 'F / ⌘ + K', action: 'Floating Elements / Command Omnibar' },
+              { key: '⌘ + Z / ⌘ + ⇧ + Z', action: '64-Frame ZLIB Binary Undo & Redo' },
+              { key: 'Alt + S / Alt + P', action: 'Sample & Apply Node Style' },
+              { key: '⇧ + M / ⇧ + G', action: 'GLSL Aurora Shader / Toggle Grid' },
+              { key: '⇧ + O / ⇧ + H', action: 'Sub-Pixel Quantizer / Heal Contrast' },
+              { key: '⇧ + I / ⇧ + Q', action: '3D Isometric Cube / Vector QR' },
+              { key: 'Space + Drag', action: 'Infinite Focal-Point Stage Pan' },
             ].map((sc, idx) => (
               <div
                 key={idx}
                 style={{
-                  padding: '10px 14px',
-                  borderRadius: '0.5rem',
+                  padding: '11px 14px',
+                  borderRadius: 12,
                   background: '#0D0F17',
-                  border: '1px solid #1A1E2A',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 4,
                 }}
               >
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#06B6D4', fontWeight: 600 }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#22D3EE', fontWeight: 600 }}>
                   {sc.key}
                 </span>
                 <span style={{ fontSize: 12, color: '#94A3B8' }}>{sc.action}</span>

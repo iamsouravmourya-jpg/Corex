@@ -388,183 +388,80 @@ export function AiChatPanel() {
   return (
     <div
       style={{
-        position: 'absolute',
-        inset: 0,
-        zIndex: 100,
-        background: 'var(--color-base-900)',
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
-        overflow: 'hidden',
-        borderLeft: '1px solid var(--color-base-600)',
+        minHeight: 470,
+        maxHeight: '66vh',
+        background: 'transparent',
       }}
     >
-      {/* Header */}
-      <div
-        style={{
-          height: 48,
-          borderBottom: '1px solid var(--color-base-600)',
-          background: 'var(--color-base-875)',
-          padding: '0 12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: '0.5rem',
-              background: 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 6px 16px rgba(6,182,212,0.22)',
-            }}
-          >
-            <Sparkles size={14} color="#08090E" />
-          </div>
-          <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-base-100)', lineHeight: 1.2 }}>
-              Corex AI Studio
-            </div>
-            <div style={{ fontSize: 9.5, color: '#10B981', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-              Gemini 3.8 Flash Connected
-            </div>
-          </div>
-        </div>
-
-        {/* Close Button */}
-        <button
-          onClick={() => setIsAiModeOpen(false)}
-          className="btn-ghost btn-icon"
-          style={{ width: 28, height: 28, color: 'var(--color-base-400)', cursor: 'pointer' }}
-          aria-label="Close AI Studio"
-          title="Close AI Studio"
-        >
-          <X size={15} />
-        </button>
-      </div>
-
-      {/* Sub Header Mode Navigation Tabs */}
+      {/* Segmented Mode Navigation Pills */}
       <div
         style={{
           display: 'flex',
-          borderBottom: '1px solid var(--color-base-600)',
-          background: 'var(--color-base-850)',
-          padding: '2px 6px',
-          gap: 4,
+          background: '#111522',
+          padding: 6,
+          margin: '12px 14px 6px',
+          borderRadius: 16,
+          gap: 6,
           flexShrink: 0,
         }}
       >
-        <button
-          onClick={() => setActiveTab('chat')}
-          style={{
-            flex: 1,
-            height: 28,
-            borderRadius: 5,
-            border: 'none',
-            fontSize: 10.5,
-            fontWeight: activeTab === 'chat' ? 600 : 400,
-            background: activeTab === 'chat' ? 'var(--color-base-750)' : 'transparent',
-            color: activeTab === 'chat' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 4,
-          }}
-        >
-          <MessageSquare size={12} />
-          <span>Chat Copilot</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('generate')}
-          style={{
-            flex: 1,
-            height: 28,
-            borderRadius: 5,
-            border: 'none',
-            fontSize: 10,
-            fontWeight: activeTab === 'generate' ? 600 : 400,
-            background: activeTab === 'generate' ? 'var(--color-base-750)' : 'transparent',
-            color: activeTab === 'generate' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 3,
-          }}
-        >
-          <Wand2 size={11} />
-          <span>Layout</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('image')}
-          style={{
-            flex: 1,
-            height: 28,
-            borderRadius: 5,
-            border: 'none',
-            fontSize: 10,
-            fontWeight: activeTab === 'image' ? 600 : 400,
-            background: activeTab === 'image' ? 'var(--color-base-750)' : 'transparent',
-            color: activeTab === 'image' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 3,
-          }}
-        >
-          <ImageIcon size={11} />
-          <span>Image AI</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('critique')}
-          style={{
-            flex: 1,
-            height: 28,
-            borderRadius: 5,
-            border: 'none',
-            fontSize: 10,
-            fontWeight: activeTab === 'critique' ? 600 : 400,
-            background: activeTab === 'critique' ? 'var(--color-base-750)' : 'transparent',
-            color: activeTab === 'critique' ? 'var(--color-accent-300)' : 'var(--color-base-400)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 3,
-          }}
-        >
-          <ScanEye size={11} />
-          <span>Doctor</span>
-        </button>
+        {(
+          [
+            { id: 'chat', label: 'Copilot', icon: <MessageSquare size={12} /> },
+            { id: 'generate', label: 'Layout', icon: <Wand2 size={12} /> },
+            { id: 'image', label: 'Image AI', icon: <ImageIcon size={12} /> },
+            { id: 'critique', label: 'Doctor', icon: <ScanEye size={12} /> },
+          ] as const
+        ).map((tab) => {
+          const active = activeTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                flex: 1,
+                height: 34,
+                borderRadius: 12,
+                border: 'none',
+                fontSize: 11,
+                fontWeight: active ? 700 : 600,
+                background: active
+                  ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.22) 0%, rgba(20, 184, 166, 0.16) 100%)'
+                  : 'transparent',
+                color: active ? '#22D3EE' : '#94A3B8',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 5,
+              }}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Status Notification Toast */}
       {statusMessage && (
         <div
           style={{
-            padding: '5px 10px',
-            background: 'rgba(244,63,94,0.15)',
-            borderBottom: '1px solid rgba(244,63,94,0.3)',
-            fontSize: 10,
-            color: '#FDA4AF',
+            margin: '4px 14px',
+            padding: '8px 12px',
+            borderRadius: 12,
+            background: 'rgba(6, 182, 212, 0.14)',
+            fontSize: 11,
+            color: '#22D3EE',
+            fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: 5,
+            gap: 6,
           }}
         >
-          <CheckCircle2 size={12} color="#F43F5E" />
+          <CheckCircle2 size={13} color="#06B6D4" />
           <span>{statusMessage}</span>
         </div>
       )}
@@ -576,10 +473,10 @@ export function AiChatPanel() {
             style={{
               flex: 1,
               overflowY: 'auto',
-              padding: '10px',
+              padding: '10px 14px',
               display: 'flex',
               flexDirection: 'column',
-              gap: 10,
+              gap: 12,
             }}
           >
             {messages.map((msg) => (
@@ -589,24 +486,23 @@ export function AiChatPanel() {
                   display: 'flex',
                   flexDirection: 'column',
                   alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                  maxWidth: '96%',
+                  maxWidth: '94%',
                 }}
               >
                 <div
                   style={{
                     display: 'flex',
-                    gap: 6,
+                    gap: 8,
                     alignItems: 'flex-start',
                     flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
                   }}
                 >
                   <div
                     style={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: 4,
-                      background: msg.role === 'user' ? 'var(--color-base-700)' : 'rgba(244,63,94,0.15)',
-                      border: msg.role === 'user' ? '1px solid var(--color-base-600)' : '1px solid rgba(244,63,94,0.3)',
+                      width: 24,
+                      height: 24,
+                      borderRadius: 8,
+                      background: msg.role === 'user' ? '#181C2B' : 'rgba(6, 182, 212, 0.16)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -615,28 +511,24 @@ export function AiChatPanel() {
                     }}
                   >
                     {msg.role === 'user' ? (
-                      <User size={11} color="var(--color-base-200)" />
+                      <User size={12} color="#CBD5E1" />
                     ) : (
-                      <Bot size={11} color="#F43F5E" />
+                      <Bot size={12} color="#22D3EE" />
                     )}
                   </div>
 
                   <div
                     style={{
-                      padding: '8px 11px',
-                      borderRadius: 8,
-                      fontSize: 11.5,
-                      lineHeight: 1.5,
+                      padding: '10px 14px',
+                      borderRadius: 16,
+                      fontSize: 12,
+                      lineHeight: 1.55,
                       background:
                         msg.role === 'user'
-                          ? 'linear-gradient(135deg, #BE123C 0%, #F43F5E 100%)'
-                          : 'var(--color-base-800)',
-                      border:
-                        msg.role === 'user'
-                          ? '1px solid rgba(255,255,255,0.15)'
-                          : '1px solid var(--color-base-600)',
-                      color: msg.role === 'user' ? '#FFFFFF' : 'var(--color-base-100)',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                          ? 'linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%)'
+                          : '#141826',
+                      color: msg.role === 'user' ? '#07080D' : '#F1F5F9',
+                      fontWeight: msg.role === 'user' ? 600 : 400,
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-word',
                     }}
@@ -645,12 +537,12 @@ export function AiChatPanel() {
 
                     {/* Extracted Colors Chips */}
                     {msg.suggestedColors && msg.suggestedColors.length > 0 && (
-                      <div style={{ marginTop: 8, paddingTop: 6, borderTop: '1px solid var(--color-base-700)' }}>
-                        <div style={{ fontSize: 9.5, color: 'var(--color-base-400)', marginBottom: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <Palette size={10} />
-                          <span>Detected Palette (Click to set BG):</span>
+                      <div style={{ marginTop: 10, paddingTop: 8 }}>
+                        <div style={{ fontSize: 10, color: '#94A3B8', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Palette size={11} color="#22D3EE" />
+                          <span>Detected Palette (Tap to apply background):</span>
                         </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                           {msg.suggestedColors.map((color, idx) => (
                             <button
                               key={idx}
@@ -659,24 +551,23 @@ export function AiChatPanel() {
                               style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 4,
-                                padding: '2px 5px',
-                                background: 'var(--color-base-750)',
-                                border: '1px solid var(--color-base-600)',
-                                borderRadius: 4,
+                                gap: 5,
+                                padding: '4px 8px',
+                                background: '#0C0E16',
+                                border: 'none',
+                                borderRadius: 8,
                                 cursor: 'pointer',
-                                fontSize: 9.5,
+                                fontSize: 10,
                                 fontFamily: 'var(--font-mono)',
-                                color: 'var(--color-base-200)',
+                                color: '#E2E8F0',
                               }}
                             >
                               <span
                                 style={{
-                                  width: 10,
-                                  height: 10,
-                                  borderRadius: 2,
+                                  width: 11,
+                                  height: 11,
+                                  borderRadius: 4,
                                   background: color,
-                                  border: '1px solid rgba(255,255,255,0.2)',
                                   display: 'inline-block',
                                 }}
                               />
@@ -692,24 +583,24 @@ export function AiChatPanel() {
             ))}
 
             {isTyping && (
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '6px 10px' }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 12px' }}>
                 <div
                   style={{
-                    width: 18,
-                    height: 18,
-                    borderRadius: 4,
-                    background: 'rgba(244,63,94,0.15)',
+                    width: 22,
+                    height: 22,
+                    borderRadius: 8,
+                    background: 'rgba(6, 182, 212, 0.16)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <Bot size={10} color="#F43F5E" />
+                  <Bot size={11} color="#22D3EE" />
                 </div>
                 <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                  <span className="animate-bounce" style={{ width: 4, height: 4, borderRadius: '50%', background: '#F43F5E', animationDelay: '0ms' }} />
-                  <span className="animate-bounce" style={{ width: 4, height: 4, borderRadius: '50%', background: '#F43F5E', animationDelay: '150ms' }} />
-                  <span className="animate-bounce" style={{ width: 4, height: 4, borderRadius: '50%', background: '#F43F5E', animationDelay: '300ms' }} />
+                  <span className="animate-bounce" style={{ width: 5, height: 5, borderRadius: '50%', background: '#06B6D4', animationDelay: '0ms' }} />
+                  <span className="animate-bounce" style={{ width: 5, height: 5, borderRadius: '50%', background: '#14B8A6', animationDelay: '150ms' }} />
+                  <span className="animate-bounce" style={{ width: 5, height: 5, borderRadius: '50%', background: '#10B981', animationDelay: '300ms' }} />
                 </div>
               </div>
             )}
@@ -720,32 +611,31 @@ export function AiChatPanel() {
           {/* Quick Preset Ideas */}
           <div
             style={{
-              padding: '6px 8px',
-              borderTop: '1px solid var(--color-base-700)',
-              background: 'var(--color-base-875)',
+              padding: '6px 14px',
               display: 'flex',
-              gap: 5,
+              gap: 6,
               overflowX: 'auto',
               scrollbarWidth: 'none',
               flexShrink: 0,
             }}
           >
             {[
-              '🎨 5 Aesthetic Dark Palettes',
-              '🔥 Viral Tech Headline Copy',
-              '💡 YouTube Thumbnail Tips',
-              '🪄 Best Font Combinations',
+              '5 Aesthetic Dark Palettes',
+              'Viral Tech Headline Copy',
+              'YouTube Thumbnail Tips',
+              'Best Font Combinations',
             ].map((p, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSendChat(p)}
                 style={{
-                  padding: '3px 7px',
-                  borderRadius: 4,
-                  background: 'var(--color-base-800)',
-                  border: '1px solid var(--color-base-600)',
-                  color: 'var(--color-base-300)',
-                  fontSize: 9.5,
+                  padding: '6px 10px',
+                  borderRadius: 10,
+                  background: '#141826',
+                  border: 'none',
+                  color: '#CBD5E1',
+                  fontSize: 10.5,
+                  fontWeight: 600,
                   whiteSpace: 'nowrap',
                   cursor: 'pointer',
                 }}
@@ -758,12 +648,10 @@ export function AiChatPanel() {
           {/* Input Bar */}
           <div
             style={{
-              padding: '8px',
-              borderTop: '1px solid var(--color-base-600)',
-              background: 'var(--color-base-875)',
+              padding: '10px 14px 14px',
               display: 'flex',
               alignItems: 'center',
-              gap: 6,
+              gap: 8,
               flexShrink: 0,
             }}
           >
@@ -771,9 +659,9 @@ export function AiChatPanel() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
-              placeholder="Ask Gemini design questions or copy..."
+              placeholder="Ask Corex AI for palettes, copy, or design tips..."
               className="input-base"
-              style={{ flex: 1, fontSize: 11, height: 32 }}
+              style={{ flex: 1, fontSize: 12, height: 38 }}
               disabled={isTyping}
             />
             <button
@@ -781,8 +669,9 @@ export function AiChatPanel() {
               disabled={!input.trim() || isTyping}
               className="btn-primary btn-base"
               style={{
-                height: 32,
-                width: 32,
+                height: 38,
+                width: 38,
+                borderRadius: 12,
                 padding: 0,
                 display: 'flex',
                 alignItems: 'center',
@@ -791,7 +680,7 @@ export function AiChatPanel() {
               }}
               aria-label="Send"
             >
-              <Send size={13} />
+              <Send size={14} />
             </button>
           </div>
         </>
@@ -799,27 +688,27 @@ export function AiChatPanel() {
 
       {/* TAB 2: Text-to-Design (Auto Generator) */}
       {activeTab === 'generate' && (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ padding: '10px', background: 'var(--color-base-800)', borderRadius: 8, border: '1px solid var(--color-base-600)' }}>
-            <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--color-base-100)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Wand2 size={13} color="#F43F5E" />
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 18px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ padding: 14, background: '#141826', borderRadius: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#F8FAFC', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Wand2 size={14} color="#22D3EE" />
               <span>Autonomous AI Layout Engine</span>
             </div>
-            <div style={{ fontSize: 10.5, color: 'var(--color-base-400)', lineHeight: 1.4 }}>
-              Describe your vision and Gemini will generate and place coordinated shapes, cards, badges, and typography on your canvas.
+            <div style={{ fontSize: 11, color: '#94A3B8', lineHeight: 1.5 }}>
+              Describe your vision and Corex AI will synthesize coordinated vector shapes, cards, badges, and typography directly on your stage.
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: 10.5, color: 'var(--color-base-300)', fontWeight: 600, display: 'block', marginBottom: 6 }}>
+            <label style={{ fontSize: 11, color: '#CBD5E1', fontWeight: 600, display: 'block', marginBottom: 6 }}>
               Design Brief / Prompt
             </label>
             <textarea
               value={designPrompt}
               onChange={(e) => setDesignPrompt(e.target.value)}
-              placeholder="e.g. Modern SaaS launch banner with dark navy background, bold cyan heading, feature card, and 50% discount badge"
+              placeholder="e.g. Modern SaaS launch banner with deep ink background, bold cyan heading, feature card, and 50% discount badge"
               className="input-base"
-              style={{ width: '100%', height: 75, resize: 'none', fontSize: 11, padding: '8px' }}
+              style={{ width: '100%', height: 82, resize: 'none', fontSize: 12, padding: 10 }}
             />
           </div>
 
@@ -827,22 +716,22 @@ export function AiChatPanel() {
             onClick={() => handleGenerateDesign()}
             disabled={!designPrompt.trim() || isGeneratingDesign}
             className="btn-primary btn-base"
-            style={{ height: 34, gap: 6, fontWeight: 600, fontSize: 11.5 }}
+            style={{ height: 40, borderRadius: 14, gap: 7, fontWeight: 700, fontSize: 12.5 }}
           >
             <Sparkles size={14} />
-            <span>{isGeneratingDesign ? 'Generating Design Elements...' : 'Generate On Canvas'}</span>
+            <span>{isGeneratingDesign ? 'Synthesizing Vector Layout...' : 'Synthesize Layout on Stage'}</span>
           </button>
 
           {/* Prompt Templates */}
           <div>
-            <div style={{ fontSize: 10, color: 'var(--color-base-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-              Quick Templates
+            <div style={{ fontSize: 10.5, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+              1-Tap Brief Presets
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
-                'Tech Podcast cover with neon purple glow and bold title',
+                'Tech Podcast cover with electric cyan glow and bold title',
                 'Minimalist Coffee shop promo with warm cream & amber theme',
-                'Black Friday Mega Sale with high-contrast red & yellow badges',
+                'Black Friday Mega Sale with high-contrast red & gold badges',
                 'Modern Portfolio header for a UI/UX product designer',
               ].map((tmpl, idx) => (
                 <button
@@ -852,12 +741,12 @@ export function AiChatPanel() {
                     handleGenerateDesign(tmpl)
                   }}
                   style={{
-                    padding: '8px',
-                    borderRadius: 6,
-                    background: 'var(--color-base-800)',
-                    border: '1px solid var(--color-base-600)',
-                    color: 'var(--color-base-200)',
-                    fontSize: 10.5,
+                    padding: '10px 12px',
+                    borderRadius: 12,
+                    background: '#141826',
+                    border: 'none',
+                    color: '#E2E8F0',
+                    fontSize: 11,
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
@@ -866,7 +755,7 @@ export function AiChatPanel() {
                   }}
                 >
                   <span>{tmpl}</span>
-                  <ArrowRight size={12} color="var(--color-base-400)" />
+                  <ArrowRight size={13} color="#22D3EE" />
                 </button>
               ))}
             </div>
@@ -874,68 +763,81 @@ export function AiChatPanel() {
         </div>
       )}
 
-      {/* TAB 2.5: Create & Edit Images (gemini-3.1-flash-image-preview) */}
+      {/* TAB 3: Create & Edit Images (gemini-3.1-flash-image-preview) */}
       {activeTab === 'image' && (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ padding: '10px', background: 'var(--color-base-800)', borderRadius: 8, border: '1px solid var(--color-base-600)' }}>
-            <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--color-base-100)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <ImageIcon size={13} color="#F43F5E" />
-              <span>Create & Edit Images</span>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 18px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ padding: 14, background: '#141826', borderRadius: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#F8FAFC', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <ImageIcon size={14} color="#2DD4BF" />
+              <span>Create & Edit Artwork</span>
             </div>
-            <div style={{ fontSize: 10.5, color: 'var(--color-base-400)', lineHeight: 1.4 }}>
-              Powered by <code>gemini-3.1-flash-image-preview</code>. Generate new visual assets or edit your active canvas artwork using text prompts.
+            <div style={{ fontSize: 11, color: '#94A3B8', lineHeight: 1.5 }}>
+              Powered by <code>gemini-3.1-flash-image-preview</code> + Client-Side Vector Synth fallback.
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: 10.5, color: 'var(--color-base-300)', fontWeight: 600, display: 'block', marginBottom: 6 }}>
-              Image Prompt
+            <label style={{ fontSize: 11, color: '#CBD5E1', fontWeight: 600, display: 'block', marginBottom: 6 }}>
+              Artwork Prompt
             </label>
             <textarea
               value={imagePrompt}
               onChange={(e) => setImagePrompt(e.target.value)}
-              placeholder="e.g. Futuristic 3D glass sphere with neon rose and violet reflections on dark studio backdrop"
+              placeholder="e.g. Futuristic 3D glass sphere with electric cyan and emerald reflections on deep ink backdrop"
               className="input-base"
-              style={{ width: '100%', height: 72, resize: 'none', fontSize: 11, padding: '8px' }}
+              style={{ width: '100%', height: 78, resize: 'none', fontSize: 12, padding: 10 }}
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 10.5, color: 'var(--color-base-300)', cursor: 'pointer' }}>
+          <label
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              fontSize: 11.5,
+              color: '#CBD5E1',
+              cursor: 'pointer',
+              padding: '8px 12px',
+              borderRadius: 12,
+              background: '#141826',
+            }}
+          >
             <input
               type="checkbox"
               checked={useCanvasReference}
               onChange={(e) => setUseCanvasReference(e.target.checked)}
+              style={{ accentColor: '#06B6D4' }}
             />
-            <span>Use current canvas as reference image to edit</span>
+            <span>Use active stage as reference image to edit</span>
           </label>
 
           <button
             onClick={() => handleGenerateImage()}
             disabled={!imagePrompt.trim() || isGeneratingImage}
             className="btn-primary btn-base"
-            style={{ height: 34, gap: 6, fontWeight: 600, fontSize: 11.5 }}
+            style={{ height: 40, borderRadius: 14, gap: 7, fontWeight: 700, fontSize: 12.5 }}
           >
             <Sparkles size={14} />
-            <span>{isGeneratingImage ? 'Synthesizing Image...' : 'Generate & Add to Canvas'}</span>
+            <span>{isGeneratingImage ? 'Synthesizing Artwork...' : 'Generate & Drop on Stage'}</span>
           </button>
 
           {generatedImageUrl && (
-            <div style={{ padding: 8, borderRadius: 8, background: 'var(--color-base-800)', border: '1px solid var(--color-base-600)' }}>
-              <div style={{ fontSize: 10, color: 'var(--color-base-400)', marginBottom: 6 }}>Latest Generated Asset:</div>
+            <div style={{ padding: 10, borderRadius: 14, background: '#141826' }}>
+              <div style={{ fontSize: 10.5, color: '#94A3B8', marginBottom: 6 }}>Latest Generated Asset:</div>
               <img
                 src={generatedImageUrl}
                 alt="AI Generated"
                 referrerPolicy="no-referrer"
-                style={{ width: '100%', borderRadius: 6, display: 'block' }}
+                style={{ width: '100%', borderRadius: 10, display: 'block' }}
               />
             </div>
           )}
 
           <div>
-            <div style={{ fontSize: 10, color: 'var(--color-base-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-              Quick Image Prompts
+            <div style={{ fontSize: 10.5, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+              Quick Artwork Prompts
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
                 '3D Holographic Abstract Crystal Icon',
                 'Cyberpunk Neon Grid Horizon Illustration',
@@ -948,12 +850,12 @@ export function AiChatPanel() {
                     handleGenerateImage(preset)
                   }}
                   style={{
-                    padding: '8px',
-                    borderRadius: 6,
-                    background: 'var(--color-base-800)',
-                    border: '1px solid var(--color-base-600)',
-                    color: 'var(--color-base-200)',
-                    fontSize: 10.5,
+                    padding: '10px 12px',
+                    borderRadius: 12,
+                    background: '#141826',
+                    border: 'none',
+                    color: '#E2E8F0',
+                    fontSize: 11,
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
@@ -962,7 +864,7 @@ export function AiChatPanel() {
                   }}
                 >
                   <span>{preset}</span>
-                  <ArrowRight size={12} color="var(--color-base-400)" />
+                  <ArrowRight size={13} color="#22D3EE" />
                 </button>
               ))}
             </div>
@@ -970,16 +872,16 @@ export function AiChatPanel() {
         </div>
       )}
 
-      {/* TAB 3: Design Doctor (Vision Critique) */}
+      {/* TAB 4: Design Doctor (Vision Critique) */}
       {activeTab === 'critique' && (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ padding: '10px', background: 'var(--color-base-800)', borderRadius: 8, border: '1px solid var(--color-base-600)' }}>
-            <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--color-base-100)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <ScanEye size={13} color="#8B5CF6" />
-              <span>Multimodal Vision Critique</span>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 18px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ padding: 14, background: '#141826', borderRadius: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#F8FAFC', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <ScanEye size={14} color="#10B981" />
+              <span>Multimodal Vision Design Doctor</span>
             </div>
-            <div style={{ fontSize: 10.5, color: 'var(--color-base-400)', lineHeight: 1.4 }}>
-              Gemini Vision scans your active canvas and evaluates color contrast, alignment, typography hierarchy, and visual balance.
+            <div style={{ fontSize: 11, color: '#94A3B8', lineHeight: 1.5 }}>
+              Scans your active stage composition and evaluates contrast ratios, alignment balance, typography hierarchy, and palette harmony.
             </div>
           </div>
 
@@ -988,38 +890,37 @@ export function AiChatPanel() {
             disabled={isAnalyzing}
             className="btn-primary btn-base"
             style={{
-              height: 34,
-              gap: 6,
-              fontWeight: 600,
-              fontSize: 11.5,
-              background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+              height: 40,
+              borderRadius: 14,
+              gap: 7,
+              fontWeight: 700,
+              fontSize: 12.5,
             }}
           >
             <ScanEye size={14} />
-            <span>{isAnalyzing ? 'Analyzing Canvas Composition...' : 'Analyze Current Canvas'}</span>
+            <span>{isAnalyzing ? 'Scanning Stage Composition...' : 'Run Vision Diagnostic'}</span>
           </button>
 
           {critiqueResult && (
             <div
               style={{
-                padding: '10px',
-                borderRadius: 8,
-                background: 'var(--color-base-800)',
-                border: '1px solid var(--color-base-600)',
-                fontSize: 11,
-                lineHeight: 1.55,
-                color: 'var(--color-base-100)',
+                padding: 14,
+                borderRadius: 16,
+                background: '#141826',
+                fontSize: 11.5,
+                lineHeight: 1.6,
+                color: '#F1F5F9',
                 whiteSpace: 'pre-wrap',
               }}
             >
               {critiqueResult}
 
               {critiqueColors.length > 0 && (
-                <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid var(--color-base-700)' }}>
-                  <div style={{ fontSize: 10, color: 'var(--color-base-400)', marginBottom: 5 }}>
-                    Recommended Enhancements:
+                <div style={{ marginTop: 12, paddingTop: 10 }}>
+                  <div style={{ fontSize: 10.5, color: '#94A3B8', marginBottom: 6 }}>
+                    Recommended Palette Upgrades:
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                     {critiqueColors.map((c, idx) => (
                       <button
                         key={idx}
@@ -1027,17 +928,18 @@ export function AiChatPanel() {
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: 4,
-                          padding: '2px 6px',
-                          background: 'var(--color-base-750)',
-                          border: '1px solid var(--color-base-600)',
-                          borderRadius: 4,
-                          fontSize: 9.5,
+                          gap: 5,
+                          padding: '4px 8px',
+                          background: '#0C0E16',
+                          border: 'none',
+                          borderRadius: 8,
+                          fontSize: 10,
+                          fontFamily: 'var(--font-mono)',
                           cursor: 'pointer',
-                          color: 'var(--color-base-200)',
+                          color: '#E2E8F0',
                         }}
                       >
-                        <span style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
+                        <span style={{ width: 11, height: 11, borderRadius: 4, background: c }} />
                         <span>{c}</span>
                       </button>
                     ))}
@@ -1051,3 +953,4 @@ export function AiChatPanel() {
     </div>
   )
 }
+
