@@ -417,15 +417,42 @@ npm run build
                 LERNEXAI INTELLECTUAL PROPERTY & OWNERSHIP NOTICE
 ═════════════════════════════════════════════════════════════════════════════════
 
-OWNERSHIP & IP DISCLOSURE:
-• Intellectual Property (IP): All intellectual property, algorithms, mathematical 
-  models, rendering kernels, and source architecture belong exclusively to LernexAI.
-• Product Lineage: Corex (Corex Quantum Studio) is an independent, standalone 
-  flagship product developed under and powered by LernexAI.
-• Ownership: Founded and solely owned by Sourav Maurya.
-• Product Nature: Corex Quantum Studio is a permanent, commercial-grade, 
-  independent production software suite with zero affiliation to any hackathon, 
-  temporary challenge, or third-party competition.
+OWNERSHIP, GENESIS & 100% IP DISCLOSURE:
+
+• Lineage & Open-Source Acknowledgment:
+  The earliest conceptual spark of browser-native canvas manipulation drew minor
+  inspiration from rudimentary open-source canvas prototypes. While we extend a
+  courtesy nod to the open-source community for foundational UI sparks, what
+  existed was merely a primitive, single-canvas local box prototype.
+
+• Transformative Evolution & Architectural Leap:
+  Upon the inception of Corex under Sourav Maurya (Founder & Lead Architect of
+  LernexAI), the entire system was completely reimagined, re-engineered, and
+  re-architected from the ground up. Sourav Maurya brought the enterprise vision
+  that elevated a rudimentary toy into an industrial-grade, 18-Engine powerhouse:
+  - Hardware WebGL2 GLSL ES 3.00 `#version 300 es` fragment shader pipelines
+  - W3C OPFS `.cxbin` content-addressable binary disk vaults with SHA-256 digests
+  - Constructive Solid Geometry (CSG) vector booleans & 3D axonometric relief extruders
+  - Gielis Superformula & Lissajous harmonic parametric synthesizers
+  - Real-time Lamport logical clock CRDT binary mesh synchronization
+  - 10-target 8K WebGPU universal code & artifact compilers
+  - Multimodal Gemini 3.8/3.1 autonomous AI layout & vision healing engines
+  The resulting platform is light-years ahead and completely decoupled from any
+  early open-source prototype.
+
+• 100% Intellectual Property (IP) Ownership:
+  100% of the intellectual property (IP), proprietary source codebase, mathematical
+  engines, binary data topologies, custom UI/UX design systems, and commercial rights
+  are strictly and exclusively owned, held, and controlled by LernexAI and Sourav Maurya.
+
+• Product Classification:
+  Corex (Corex Quantum Studio) is an independent, flagship creative product developed
+  under and powered by LernexAI.
+
+• Independent Production Software:
+  Corex Quantum Studio is a permanent, commercial-grade, independent production
+  software suite with zero affiliation to any hackathon, temporary challenge,
+  or third-party competition.
 
 Copyright (c) 2026 LernexAI (Sourav Maurya). All Rights Reserved.
 
