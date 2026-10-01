@@ -1,81 +1,114 @@
-import * as SliderPrimitive from '@radix-ui/react-slider'
-import { cn } from '@/lib/cn'
-
+/**
+ * LernexAI Proprietary — Native Quantum Precision Range Slider
+ * Zero external @radix-ui/react-slider dependency.
+ */
 interface SliderProps {
   label?: string
   value: number
   min?: number
   max?: number
   step?: number
-  onChange: (val: number) => void
-  className?: string
+  onChange: (value: number) => void
   showValue?: boolean
   unit?: string
+  className?: string
 }
 
-export function Slider({ label, value, min = 0, max = 100, step = 1, onChange, className, showValue, unit }: SliderProps) {
+export function Slider({
+  label,
+  value,
+  min = 0,
+  max = 100,
+  step = 1,
+  onChange,
+  showValue = false,
+  unit = '',
+}: SliderProps) {
+  const pct = Math.max(0, Math.min(100, ((value - min) / Math.max(max - min, 0.0001)) * 100))
+
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, width: '100%' }}>
       {(label || showValue) && (
-        <div className="flex items-center justify-between">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {label && (
-            <span style={{ fontSize: '10px', color: 'var(--color-base-500)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <span
+              style={{
+                fontSize: 10.5,
+                color: 'var(--color-base-400)',
+                fontWeight: 600,
+              }}
+            >
               {label}
             </span>
           )}
           {showValue && (
-            <span style={{ fontSize: '11px', color: 'var(--color-base-400)', fontFamily: 'var(--font-mono)' }}>
-              {value}{unit || ''}
+            <span
+              style={{
+                fontSize: 10.5,
+                fontFamily: 'var(--font-mono)',
+                color: '#06B6D4',
+                fontWeight: 600,
+              }}
+            >
+              {value}
+              {unit}
             </span>
           )}
         </div>
       )}
-      <SliderPrimitive.Root
-        className="relative flex items-center select-none touch-none w-full"
-        style={{ height: 16 }}
-        value={[value]}
-        min={min}
-        max={max}
-        step={step}
-        onValueChange={([v]) => onChange(v)}
-      >
-        <SliderPrimitive.Track
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: 18 }}>
+        <div
           style={{
-            position: 'relative',
-            flexGrow: 1,
-            borderRadius: 9999,
+            position: 'absolute',
+            left: 0,
+            right: 0,
             height: 4,
-            background: 'var(--color-base-600)',
+            borderRadius: 999,
+            background: 'var(--color-ink-700)',
+            overflow: 'hidden',
+            pointerEvents: 'none',
           }}
         >
-          <SliderPrimitive.Range
+          <div
             style={{
-              position: 'absolute',
+              width: `${pct}%`,
               height: '100%',
-              borderRadius: 9999,
-              background: 'var(--color-accent-400)',
+              background: 'linear-gradient(90deg, #06B6D4 0%, #14B8A6 100%)',
             }}
           />
-        </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb
+        </div>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
           style={{
-            display: 'block',
-            width: 14,
-            height: 14,
-            borderRadius: 9999,
-            background: 'var(--color-base-50)',
-            border: '2px solid var(--color-accent-400)',
+            width: '100%',
+            height: 18,
+            margin: 0,
+            opacity: 0,
             cursor: 'pointer',
-            transition: 'box-shadow 150ms',
-          }}
-          onMouseEnter={(e) => {
-            (e.target as HTMLElement).style.boxShadow = '0 0 0 4px rgba(244,63,94,0.2)'
-          }}
-          onMouseLeave={(e) => {
-            (e.target as HTMLElement).style.boxShadow = 'none'
+            position: 'relative',
+            zIndex: 2,
           }}
         />
-      </SliderPrimitive.Root>
+        <div
+          style={{
+            position: 'absolute',
+            left: `calc(${pct}% - 7px)`,
+            width: 14,
+            height: 14,
+            borderRadius: '50%',
+            background: '#F8FAFC',
+            border: '2.5px solid #06B6D4',
+            boxShadow: '0 2px 6px rgba(8, 9, 14, 0.75)',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+      </div>
     </div>
   )
 }

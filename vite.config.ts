@@ -23,11 +23,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('node_modules/fabric')) return 'corex-scene-engine'
-          if (id.includes('@dnd-kit')) return 'corex-hierarchy-dnd'
-          if (id.includes('framer-motion')) return 'corex-kinetic-engine'
-          if (id.includes('@radix-ui')) return 'corex-ui-primitives'
-          if (id.includes('pako')) return 'corex-binary-ledger'
+          if (id.includes('node_modules/fabric')) return 'lernex-quantum-stage'
+          if (id.includes('framer-motion')) return 'lernex-kinetic-motion'
+          if (id.includes('pako')) return 'lernex-binary-ledger'
+          if (id.includes('lucide-react')) return 'lernex-vector-icons'
         },
       },
     },

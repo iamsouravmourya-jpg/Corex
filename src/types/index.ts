@@ -1,6 +1,9 @@
-import { Canvas as FabricCanvas, FabricObject } from 'fabric'
+/**
+ * LernexAI Proprietary — Quantum Studio Type Specifications & 15 Artboard Presets
+ */
+import type { FabricObject } from 'fabric'
 
-export type ToolType =
+export type Tool =
   | 'select'
   | 'rect'
   | 'circle'
@@ -10,27 +13,9 @@ export type ToolType =
   | 'pencil'
   | 'text'
   | 'image'
+  | 'emoji'
 
-export interface CanvasSize {
-  width: number
-  height: number
-  label: string
-}
-
-export const CANVAS_PRESETS: CanvasSize[] = [
-  { width: 1080, height: 1080, label: 'Social Square HD' },
-  { width: 1080, height: 1920, label: 'Vertical Reel / Story' },
-  { width: 1920, height: 1080, label: 'Widescreen Deck 16:9' },
-  { width: 1280, height: 720,  label: 'YouTube Studio Cover' },
-  { width: 1600, height: 1200, label: 'Dribbble Shot 4:3' },
-  { width: 1270, height: 760,  label: 'Product Hunt Launch' },
-  { width: 1584, height: 396,  label: 'LinkedIn Cover Banner' },
-  { width: 1500, height: 500,  label: 'X / Header Banner' },
-  { width: 1200, height: 630,  label: 'OpenGraph Social Card' },
-  { width: 794,  height: 1123, label: 'A4 Editorial Print' },
-  { width: 816,  height: 1056, label: 'US Letter Document' },
-  { width: 960,  height: 960,  label: 'Studio Square (960×960)' },
-]
+export type ToolType = Tool
 
 export interface LayerItem {
   id: string
@@ -41,93 +26,46 @@ export interface LayerItem {
   fabricObject: FabricObject
 }
 
+export interface CanvasSize {
+  width: number
+  height: number
+  label: string
+}
+
 export interface Project {
   id: string
   name: string
   json: string
   thumbnail: string
   canvasSize: CanvasSize
+  createdAt?: number
   updatedAt: number
 }
 
-export interface HistoryState {
-  json: string
-  background: string
-}
-
-export interface UserProfile {
+export interface Template {
+  id: string
   name: string
-  email: string
-  avatar?: string
-  plan: string
-  provider: 'google' | 'email' | 'demo'
+  category: 'Social' | 'Presentation' | 'Poster' | 'Card' | 'Banner' | 'Custom'
+  width: number
+  height: number
+  thumbnail: string
+  canvasJSON: string
 }
 
-export interface EditorState {
-  // Navigation & Auth Session
-  currentView: 'landing' | 'studio'
-  setCurrentView: (view: 'landing' | 'studio') => void
-  user: UserProfile | null
-  setUser: (user: UserProfile | null) => void
-  logout: () => void
-
-  // Canvas
-  fabricCanvas: FabricCanvas | null
-  setFabricCanvas: (canvas: FabricCanvas | null) => void
-
-  // Active tool
-  activeTool: ToolType
-  setActiveTool: (tool: ToolType) => void
-
-  // Canvas size
-  canvasSize: CanvasSize
-  setCanvasSize: (size: CanvasSize) => void
-
-  // Active object
-  activeObjectId: string | null
-  setActiveObjectId: (id: string | null) => void
-
-  // Layers
-  layers: LayerItem[]
-  setLayers: (layers: LayerItem[]) => void
-  syncLayersFromCanvas: () => void
-
-  // History
-  history: HistoryState[]
-  historyIndex: number
-  pushHistory: (state: HistoryState) => void
-  snapshot: () => void
-  snapshotSoon: () => void
-  undo: () => void
-  redo: () => void
-  canUndo: boolean
-  canRedo: boolean
-
-  // Viewport
-  fitScale: number
-  setFitScale: (scale: number) => void
-  viewZoom: number
-  setViewZoom: (zoom: number) => void
-  viewNonce: number
-  resetView: () => void
-
-  showGrid: boolean
-  setShowGrid: (show: boolean) => void
-  toggleGrid: () => void
-
-  // Bumped whenever something other than the Properties panel replaces the
-  // canvas background, so the panel can re-read it instead of going stale.
-  bgNonce: number
-  bumpBgNonce: () => void
-
-  // AI Mode
-  isAiModeOpen: boolean
-  setIsAiModeOpen: (open: boolean) => void
-  toggleAiMode: () => void
-
-  // Current project
-  currentProjectId: string | null
-  setCurrentProjectId: (id: string | null) => void
-  currentProjectName: string
-  setCurrentProjectName: (name: string) => void
-}
+export const CANVAS_PRESETS: CanvasSize[] = [
+  { width: 1080, height: 1080, label: 'Instagram Square (1:1)' },
+  { width: 1080, height: 1920, label: 'Instagram / TikTok Reel (9:16)' },
+  { width: 1280, height: 720, label: 'YouTube High-CTR Thumbnail' },
+  { width: 1920, height: 1080, label: 'Keynote / Pitch Deck FHD (16:9)' },
+  { width: 3840, height: 2160, label: '4K UHD Cinema Frame' },
+  { width: 1728, height: 1117, label: 'MacBook Pro 16" Retina Stage' },
+  { width: 1179, height: 2556, label: 'iPhone 16 Pro Mobile Frame' },
+  { width: 1600, height: 1200, label: 'Dribbble / Behance Shot (4:3)' },
+  { width: 1270, height: 760, label: 'Product Hunt Launch Card' },
+  { width: 1584, height: 396, label: 'LinkedIn Executive Banner (4:1)' },
+  { width: 1500, height: 500, label: 'X / Twitter Header Matrix' },
+  { width: 1200, height: 630, label: 'OpenGraph / Social Share Card' },
+  { width: 1400, height: 1400, label: 'Spotify / Apple Podcast Cover' },
+  { width: 794, height: 1123, label: 'ISO A4 Editorial Print (96 DPI)' },
+  { width: 1200, height: 1500, label: 'Exhibition Poster (4:5)' },
+]

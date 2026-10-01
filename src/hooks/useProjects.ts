@@ -1,9 +1,30 @@
-import { useLiveQuery } from 'dexie-react-hooks'
+/**
+ * LernexAI Proprietary — Reactive Native IndexedDB Vault Hook
+ * Zero external dexie-react-hooks dependency.
+ */
+import { useState, useEffect } from 'react'
 import { db } from '@/db/db'
 import type { Project } from '@/types'
 
-export function useProjects() {
-  return useLiveQuery(() => db.projects.orderBy('updatedAt').reverse().toArray(), [])
+export function useProjects(): Project[] | undefined {
+  const [projects, setProjects] = useState<Project[] | undefined>(undefined)
+
+  useEffect(() => {
+    let active = true
+    const refresh = () => {
+      void db.projects.toArray().then((list) => {
+        if (active) setProjects(list)
+      })
+    }
+    refresh()
+    const unsubscribe = db.subscribe(refresh)
+    return () => {
+      active = false
+      unsubscribe()
+    }
+  }, [])
+
+  return projects
 }
 
 export async function saveProject(project: Project) {

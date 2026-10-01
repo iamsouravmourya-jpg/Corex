@@ -1,60 +1,77 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { motion, AnimatePresence } from 'framer-motion'
-import { tooltipVariants } from '@/lib/motion'
+/**
+ * LernexAI Proprietary — Native Studio Tooltip Primitive
+ * Zero external @radix-ui/react-tooltip dependency.
+ */
+import React, { useState } from 'react'
 
 interface TooltipProps {
-  children: React.ReactNode
   content: string
   shortcut?: string
-  side?: 'top' | 'bottom' | 'left' | 'right'
-  delayDuration?: number
+  side?: 'top' | 'right' | 'bottom' | 'left'
+  children: React.ReactNode
 }
 
-export function Tooltip({ children, content, shortcut, side = 'right', delayDuration = 400 }: TooltipProps) {
+export function Tooltip({ content, shortcut, side = 'top', children }: TooltipProps) {
+  const [visible, setVisible] = useState(false)
+
+  const getPositionStyle = (): React.CSSProperties => {
+    if (side === 'right') {
+      return { left: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' }
+    }
+    if (side === 'bottom') {
+      return { top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' }
+    }
+    if (side === 'left') {
+      return { right: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' }
+    }
+    return { bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' }
+  }
+
   return (
-    <TooltipPrimitive.Root delayDuration={delayDuration}>
-      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-      <TooltipPrimitive.Portal>
-        <TooltipPrimitive.Content side={side} sideOffset={8} asChild>
-          <motion.div
-            variants={tooltipVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '4px 8px',
-              background: 'var(--color-base-750)',
-              border: '1px solid var(--color-base-600)',
-              borderRadius: 5,
-              fontSize: 12,
-              color: 'var(--color-base-200)',
-              boxShadow: 'var(--shadow-float)',
-              zIndex: 9999,
-              pointerEvents: 'none',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {content}
-            {shortcut && (
-              <kbd style={{
-                padding: '1px 5px',
-                background: 'var(--color-base-600)',
-                borderRadius: 4,
-                fontSize: 10,
+    <div
+      style={{ position: 'relative', display: 'inline-flex' }}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      onFocus={() => setVisible(true)}
+      onBlur={() => setVisible(false)}
+    >
+      {children}
+      {visible && (
+        <div
+          role="tooltip"
+          style={{
+            position: 'absolute',
+            ...getPositionStyle(),
+            zIndex: 9999,
+            pointerEvents: 'none',
+            background: '#0D0F17',
+            border: '1px solid #1A1E2A',
+            borderRadius: '0.5rem',
+            padding: '5px 9px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            whiteSpace: 'nowrap',
+            boxShadow: '0 10px 24px rgba(8, 9, 14, 0.85)',
+          }}
+        >
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#F8FAFC' }}>{content}</span>
+          {shortcut && (
+            <span
+              style={{
+                fontSize: 9.5,
                 fontFamily: 'var(--font-mono)',
-                color: 'var(--color-base-400)',
-              }}>
-                {shortcut}
-              </kbd>
-            )}
-          </motion.div>
-        </TooltipPrimitive.Content>
-      </TooltipPrimitive.Portal>
-    </TooltipPrimitive.Root>
+                color: '#06B6D4',
+                background: 'rgba(6, 182, 212, 0.14)',
+                padding: '1px 5px',
+                borderRadius: 4,
+              }}
+            >
+              {shortcut}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
   )
 }
-
-export { TooltipPrimitive as TooltipRoot }

@@ -1,7 +1,8 @@
 /**
- * LernexAI Proprietary — Quantum Studio Hotkey Dispatcher
+ * LernexAI Proprietary — Native Keyboard Matrix & Quantum Shortcut Engine
+ * Zero external react-hotkeys-hook dependency.
  */
-import { useHotkeys } from 'react-hotkeys-hook'
+import { useEffect } from 'react'
 import { ActiveSelection } from 'fabric'
 import { useEditorStore } from '@/store/editorStore'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
@@ -17,240 +18,203 @@ import { copyStyle, pasteStyle } from '@/lib/style'
 import { optimizeStageGeometry, auditAndHealCanvasContrast } from '@/lib/quantumEngine'
 import { addIsometricCube, addVectorQrBadge } from '@/lib/vectorStudio'
 
+function isEditableElementActive(): boolean {
+  const el = document.activeElement
+  if (!el) return false
+  const tag = el.tagName
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (el as HTMLElement).isContentEditable
+}
+
 export function useStudioKeybindings() {
   const stage = useFabricCanvas()
   const { undo, redo, setActiveTool } = useEditorStore()
 
-  // Binary Ledger Undo / Redo
-  useHotkeys(
-    'ctrl+z, meta+z',
-    (ev) => {
-      ev.preventDefault()
-      void undo()
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+shift+z, meta+shift+z, ctrl+y, meta+y',
-    (ev) => {
-      ev.preventDefault()
-      void redo()
-    },
-    { enableOnFormTags: false },
-  )
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      const activeObj = stage?.getActiveObject() as any
+      const editingTextOnStage = Boolean(activeObj && activeObj.isEditing)
+      const inFormField = isEditableElementActive()
 
-  // Node Removal
-  useHotkeys(
-    'delete, backspace',
-    (ev) => {
-      const target = stage?.getActiveObject()
-      if (!target || (target as any).isEditing) return
-      const tag = document.activeElement?.tagName
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return
-      ev.preventDefault()
-      stage?.remove(target)
-      stage?.requestRenderAll()
-      useEditorStore.getState().syncLayersFromCanvas()
-    },
-    { enableOnFormTags: false },
-  )
+      const cmd = ev.metaKey || ev.ctrlKey
+      const shift = ev.shiftKey
+      const alt = ev.altKey
+      const key = ev.key.toLowerCase()
 
-  // Offset Clone
-  useHotkeys('ctrl+d, meta+d', (ev) => {
-    ev.preventDefault()
-    if (stage) duplicateActiveObject(stage)
-  })
+      // Allow typing inside inputs or active IText editing
+      if (inFormField || editingTextOnStage) {
+        if (key === 'escape' && stage) {
+          stage.discardActiveObject()
+          stage.requestRenderAll()
+        }
+        return
+      }
 
-  // Clipboard Buffer Operations
-  useHotkeys(
-    'ctrl+c, meta+c',
-    (ev) => {
-      if (ev.altKey) return
-      ev.preventDefault()
-      if (stage) void copyActive(stage)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+x, meta+x',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) void cutActive(stage)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+v, meta+v',
-    (ev) => {
-      if (ev.altKey) return
-      ev.preventDefault()
-      if (stage) void pasteClipboard(stage)
-    },
-    { enableOnFormTags: false },
-  )
+      // 1. Binary Ledger Undo / Redo (⌘Z / ⌘⇧Z / ⌘Y)
+      if (cmd && !alt && key === 'z') {
+        ev.preventDefault()
+        if (shift) {
+          void redo()
+        } else {
+          void undo()
+        }
+        return
+      }
+      if (cmd && !alt && key === 'y') {
+        ev.preventDefault()
+        void redo()
+        return
+      }
 
-  // Visual Attribute Cloning
-  useHotkeys(
-    'ctrl+alt+c, meta+alt+c',
-    (ev) => {
-      ev.preventDefault()
-      const target = stage?.getActiveObject()
-      if (target) copyStyle(target)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+alt+v, meta+alt+v',
-    (ev) => {
-      ev.preventDefault()
-      const target = stage?.getActiveObject()
-      if (!stage || !pasteStyle(target)) return
-      stage.requestRenderAll()
-      useEditorStore.getState().snapshotSoon()
-    },
-    { enableOnFormTags: false },
-  )
+      // 2. Visual Attribute Copy/Paste (⌘+Alt+C / ⌘+Alt+V)
+      if (cmd && alt && key === 'c') {
+        ev.preventDefault()
+        if (activeObj) copyStyle(activeObj)
+        return
+      }
+      if (cmd && alt && key === 'v') {
+        ev.preventDefault()
+        if (stage && activeObj && pasteStyle(activeObj)) {
+          stage.requestRenderAll()
+          useEditorStore.getState().snapshotSoon()
+        }
+        return
+      }
 
-  // Z-Index Hierarchy Stack
-  useHotkeys(
-    'ctrl+], meta+]',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) moveZOrder(stage, 'forward')
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+[, meta+[',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) moveZOrder(stage, 'backward')
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+shift+], meta+shift+]',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) moveZOrder(stage, 'front')
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'ctrl+shift+[, meta+shift+[',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) moveZOrder(stage, 'back')
-    },
-    { enableOnFormTags: false },
-  )
+      // 3. Scene Node Copy / Cut / Paste / Duplicate / Select All
+      if (cmd && !alt && key === 'c') {
+        ev.preventDefault()
+        if (stage) void copyActive(stage)
+        return
+      }
+      if (cmd && !alt && key === 'x') {
+        ev.preventDefault()
+        if (stage) void cutActive(stage)
+        return
+      }
+      if (cmd && !alt && key === 'v') {
+        ev.preventDefault()
+        if (stage) void pasteClipboard(stage)
+        return
+      }
+      if (cmd && !alt && key === 'd') {
+        ev.preventDefault()
+        if (stage) duplicateActiveObject(stage)
+        return
+      }
+      if (cmd && !alt && key === 'a') {
+        ev.preventDefault()
+        if (!stage) return
+        const nodes = stage.getObjects()
+        if (nodes.length === 0) return
+        stage.discardActiveObject()
+        stage.setActiveObject(new ActiveSelection(nodes, { canvas: stage }))
+        stage.requestRenderAll()
+        return
+      }
 
-  // Multi-Node Selection
-  useHotkeys('ctrl+a, meta+a', (ev) => {
-    ev.preventDefault()
-    if (!stage) return
-    const nodes = stage.getObjects()
-    if (nodes.length === 0) return
-    stage.discardActiveObject()
-    const multiSel = new ActiveSelection(nodes, { canvas: stage })
-    stage.setActiveObject(multiSel)
-    stage.requestRenderAll()
-  })
+      // 4. Z-Index Hierarchy Stack (⌘] / ⌘[ / ⌘⇧] / ⌘⇧[)
+      if (cmd && (ev.key === ']' || ev.key === '}')) {
+        ev.preventDefault()
+        if (stage) moveZOrder(stage, shift ? 'front' : 'forward')
+        return
+      }
+      if (cmd && (ev.key === '[' || ev.key === '{')) {
+        ev.preventDefault()
+        if (stage) moveZOrder(stage, shift ? 'back' : 'backward')
+        return
+      }
 
-  useHotkeys('escape', () => {
-    stage?.discardActiveObject()
-    stage?.requestRenderAll()
-  })
+      // 5. Coordinate Grid Toggle (⌘')
+      if (cmd && ev.key === "'") {
+        ev.preventDefault()
+        useEditorStore.getState().toggleGrid()
+        return
+      }
 
-  // Coordinate Grid Overlay
-  useHotkeys(
-    "ctrl+', meta+'",
-    (ev) => {
-      ev.preventDefault()
-      useEditorStore.getState().toggleGrid()
-    },
-    { enableOnFormTags: false },
-  )
+      // 6. Node Deletion
+      if (ev.key === 'Delete' || ev.key === 'Backspace') {
+        if (!activeObj || !stage) return
+        ev.preventDefault()
+        stage.remove(activeObj)
+        stage.requestRenderAll()
+        useEditorStore.getState().syncLayersFromCanvas()
+        return
+      }
 
-  // Primary Vector Tool Activation
-  useHotkeys('v', () => {
-    setActiveTool('select')
-    if (stage) stage.isDrawingMode = false
-  })
-  useHotkeys('r', () => {
-    if (stage) {
-      addRect(stage)
-      setActiveTool('select')
+      // 7. Escape Selection
+      if (ev.key === 'Escape') {
+        stage?.discardActiveObject()
+        stage?.requestRenderAll()
+        return
+      }
+
+      // 8. Quantum Studio Exclusive Shortcuts (Shift + O / H / I / Q)
+      if (shift && !cmd && !alt) {
+        if (key === 'o' && stage) {
+          ev.preventDefault()
+          optimizeStageGeometry(stage)
+          return
+        }
+        if (key === 'h' && stage) {
+          ev.preventDefault()
+          auditAndHealCanvasContrast(stage, true)
+          return
+        }
+        if (key === 'i' && stage) {
+          ev.preventDefault()
+          addIsometricCube(stage)
+          return
+        }
+        if (key === 'q' && stage) {
+          ev.preventDefault()
+          addVectorQrBadge(stage, 'https://lernexai.com')
+          return
+        }
+      }
+
+      // 9. Single-Key Vector Tool Switching (V / R / C / T / P)
+      if (!cmd && !alt && !shift) {
+        if (key === 'v') {
+          setActiveTool('select')
+          if (stage) stage.isDrawingMode = false
+          return
+        }
+        if (key === 'r' && stage) {
+          addRect(stage)
+          setActiveTool('select')
+          return
+        }
+        if (key === 'c' && stage) {
+          addCircle(stage)
+          setActiveTool('select')
+          return
+        }
+        if (key === 't' && stage) {
+          addIText(stage)
+          setActiveTool('select')
+          return
+        }
+        if (key === 'p' && stage) {
+          enablePencil(stage)
+          setActiveTool('pencil')
+          return
+        }
+      }
+
+      // 10. Precision Arrow Key Translation (1px / 10px)
+      const step = shift ? 10 : 1
+      if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown' || ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+        if (!activeObj || !stage) return
+        ev.preventDefault()
+        const dx = ev.key === 'ArrowLeft' ? -step : ev.key === 'ArrowRight' ? step : 0
+        const dy = ev.key === 'ArrowUp' ? -step : ev.key === 'ArrowDown' ? step : 0
+        activeObj.set({ left: (activeObj.left || 0) + dx, top: (activeObj.top || 0) + dy })
+        stage.requestRenderAll()
+        useEditorStore.getState().snapshotSoon()
+      }
     }
-  })
-  useHotkeys('c', () => {
-    if (stage) {
-      addCircle(stage)
-      setActiveTool('select')
-    }
-  })
-  useHotkeys('t', () => {
-    if (stage) {
-      addIText(stage)
-      setActiveTool('select')
-    }
-  })
-  useHotkeys('p', () => {
-    if (stage) {
-      enablePencil(stage)
-      setActiveTool('pencil')
-    }
-  })
 
-  // Quantum Studio Exclusive Hotkeys
-  useHotkeys(
-    'shift+o',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) optimizeStageGeometry(stage)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'shift+h',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) auditAndHealCanvasContrast(stage, true)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'shift+i',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) addIsometricCube(stage)
-    },
-    { enableOnFormTags: false },
-  )
-  useHotkeys(
-    'shift+q',
-    (ev) => {
-      ev.preventDefault()
-      if (stage) addVectorQrBadge(stage, 'https://lernexai.com')
-    },
-    { enableOnFormTags: false },
-  )
-
-  // Precision Coordinate Translation
-  const translateActiveNode = (dx: number, dy: number) => {
-    const active = stage?.getActiveObject()
-    if (!active || !stage) return
-    active.set({ left: (active.left || 0) + dx, top: (active.top || 0) + dy })
-    stage.requestRenderAll()
-    useEditorStore.getState().snapshotSoon()
-  }
-
-  useHotkeys('up', (ev) => { ev.preventDefault(); translateActiveNode(0, -1) }, { enableOnFormTags: false })
-  useHotkeys('down', (ev) => { ev.preventDefault(); translateActiveNode(0, 1) }, { enableOnFormTags: false })
-  useHotkeys('left', (ev) => { ev.preventDefault(); translateActiveNode(-1, 0) }, { enableOnFormTags: false })
-  useHotkeys('right', (ev) => { ev.preventDefault(); translateActiveNode(1, 0) }, { enableOnFormTags: false })
-  useHotkeys('shift+up', (ev) => { ev.preventDefault(); translateActiveNode(0, -10) }, { enableOnFormTags: false })
-  useHotkeys('shift+down', (ev) => { ev.preventDefault(); translateActiveNode(0, 10) }, { enableOnFormTags: false })
-  useHotkeys('shift+left', (ev) => { ev.preventDefault(); translateActiveNode(-10, 0) }, { enableOnFormTags: false })
-  useHotkeys('shift+right', (ev) => { ev.preventDefault(); translateActiveNode(10, 0) }, { enableOnFormTags: false })
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [stage, undo, redo, setActiveTool])
 }

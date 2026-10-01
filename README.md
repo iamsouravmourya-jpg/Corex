@@ -162,7 +162,19 @@ Legacy creative software forces designers and engineers into a painful trade-off
 
 ## 4. System Topologies & Internal Data Flow Diagrams
 
-### 4.1 Hybrid Client-Serverless Runtime Topology
+### 4.1 Hybrid Client-Serverless Runtime Topology (100% First-Party Native Primitives)
+
+Unlike boilerplate editors that rely on heavy third-party wrappers (`Dexie.js`, `@dnd-kit`, `Radix UI`, `react-colorful`, `react-hotkeys-hook`, `file-saver`), **Corex Quantum Studio (`v2.4.0`)** implements its own **First-Party LernexAI Native Runtime Stack**:
+
+| Subsystem Layer | LernexAI First-Party Implementation | Replaced Legacy Wrapper |
+| :--- | :--- | :--- |
+| **Local Database Vault** | Native W3C `IDBDatabase` + `EventTarget` (`src/db/db.ts`) | *Zero `dexie` / `dexie-react-hooks`* |
+| **Z-Index Hierarchy Tree** | Native HTML5 Drag-Reorder & Z-Stack (`SceneNodeTree.tsx`) | *Zero `@dnd-kit/core` / `sortable`* |
+| **Color Spectrum Engine** | `QuantumColorSpectrum.tsx` (24-Swatch Matrix + HSV Input) | *Zero `react-colorful`* |
+| **UI Primitives & Tabs** | Native `Slider.tsx`, `Tooltip.tsx` & `StudioInspectorDeck.tsx` | *Zero `@radix-ui/*` packages* |
+| **Keyboard Command Matrix**| Deterministic `keydown` state machine (`useStudioKeybindings.ts`)| *Zero `react-hotkeys-hook`* |
+| **Binary Stream Downloader**| Native `URL.createObjectURL` Stream (`dispatchBinaryDownload`) | *Zero `file-saver`* |
+| **Artboards & Typefaces** | **15 Studio Artboard Presets** & **36 Google Font Typefaces** | *Expanded beyond 9/25 limits* |
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐

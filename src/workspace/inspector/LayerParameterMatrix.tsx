@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { HexColorPicker } from 'react-colorful'
+import { QuantumColorSpectrum } from '@/components/ui/QuantumColorSpectrum'
 import { IText, FabricObject, Group, ActiveSelection } from 'fabric'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { useEditorStore } from '@/store/editorStore'
@@ -60,7 +60,7 @@ function ColorSwatch({ color, onChange, label }: { color: string; onChange: (c: 
           <div style={{ position: 'absolute', top: 36, left: 0, zIndex: 500,
             padding: 10, background: 'var(--color-base-800)', border: '1px solid var(--color-base-600)',
             borderRadius: 10, boxShadow: 'var(--shadow-float)' }}>
-            <HexColorPicker color={safeColor} onChange={onChange} />
+            <QuantumColorSpectrum color={safeColor} onChange={onChange} />
             <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
               <button onClick={() => { onChange('transparent'); setOpen(false) }}
                 style={{ flex: 1, height: 24, background: 'var(--color-base-700)', border: '1px solid var(--color-base-600)', borderRadius: 5, color: 'var(--color-base-400)', fontSize: 10, cursor: 'pointer' }}>

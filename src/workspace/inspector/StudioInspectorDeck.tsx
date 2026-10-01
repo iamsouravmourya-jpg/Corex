@@ -1,6 +1,9 @@
+/**
+ * LernexAI Proprietary — Studio Inspector Deck
+ * Zero external @radix-ui/react-tabs dependency.
+ */
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import * as Tabs from '@radix-ui/react-tabs'
 import { PropertiesPanel } from './LayerParameterMatrix'
 import { LayersPanel } from './SceneNodeTree'
 import { TemplatePanel } from './BlueprintGalleryDeck'
@@ -13,11 +16,11 @@ import { panelVariants } from '@/lib/motion'
 
 const STUDIO_INSPECTOR_TABS = [
   { id: 'properties', label: 'Inspector' },
-  { id: 'quantum',    label: '⚡ Quantum' },
-  { id: 'layers',     label: 'Hierarchy' },
-  { id: 'templates',  label: 'Blueprints' },
-  { id: 'emoji',      label: 'Vectors' },
-  { id: 'projects',   label: 'Vault' },
+  { id: 'quantum', label: '⚡ Quantum' },
+  { id: 'layers', label: 'Hierarchy' },
+  { id: 'templates', label: 'Blueprints' },
+  { id: 'emoji', label: 'Vectors' },
+  { id: 'projects', label: 'Vault' },
 ]
 
 export function RightPanel() {
@@ -40,12 +43,9 @@ export function RightPanel() {
         position: 'relative',
       }}
     >
-      <Tabs.Root
-        value={activeTab}
-        onValueChange={setActiveTab}
-        style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
-      >
-        <Tabs.List
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div
+          role="tablist"
           style={{
             display: 'flex',
             borderBottom: '1px solid var(--color-base-600)',
@@ -56,9 +56,11 @@ export function RightPanel() {
           }}
         >
           {STUDIO_INSPECTOR_TABS.map((tab) => (
-            <Tabs.Trigger
+            <button
               key={tab.id}
-              value={tab.id}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
               style={{
                 flex: 1,
                 minWidth: 0,
@@ -68,9 +70,8 @@ export function RightPanel() {
                 color: activeTab === tab.id ? 'var(--color-accent-cyan)' : 'var(--color-base-500)',
                 background: activeTab === tab.id ? 'rgba(6, 182, 212, 0.06)' : 'transparent',
                 border: 'none',
-                borderBottom: activeTab === tab.id
-                  ? '2px solid var(--color-accent-cyan)'
-                  : '2px solid transparent',
+                borderBottom:
+                  activeTab === tab.id ? '2px solid var(--color-accent-cyan)' : '2px solid transparent',
                 cursor: 'pointer',
                 transition: 'all 150ms',
                 padding: '0 3px',
@@ -80,9 +81,9 @@ export function RightPanel() {
               }}
             >
               {tab.label}
-            </Tabs.Trigger>
+            </button>
           ))}
-        </Tabs.List>
+        </div>
 
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
           <AnimatePresence mode="wait">
@@ -94,28 +95,34 @@ export function RightPanel() {
               exit="exit"
               style={{ height: '100%' }}
             >
-              <Tabs.Content value="properties" forceMount style={{ display: activeTab === 'properties' ? 'block' : 'none', height: '100%' }}>
+              <div style={{ display: activeTab === 'properties' ? 'block' : 'none', height: '100%' }}>
                 <PropertiesPanel />
-              </Tabs.Content>
-              <Tabs.Content value="quantum" forceMount style={{ display: activeTab === 'quantum' ? 'block' : 'none', height: '100%' }}>
+              </div>
+              <div style={{ display: activeTab === 'quantum' ? 'block' : 'none', height: '100%' }}>
                 <QuantumLabPanel />
-              </Tabs.Content>
-              <Tabs.Content value="layers" forceMount style={{ display: activeTab === 'layers' ? 'block' : 'none', height: '100%' }}>
+              </div>
+              <div style={{ display: activeTab === 'layers' ? 'block' : 'none', height: '100%' }}>
                 <LayersPanel />
-              </Tabs.Content>
-              <Tabs.Content value="templates" forceMount style={{ display: activeTab === 'templates' ? 'block' : 'none', height: '100%' }}>
+              </div>
+              <div style={{ display: activeTab === 'templates' ? 'block' : 'none', height: '100%' }}>
                 <TemplatePanel />
-              </Tabs.Content>
-              <Tabs.Content value="emoji" forceMount style={{ display: activeTab === 'emoji' ? 'flex' : 'none', flexDirection: 'column', height: '100%' }}>
+              </div>
+              <div
+                style={{
+                  display: activeTab === 'emoji' ? 'flex' : 'none',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              >
                 <StickerPanel />
-              </Tabs.Content>
-              <Tabs.Content value="projects" forceMount style={{ display: activeTab === 'projects' ? 'block' : 'none', height: '100%' }}>
+              </div>
+              <div style={{ display: activeTab === 'projects' ? 'block' : 'none', height: '100%' }}>
                 <ProjectsPanel />
-              </Tabs.Content>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
-      </Tabs.Root>
+      </div>
 
       <AnimatePresence>
         {isAiModeOpen && (
