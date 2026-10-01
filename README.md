@@ -419,37 +419,42 @@ npm run build
 
 OWNERSHIP, GENESIS & 100% IP DISCLOSURE:
 
-• Lineage & Open-Source Acknowledgment:
-  The earliest conceptual spark of browser-native canvas manipulation drew minor
-  inspiration from rudimentary open-source canvas prototypes. While we extend a
-  courtesy nod to the open-source community for foundational UI sparks, what
-  existed was merely a primitive, single-canvas local box prototype.
+• Foundational Lineage & Courtesy Attribution:
+  Foundational UI Layout and basic workspace canvas concepts drew early conceptual
+  inspiration from Craftora by shreyansh001boy-tech. We extend an ethical courtesy
+  acknowledgment for that initial spark. However, that early work existed merely as
+  an elementary, single-canvas hobby prototype—limited in scope, bound to local DOM
+  primitives, and lacking hardware acceleration, vector mathematics, or enterprise scaling.
 
-• Transformative Evolution & Architectural Leap:
-  Upon the inception of Corex under Sourav Maurya (Founder & Lead Architect of
-  LernexAI), the entire system was completely reimagined, re-engineered, and
-  re-architected from the ground up. Sourav Maurya brought the enterprise vision
-  that elevated a rudimentary toy into an industrial-grade, 18-Engine powerhouse:
-  - Hardware WebGL2 GLSL ES 3.00 `#version 300 es` fragment shader pipelines
+• The Architectural Revolution by Sourav Maurya (Founder, LernexAI):
+  When Sourav Maurya (Founder & Chief Architect of LernexAI) took over the project,
+  he brought an unapologetic, world-class software engineering vision backed by
+  LernexAI's high-performance serverless platform philosophy. Under Sourav Maurya's
+  direction, the entire codebase was systematically dismantled, re-engineered, and
+  re-architected from the ground up, turning a simple toy into Corex Quantum Studio—a
+  behemoth powered by 18 enterprise-grade proprietary engines:
+  - Hardware WebGL2 GLSL ES 3.00 `#version 300 es` GPU fragment shader pipelines
   - W3C OPFS `.cxbin` content-addressable binary disk vaults with SHA-256 digests
   - Constructive Solid Geometry (CSG) vector booleans & 3D axonometric relief extruders
-  - Gielis Superformula & Lissajous harmonic parametric synthesizers
-  - Real-time Lamport logical clock CRDT binary mesh synchronization
-  - 10-target 8K WebGPU universal code & artifact compilers
-  - Multimodal Gemini 3.8/3.1 autonomous AI layout & vision healing engines
-  The resulting platform is light-years ahead and completely decoupled from any
-  early open-source prototype.
+  - Johan Gielis Superformula & Lissajous harmonic parametric synthesizers
+  - Real-time Lamport logical clock CRDT binary mesh synchronization over BroadcastChannel
+  - 10-target 8K WebGPU universal code & artifact compilers (PNG, SVG, PDF, PPTX, TSX, HTML5, GLSL, CSS)
+  - Multimodal Gemini 3.8/3.1 autonomous AI layout & vision healing engines with zero-latency fallbacks
+  Today, Corex Quantum Studio operates in an entirely different stratosphere of
+  computational geometry and graphical performance, completely decoupled from and
+  infinitely superior to any early prototype.
 
-• 100% Intellectual Property (IP) Ownership:
+• 100% Undisputed Intellectual Property (IP) & Commercial Ownership:
   100% of the intellectual property (IP), proprietary source codebase, mathematical
-  engines, binary data topologies, custom UI/UX design systems, and commercial rights
-  are strictly and exclusively owned, held, and controlled by LernexAI and Sourav Maurya.
+  engines, binary data topologies, custom UI/UX design systems, serverless infrastructure,
+  and commercial rights are strictly and exclusively owned, held, and controlled by
+  LernexAI and Sourav Maurya.
 
 • Product Classification:
-  Corex (Corex Quantum Studio) is an independent, flagship creative product developed
-  under and powered by LernexAI.
+  Corex (Corex Quantum Studio) is an independent, standalone flagship creative
+  product engineered and powered under the LernexAI technology ecosystem.
 
-• Independent Production Software:
+• Enterprise Production Software:
   Corex Quantum Studio is a permanent, commercial-grade, independent production
   software suite with zero affiliation to any hackathon, temporary challenge,
   or third-party competition.
