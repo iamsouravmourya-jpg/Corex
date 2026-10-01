@@ -1,6 +1,20 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Undo2, Redo2, Download, ChevronDown, Sparkles, LogOut, Home, Command } from 'lucide-react'
+import {
+  Undo2,
+  Redo2,
+  Download,
+  ChevronDown,
+  Sparkles,
+  LogOut,
+  Home,
+  Command,
+  PanelLeft,
+  PanelRight,
+  Zap,
+  LayoutTemplate,
+  Shapes,
+} from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ExportModal } from '@/workspace/compiler/ArtifactCompilerDialog'
@@ -32,7 +46,7 @@ function Logo() {
       </svg>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <span style={{
-          fontFamily: "'Plus Jakarta Sans','Inter',sans-serif",
+          fontFamily: "'Plus Jakarta Sans',sans-serif",
           fontWeight: 800, fontSize: 15,
           letterSpacing: '-0.03em', lineHeight: 1,
         }}>
@@ -124,21 +138,23 @@ function PageSizePicker() {
           <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
             style={{ position: 'absolute', top: 34, left: 0, zIndex: 300,
               background: 'var(--color-base-800)', border: '1px solid var(--color-base-600)',
-              borderRadius: 8, boxShadow: 'var(--shadow-float)', minWidth: 230, overflow: 'hidden' }}>
-            {CANVAS_PRESETS.map((preset) => (
-              <button key={preset.label} onClick={() => apply(preset)}
-                style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '7px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 12,
-                  color: canvasSize.label === preset.label ? 'var(--color-accent-400)' : 'var(--color-base-200)',
-                  transition: 'background 80ms' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-base-750)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
-                <span>{preset.label}</span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-base-500)' }}>
-                  {preset.width}×{preset.height}
-                </span>
-              </button>
-            ))}
+              borderRadius: 8, boxShadow: 'var(--shadow-float)', minWidth: 260, overflow: 'hidden' }}>
+            <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+              {CANVAS_PRESETS.map((preset) => (
+                <button key={preset.label} onClick={() => apply(preset)}
+                  style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '7px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11.5,
+                    color: canvasSize.label === preset.label ? 'var(--color-accent-400)' : 'var(--color-base-200)',
+                    transition: 'background 80ms' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-base-750)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
+                  <span>{preset.label}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-base-500)' }}>
+                    {preset.width}×{preset.height}
+                  </span>
+                </button>
+              ))}
+            </div>
             <div style={{ padding: '8px 14px', borderTop: '1px solid var(--color-base-600)', display: 'flex', flexDirection: 'column', gap: 6 }}>
               <span style={{ fontSize: 10, color: 'var(--color-base-500)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Custom</span>
               <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
@@ -298,7 +314,18 @@ function UserProfileMenu() {
 
 // ─── TopBar ───────────────────────────────────────────────────────────────────
 export function TopBar() {
-  const { canUndo, canRedo, undo, redo, isAiModeOpen, toggleAiMode } = useEditorStore()
+  const {
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    isAiModeOpen,
+    toggleAiMode,
+    leftDrawerTab,
+    toggleLeftDrawer,
+    isRightPanelOpen,
+    toggleRightPanel,
+  } = useEditorStore()
   const [showExport, setShowExport] = useState(false)
   const [showCommandPalette, setShowCommandPalette] = useState(false)
 
@@ -319,17 +346,117 @@ export function TopBar() {
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.25, ease: [0, 0, 0.2, 1] }}
-        style={{ height: 44, background: 'var(--color-base-875)',
+        style={{
+          height: 46,
+          background: '#0D0F17',
           borderBottom: '1px solid var(--color-base-600)',
-          display: 'flex', alignItems: 'center',
-          padding: '0 14px', gap: 8, flexShrink: 0, zIndex: 100 }}>
-
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px',
+          gap: 7,
+          flexShrink: 0,
+          zIndex: 100,
+        }}
+      >
         <Logo />
         <div style={{ width: 1, height: 20, background: 'var(--color-base-600)', margin: '0 2px' }} />
+
+        {/* Left Drawer Slide Toggle */}
+        <Tooltip content={leftDrawerTab ? 'Hide Left Sidebar' : 'Show Left Sidebar'} side="bottom">
+          <button
+            onClick={() => toggleLeftDrawer(leftDrawerTab || 'create')}
+            className="btn-base"
+            style={{
+              height: 28,
+              padding: '0 8px',
+              color: leftDrawerTab ? '#06B6D4' : '#94A3B8',
+              borderColor: leftDrawerTab ? 'rgba(6, 182, 212, 0.4)' : 'var(--color-base-600)',
+            }}
+          >
+            <PanelLeft size={13} />
+          </button>
+        </Tooltip>
+
         <PageSizePicker />
-        <div style={{ width: 1, height: 16, background: 'var(--color-base-700)', margin: '0 2px' }} />
         <ProjectTitle />
+
         <div style={{ flex: 1 }} />
+
+        {/* Center Quick Studio Suite Switcher */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: 3,
+            borderRadius: '0.5rem',
+            background: '#08090E',
+            border: '1px solid var(--color-base-600)',
+          }}
+        >
+          <button
+            onClick={() => toggleLeftDrawer('blueprints')}
+            style={{
+              height: 24,
+              padding: '0 9px',
+              borderRadius: 5,
+              border: 'none',
+              background: leftDrawerTab === 'blueprints' ? 'rgba(6, 182, 212, 0.16)' : 'transparent',
+              color: leftDrawerTab === 'blueprints' ? '#22D3EE' : '#94A3B8',
+              fontSize: 11,
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              cursor: 'pointer',
+            }}
+          >
+            <LayoutTemplate size={12} color="#06B6D4" />
+            <span>Blueprints</span>
+          </button>
+
+          <button
+            onClick={() => toggleLeftDrawer('vectors')}
+            style={{
+              height: 24,
+              padding: '0 9px',
+              borderRadius: 5,
+              border: 'none',
+              background: leftDrawerTab === 'vectors' ? 'rgba(6, 182, 212, 0.16)' : 'transparent',
+              color: leftDrawerTab === 'vectors' ? '#22D3EE' : '#94A3B8',
+              fontSize: 11,
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              cursor: 'pointer',
+            }}
+          >
+            <Shapes size={12} color="#14B8A6" />
+            <span>Vectors & QR</span>
+          </button>
+
+          <button
+            onClick={() => toggleLeftDrawer('quantum')}
+            style={{
+              height: 24,
+              padding: '0 9px',
+              borderRadius: 5,
+              border: 'none',
+              background: leftDrawerTab === 'quantum' ? 'rgba(6, 182, 212, 0.16)' : 'transparent',
+              color: leftDrawerTab === 'quantum' ? '#22D3EE' : '#94A3B8',
+              fontSize: 11,
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              cursor: 'pointer',
+            }}
+          >
+            <Zap size={12} color="#F59E0B" />
+            <span>Quantum Lab</span>
+          </button>
+        </div>
 
         {/* ⌘K Omnibar Command Trigger */}
         <Tooltip content="Omnibar Command Palette" shortcut="⌘K" side="bottom">
@@ -353,7 +480,7 @@ export function TopBar() {
             }}
           >
             <Command size={12} color="#06B6D4" />
-            <span>Commands</span>
+            <span>Omnibar</span>
             <span
               style={{
                 fontSize: 9.5,
@@ -370,7 +497,7 @@ export function TopBar() {
         </Tooltip>
 
         {/* AI Mode Button */}
-        <Tooltip content={isAiModeOpen ? "Close AI Assistant" : "Open AI Assistant"} side="bottom">
+        <Tooltip content={isAiModeOpen ? 'Close AI Studio' : 'Open AI Studio'} side="bottom">
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={toggleAiMode}
@@ -384,9 +511,7 @@ export function TopBar() {
               background: isAiModeOpen
                 ? 'linear-gradient(135deg, rgba(6,182,212,0.22) 0%, rgba(20,184,166,0.22) 100%)'
                 : 'var(--color-base-800)',
-              border: isAiModeOpen
-                ? '1px solid #06B6D4'
-                : '1px solid var(--color-base-600)',
+              border: isAiModeOpen ? '1px solid #06B6D4' : '1px solid var(--color-base-600)',
               borderRadius: '0.5rem',
               color: isAiModeOpen ? '#A5F3FC' : 'var(--color-base-200)',
               fontSize: 11.5,
@@ -397,38 +522,74 @@ export function TopBar() {
             }}
           >
             <Sparkles size={13} style={{ color: isAiModeOpen ? '#22D3EE' : '#06B6D4' }} />
-            <span>AI Mode</span>
+            <span>AI Studio</span>
           </motion.button>
         </Tooltip>
 
         <div style={{ width: 1, height: 16, background: 'var(--color-base-700)', margin: '0 2px' }} />
 
         <Tooltip content="Undo" shortcut="⌘Z" side="bottom">
-          <motion.button whileTap={{ scale: 0.88 }} onClick={undo} disabled={!canUndo}
-            aria-label="Undo" className="btn-ghost btn-icon"
-            style={{ opacity: canUndo ? 1 : 0.3, transition: 'opacity 150ms' }}>
+          <motion.button
+            whileTap={{ scale: 0.88 }}
+            onClick={undo}
+            disabled={!canUndo}
+            aria-label="Undo"
+            className="btn-ghost btn-icon"
+            style={{ opacity: canUndo ? 1 : 0.3, transition: 'opacity 150ms' }}
+          >
             <Undo2 size={15} strokeWidth={1.5} />
           </motion.button>
         </Tooltip>
         <Tooltip content="Redo" shortcut="⌘⇧Z" side="bottom">
-          <motion.button whileTap={{ scale: 0.88 }} onClick={redo} disabled={!canRedo}
-            aria-label="Redo" className="btn-ghost btn-icon"
-            style={{ opacity: canRedo ? 1 : 0.3, transition: 'opacity 150ms' }}>
+          <motion.button
+            whileTap={{ scale: 0.88 }}
+            onClick={redo}
+            disabled={!canRedo}
+            aria-label="Redo"
+            className="btn-ghost btn-icon"
+            style={{ opacity: canRedo ? 1 : 0.3, transition: 'opacity 150ms' }}
+          >
             <Redo2 size={15} strokeWidth={1.5} />
           </motion.button>
         </Tooltip>
 
-        <div style={{ width: 1, height: 20, background: 'var(--color-base-600)', margin: '0 2px' }} />
+        {/* Right Inspector Toggle */}
+        <Tooltip content={isRightPanelOpen ? 'Hide Right Inspector' : 'Show Right Inspector'} side="bottom">
+          <button
+            onClick={toggleRightPanel}
+            className="btn-base"
+            style={{
+              height: 28,
+              padding: '0 8px',
+              color: isRightPanelOpen ? '#06B6D4' : '#94A3B8',
+              borderColor: isRightPanelOpen ? 'rgba(6, 182, 212, 0.4)' : 'var(--color-base-600)',
+            }}
+          >
+            <PanelRight size={13} />
+          </button>
+        </Tooltip>
 
-        <Tooltip content="Export as PNG, JPEG or SVG" side="bottom">
-          <motion.button whileTap={{ scale: 0.96 }} onClick={() => setShowExport(true)}
+        <Tooltip content="Compile & Export (PNG 8K, SVG, PDF, PPTX, React JSX)" side="bottom">
+          <motion.button
+            whileTap={{ scale: 0.96 }}
+            onClick={() => setShowExport(true)}
             aria-label="Export design"
-            style={{ display: 'flex', alignItems: 'center', gap: 6,
-              height: 30, padding: '0 14px',
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              height: 30,
+              padding: '0 14px',
               background: 'linear-gradient(135deg,#06B6D4 0%,#14B8A6 100%)',
-              border: '1px solid rgba(255,255,255,0.2)', borderRadius: '0.5rem',
-              color: '#08090E', fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              boxShadow: '0 6px 16px rgba(6,182,212,0.25),inset 0 1px 0 rgba(255,255,255,0.25)' }}>
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '0.5rem',
+              color: '#08090E',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 6px 16px rgba(6,182,212,0.25),inset 0 1px 0 rgba(255,255,255,0.25)',
+            }}
+          >
             <Download size={13} strokeWidth={2.2} />
             Export
           </motion.button>

@@ -7,6 +7,9 @@ import { encodeSceneTransaction, decodeSceneTransaction } from '@/lib/commandLed
 
 const MAX_LEDGER_FRAMES = 64
 
+export type LeftDrawerTab = 'create' | 'blueprints' | 'vectors' | 'quantum' | 'vault' | null
+export type RightInspectorTab = 'properties' | 'layers' | 'ai'
+
 export interface UserSession {
   name: string
   email: string
@@ -32,6 +35,15 @@ interface EditorState {
   bgNonce: number
   activeObjectId: string | null
   layers: LayerItem[]
+
+  /** Collapsible Left Slide-Out Drawer & Right Inspector State */
+  leftDrawerTab: LeftDrawerTab
+  rightActiveTab: RightInspectorTab
+  isRightPanelOpen: boolean
+  setLeftDrawerTab: (tab: LeftDrawerTab) => void
+  toggleLeftDrawer: (tab?: Exclude<LeftDrawerTab, null>) => void
+  setRightActiveTab: (tab: RightInspectorTab) => void
+  toggleRightPanel: () => void
 
   /** Binary Deflated Transaction Ledger (Uint8Array packets via pako) */
   transactionLedger: Uint8Array[]
@@ -99,6 +111,23 @@ export const useEditorStore = create<EditorState>()(
     bgNonce: 0,
     activeObjectId: null,
     layers: [],
+
+    leftDrawerTab: 'create',
+    rightActiveTab: 'properties',
+    isRightPanelOpen: true,
+    setLeftDrawerTab: (tab) => set({ leftDrawerTab: tab }),
+    toggleLeftDrawer: (targetTab = 'create') =>
+      set((s) => ({
+        leftDrawerTab: s.leftDrawerTab === targetTab ? null : targetTab,
+      })),
+    setRightActiveTab: (tab) =>
+      set({
+        rightActiveTab: tab,
+        isRightPanelOpen: true,
+        isAiModeOpen: tab === 'ai',
+      }),
+    toggleRightPanel: () => set((s) => ({ isRightPanelOpen: !s.isRightPanelOpen })),
+
     transactionLedger: [],
     ledgerCursor: -1,
     canUndo: false,
@@ -207,7 +236,20 @@ export const useEditorStore = create<EditorState>()(
 
     setCurrentProjectId: (id) => set({ currentProjectId: id }),
     setCurrentProjectName: (name) => set({ currentProjectName: name }),
-    setIsAiModeOpen: (open) => set({ isAiModeOpen: open }),
-    toggleAiMode: () => set((s) => ({ isAiModeOpen: !s.isAiModeOpen })),
+    setIsAiModeOpen: (open) =>
+      set({
+        isAiModeOpen: open,
+        isRightPanelOpen: true,
+        rightActiveTab: open ? 'ai' : 'properties',
+      }),
+    toggleAiMode: () =>
+      set((s) => {
+        const nextOpen = !s.isAiModeOpen
+        return {
+          isAiModeOpen: nextOpen,
+          isRightPanelOpen: true,
+          rightActiveTab: nextOpen ? 'ai' : 'properties',
+        }
+      }),
   }))
 )

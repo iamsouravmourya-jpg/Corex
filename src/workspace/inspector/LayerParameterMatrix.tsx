@@ -23,13 +23,21 @@ import {
   generateDevModeCss,
 } from '@/lib/vectorStudio'
 import {
+  applyProceduralShaderBackground,
+  smartReflowCanvasToNewSize,
+  optimizeStageGeometry,
+  auditAndHealCanvasContrast,
+  compileCanvasToReactTailwindJsx,
+  compileCanvasToW3cDesignTokens,
+} from '@/lib/quantumEngine'
+import {
   AlignLeft, AlignCenter, AlignRight,
   AlignStartVertical, AlignCenterVertical, AlignEndVertical,
   AlignHorizontalSpaceAround, AlignVerticalSpaceAround,
   BringToFront, SendToBack, MoveUp, MoveDown,
   Copy, Trash2, Group as GroupIcon, Ungroup,
   Bold, Italic, Underline, FlipHorizontal, FlipVertical, RotateCcw, Pipette, Paintbrush,
-  Scissors, Code2, Check,
+  Scissors, Code2, Check, Sparkles, Maximize2, Wand2, Eye, Zap,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
@@ -179,7 +187,7 @@ export function PropertiesPanel() {
   const [objH, setObjH] = useState(0)
   const [rotation, setRotation] = useState(0)
   // Text
-  const [fontFamily, setFontFamily] = useState('Inter')
+  const [fontFamily, setFontFamily] = useState('Plus Jakarta Sans')
   const [fontSize, setFontSize] = useState(32)
   const [bold, setBold] = useState(false)
   const [italic, setItalic] = useState(false)
@@ -193,6 +201,7 @@ export function PropertiesPanel() {
   const [shadow, setShadow] = useState<ShadowSpec>(DEFAULT_SHADOW)
   const [hasShadow, setHasShadow] = useState(false)
   const [styleStored, setStyleStored] = useState(false)
+  const [cssCopied, setCssCopied] = useState(false)
   // Canvas bg
   const [bgColor, setBgColor] = useState('#ffffff')
   const [bgMode, setBgMode] = useState<FillMode>('solid')
@@ -230,7 +239,7 @@ export function PropertiesPanel() {
 
     if (active.type === 'i-text' || active.type === 'text') {
       const t = active as IText
-      setFontFamily(t.fontFamily || 'Inter')
+      setFontFamily(t.fontFamily || 'Plus Jakarta Sans')
       setFontSize(t.fontSize || 32)
       setBold(t.fontWeight === 'bold')
       setItalic(t.fontStyle === 'italic')
@@ -493,9 +502,126 @@ export function PropertiesPanel() {
       </div>
 
       {!obj && (
-        <div style={{ padding: '20px 12px', textAlign: 'center', color: 'var(--color-base-500)', fontSize: 12, lineHeight: 1.6 }}>
-          Select an object to edit its properties
-        </div>
+        <>
+          {/* ── 1-Click Procedural Shader Surfaces ── */}
+          <SectionHead>Procedural Stage Shaders</SectionHead>
+          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            {[
+              { id: 'aurora-plasma', label: 'Aurora Plasma' },
+              { id: 'synthwave-grid', label: 'Synthwave Grid' },
+              { id: 'quantum-mesh', label: 'Quantum Mesh' },
+              { id: 'constellation', label: 'Constellation' },
+            ].map((sh) => (
+              <button
+                key={sh.id}
+                onClick={() => canvas && void applyProceduralShaderBackground(canvas, sh.id as any)}
+                className="btn-base"
+                style={{ height: 32, fontSize: 11 }}
+              >
+                <Sparkles size={12} color="#06B6D4" />
+                <span>{sh.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* ── Cassowary Autonomous Smart Layout Reflow ── */}
+          <SectionHead>Autonomous Smart Reflow</SectionHead>
+          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            {[
+              { w: 1080, h: 1080, label: '1:1 Square' },
+              { w: 1080, h: 1920, label: '9:16 Reel' },
+              { w: 1280, h: 720, label: '16:9 YouTube' },
+              { w: 1584, h: 396, label: '4:1 LinkedIn' },
+            ].map((preset) => (
+              <button
+                key={preset.label}
+                onClick={() => canvas && smartReflowCanvasToNewSize(canvas, preset.w, preset.h)}
+                className="btn-base"
+                style={{ height: 32, fontSize: 11 }}
+              >
+                <Maximize2 size={11} color="#14B8A6" />
+                <span>{preset.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* ── Stage Optimization & WCAG Contrast Healer ── */}
+          <SectionHead>Stage Health & Optimization</SectionHead>
+          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            <button
+              onClick={() => canvas && optimizeStageGeometry(canvas)}
+              className="btn-base"
+              style={{ height: 32, fontSize: 11 }}
+              title="Sub-Pixel Geometry Quantizer (Shift+O)"
+            >
+              <Wand2 size={12} color="#06B6D4" />
+              <span>Optimize Nodes</span>
+            </button>
+            <button
+              onClick={() => canvas && auditAndHealCanvasContrast(canvas, true)}
+              className="btn-base"
+              style={{ height: 32, fontSize: 11 }}
+              title="WCAG 2.1 AAA Contrast Auto-Healer (Shift+H)"
+            >
+              <Eye size={12} color="#10B981" />
+              <span>Heal Contrast</span>
+            </button>
+          </div>
+
+          {/* ── Universal Code & Token Compiler ── */}
+          <SectionHead>Universal Stage Code Export</SectionHead>
+          <div style={{ padding: '6px 12px 10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            <button
+              onClick={() => {
+                if (!canvas) return
+                void navigator.clipboard?.writeText(compileCanvasToReactTailwindJsx(canvas))
+                setCssCopied(true)
+                setTimeout(() => setCssCopied(false), 1800)
+              }}
+              className="btn-base"
+              style={{ height: 32, fontSize: 11 }}
+            >
+              {cssCopied ? <Check size={12} color="#10B981" /> : <Code2 size={12} color="#06B6D4" />}
+              <span>{cssCopied ? 'JSX Copied!' : 'Copy React JSX'}</span>
+            </button>
+            <button
+              onClick={() => {
+                if (!canvas) return
+                void navigator.clipboard?.writeText(compileCanvasToW3cDesignTokens(canvas))
+                setCssCopied(true)
+                setTimeout(() => setCssCopied(false), 1800)
+              }}
+              className="btn-base"
+              style={{ height: 32, fontSize: 11 }}
+            >
+              <Zap size={12} color="#F59E0B" />
+              <span>Copy W3C JSON</span>
+            </button>
+          </div>
+
+          {/* ── Quick Navigation to Studio Suites ── */}
+          <SectionHead>Studio Suites</SectionHead>
+          <div style={{ padding: '6px 12px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <button
+              onClick={() => useEditorStore.getState().setLeftDrawerTab('quantum')}
+              className="btn-base"
+              style={{ height: 34, justifyContent: 'space-between', padding: '0 12px', fontSize: 11.5 }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Zap size={13} color="#06B6D4" /> Open 15-Engine Quantum Lab
+              </span>
+              <span style={{ fontSize: 10, color: '#06B6D4', fontFamily: 'var(--font-mono)' }}>Left Dock</span>
+            </button>
+            <button
+              onClick={() => useEditorStore.getState().setRightActiveTab('ai')}
+              className="btn-primary btn-base"
+              style={{ height: 36, fontSize: 12 }}
+            >
+              <Sparkles size={13} />
+              <span>Launch Autonomous AI Studio</span>
+            </button>
+          </div>
+        </>
       )}
 
       {obj && (

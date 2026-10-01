@@ -5,6 +5,8 @@ import { nanoid } from 'nanoid'
 import { addImageFromDataUrl } from '@/lib/shapes'
 import { attachAlignmentGuides } from '@/lib/snapping'
 import { crdtMesh } from '@/lib/crdtSync'
+import { optimizeStageGeometry, auditAndHealCanvasContrast } from '@/lib/quantumEngine'
+import { ZoomIn, ZoomOut, Maximize2, Grid3x3, Wand2, Eye } from 'lucide-react'
 
 const STAGE_MARGIN_PX = 80
 
@@ -20,6 +22,7 @@ export function CanvasBoard() {
   const {
     canvasSize,
     viewZoom,
+    fitScale,
     viewNonce,
     fabricCanvas,
     showGrid,
@@ -285,6 +288,129 @@ export function CanvasBoard() {
           ref={magneticOverlayRef}
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
         />
+      </div>
+
+      {/* ── Floating Stage Quick-Action HUD ── */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 14,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 25,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '5px 10px',
+          borderRadius: '0.625rem',
+          background: 'rgba(13, 15, 23, 0.92)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid var(--color-base-600)',
+          boxShadow: '0 10px 28px rgba(8, 9, 14, 0.75)',
+          userSelect: 'none',
+        }}
+      >
+        <button
+          onClick={() => useEditorStore.getState().setViewZoom(viewZoom / 1.2)}
+          title="Zoom Out"
+          style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
+        >
+          <ZoomOut size={13} />
+        </button>
+        <span
+          style={{
+            fontSize: 11,
+            fontFamily: 'var(--font-mono)',
+            color: '#F8FAFC',
+            fontWeight: 600,
+            minWidth: 40,
+            textAlign: 'center',
+          }}
+        >
+          {Math.round(fitScale * viewZoom * 100)}%
+        </span>
+        <button
+          onClick={() => useEditorStore.getState().setViewZoom(viewZoom * 1.2)}
+          title="Zoom In"
+          style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', padding: 3 }}
+        >
+          <ZoomIn size={13} />
+        </button>
+        <button
+          onClick={() => useEditorStore.getState().resetView()}
+          title="Fit Artboard to Viewport"
+          style={{ background: 'none', border: 'none', color: '#06B6D4', cursor: 'pointer', display: 'flex', padding: 3 }}
+        >
+          <Maximize2 size={12} />
+        </button>
+
+        <div style={{ width: 1, height: 14, background: 'var(--color-base-600)', margin: '0 2px' }} />
+
+        <button
+          onClick={() => useEditorStore.getState().toggleGrid()}
+          title="Toggle Coordinate Grid (⌘')"
+          style={{
+            height: 24,
+            padding: '0 8px',
+            borderRadius: 5,
+            border: 'none',
+            background: showGrid ? 'rgba(6, 182, 212, 0.18)' : 'transparent',
+            color: showGrid ? '#22D3EE' : '#94A3B8',
+            fontSize: 10.5,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            cursor: 'pointer',
+          }}
+        >
+          <Grid3x3 size={12} />
+          <span>Grid</span>
+        </button>
+
+        <button
+          onClick={() => fabricCanvas && optimizeStageGeometry(fabricCanvas)}
+          title="Optimize Sub-Pixel Geometry (Shift+O)"
+          style={{
+            height: 24,
+            padding: '0 8px',
+            borderRadius: 5,
+            border: 'none',
+            background: 'transparent',
+            color: '#94A3B8',
+            fontSize: 10.5,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            cursor: 'pointer',
+          }}
+        >
+          <Wand2 size={12} color="#06B6D4" />
+          <span>Optimize</span>
+        </button>
+
+        <button
+          onClick={() => fabricCanvas && auditAndHealCanvasContrast(fabricCanvas, true)}
+          title="WCAG AAA Contrast Auto-Healer (Shift+H)"
+          style={{
+            height: 24,
+            padding: '0 8px',
+            borderRadius: 5,
+            border: 'none',
+            background: 'transparent',
+            color: '#94A3B8',
+            fontSize: 10.5,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            cursor: 'pointer',
+          }}
+        >
+          <Eye size={12} color="#10B981" />
+          <span>Heal Contrast</span>
+        </button>
       </div>
     </div>
   )
