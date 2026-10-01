@@ -14,7 +14,7 @@ import {
 } from '@/lib/quantumEngine'
 import { encryptProjectPayload } from '@/lib/cryptoVault'
 import { crdtMesh } from '@/lib/crdtSync'
-import { saveAs } from 'file-saver'
+import { dispatchBinaryDownload } from '@/lib/export'
 import {
   Cpu,
   Sparkles,
@@ -72,7 +72,7 @@ export function QuantumLabPanel() {
     const rawJson = JSON.stringify((canvas as any).toJSON(['__uid', 'corexLabel']))
     const encrypted = await encryptProjectPayload(rawJson, vaultKey.trim())
     const blob = new Blob([JSON.stringify(encrypted, null, 2)], { type: 'application/json' })
-    saveAs(blob, `corex-vault-aes256.corex.enc`)
+    dispatchBinaryDownload(blob, `corex-vault-aes256.corex.enc`)
     notify('🔒 AES-GCM 256-Bit Encrypted Vault downloaded!')
   }
 

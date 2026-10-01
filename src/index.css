@@ -44,10 +44,10 @@
   --color-info: #06B6D4;
 
   /* ── Typography ── */
-  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --font-brand: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-brand: 'Plus Jakarta Sans', sans-serif;
 
   /* ── Font sizes ── */
   --text-2xs: 0.625rem;
@@ -122,8 +122,8 @@
     background-color: var(--color-ink-950);
     color: var(--color-base-200);
     font-family: var(--font-sans);
-    font-size: 13px;
-    line-height: 1.75;
+    font-size: 12.5px;
+    line-height: 1.65;
   }
 
   /* Custom scrollbar */

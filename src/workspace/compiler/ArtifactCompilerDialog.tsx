@@ -4,13 +4,12 @@ import { Download, X, Cpu } from 'lucide-react'
 import { Slider } from '@/components/ui/Slider'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { useEditorStore } from '@/store/editorStore'
-import { exportCanvas, type ExportFormat } from '@/lib/export'
+import { exportCanvas, dispatchBinaryDownload, type ExportFormat } from '@/lib/export'
 import {
   detectHardwareRasterBackend,
   compileCanvasToReactTailwindJsx,
   compileCanvasToW3cDesignTokens,
 } from '@/lib/quantumEngine'
-import { saveAs } from 'file-saver'
 import { modalVariants, modalOverlayVariants } from '@/lib/motion'
 
 interface ExportModalProps {
@@ -39,10 +38,10 @@ export function ExportModal({ onClose }: ExportModalProps) {
     try {
       if (format === 'jsx') {
         const code = compileCanvasToReactTailwindJsx(canvas)
-        saveAs(new Blob([code], { type: 'text/plain;charset=utf-8' }), `${filename}.tsx`)
+        dispatchBinaryDownload(new Blob([code], { type: 'text/plain;charset=utf-8' }), `${filename}.tsx`)
       } else if (format === 'tokens') {
         const json = compileCanvasToW3cDesignTokens(canvas)
-        saveAs(new Blob([json], { type: 'application/json;charset=utf-8' }), `${filename}.tokens.json`)
+        dispatchBinaryDownload(new Blob([json], { type: 'application/json;charset=utf-8' }), `${filename}.tokens.json`)
       } else {
         await exportCanvas(canvas, format, quality / 100, filename, { scale, transparent })
       }

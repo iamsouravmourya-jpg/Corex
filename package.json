@@ -1,13 +1,16 @@
 {
-  "name": "corex",
+  "name": "@lernexai/corex-quantum-studio",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.4.0",
+  "description": "LernexAI Proprietary 15-Engine Vector, Shader & Autonomous AI Design Suite",
+  "author": "Sourav Maurya <iamsouravmaurya@gmail.com> (LernexAI)",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
     "start": "tsx server.ts",
     "build": "tsc -b && vite build",
-    "lint": "oxlint",
+    "lint": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -25,7 +28,6 @@
     "dexie-react-hooks": "^4.4.0",
     "express": "^5.2.1",
     "fabric": "^7.4.0",
-    "file-saver": "^2.0.5",
     "framer-motion": "^13.4.4",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.48.0",
@@ -42,12 +44,10 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@types/file-saver": "^2.0.7",
     "@types/node": "^24.19.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
-    "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"

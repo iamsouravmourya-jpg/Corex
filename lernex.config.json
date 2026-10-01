@@ -1,0 +1,13 @@
+{
+  "$schema": "https://lernexai.com/schemas/quantum-studio-v2.json",
+  "engine": "Corex Quantum Studio",
+  "organization": "LernexAI",
+  "version": "2.4.0-quantum",
+  "architecture": {
+    "stateLedger": "ZLIB-DEFLATE-Uint8Array",
+    "crdtMesh": "BroadcastChannel-Lamport-v2",
+    "vaultCryptography": "WebCrypto-PBKDF2-AES-GCM-256",
+    "rasterPipeline": "WebGPU-OffscreenCanvas-8K",
+    "aiRuntime": "Hybrid-Gemini-3.8-Serverless"
+  }
+}

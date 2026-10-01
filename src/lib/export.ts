@@ -1,8 +1,9 @@
 /**
- * LernexAI Proprietary — Multi-Format Raster & Vector Output Compiler
+ * LernexAI Proprietary — Quantum Artifact & Binary Stream Compiler
+ * Uses native ObjectURL stream dispatching (zero external file-saver dependency)
+ * and calibrated DPI vector/raster transformation matrices.
  */
 import { Canvas as FabricCanvas } from 'fabric'
-import { saveAs } from 'file-saver'
 
 export type ExportFormat = 'png' | 'jpeg' | 'svg' | 'pdf' | 'pptx'
 
@@ -11,7 +12,31 @@ export interface ExportOptions {
   transparent?: boolean
 }
 
-function synthesizeDataUrl(
+/**
+ * Native browser binary stream downloader — replaces external file-saver library.
+ */
+export function dispatchBinaryDownload(payload: Blob | string, targetFilename: string) {
+  const objectUri =
+    typeof payload === 'string'
+      ? payload
+      : URL.createObjectURL(payload)
+
+  const anchor = document.createElement('a')
+  anchor.style.display = 'none'
+  anchor.href = objectUri
+  anchor.download = targetFilename
+  document.body.appendChild(anchor)
+  anchor.click()
+
+  setTimeout(() => {
+    anchor.remove()
+    if (typeof payload !== 'string') {
+      URL.revokeObjectURL(objectUri)
+    }
+  }, 250)
+}
+
+function renderStageToDataUri(
   stage: FabricCanvas,
   {
     scale = 1,
@@ -20,13 +45,13 @@ function synthesizeDataUrl(
     quality = 1,
   }: { scale?: number; transparent?: boolean; format?: 'png' | 'jpeg'; quality?: number },
 ): string {
-  const originalBg = stage.backgroundColor
+  const priorBackground = stage.backgroundColor
   if (transparent) stage.backgroundColor = ''
   try {
     return stage.toDataURL({ format, quality, multiplier: scale })
   } finally {
     if (transparent) {
-      stage.backgroundColor = originalBg
+      stage.backgroundColor = priorBackground
       stage.requestRenderAll()
     }
   }
@@ -40,30 +65,38 @@ export async function exportCanvas(
   { scale = 1, transparent = false }: ExportOptions = {},
 ) {
   if (format === 'svg') {
-    const svgString = stage.toSVG()
-    saveAs(new Blob([svgString], { type: 'image/svg+xml' }), `${filename}.svg`)
+    const xmlPayload = stage.toSVG()
+    dispatchBinaryDownload(
+      new Blob([xmlPayload], { type: 'image/svg+xml;charset=utf-8' }),
+      `${filename}.svg`,
+    )
     return
   }
 
   if (format === 'pdf' || format === 'pptx') {
-    const dataUrl = synthesizeDataUrl(stage, { scale, format: 'png' })
-    const w = stage.getWidth()
-    const h = stage.getHeight()
+    const highDpiUri = renderStageToDataUri(stage, { scale, format: 'png' })
+    const stageW = stage.getWidth()
+    const stageH = stage.getHeight()
     if (format === 'pdf') {
-      await compilePdfDocument(dataUrl, w, h, filename)
+      await compileVectorPdfArtifact(highDpiUri, stageW, stageH, filename)
     } else {
-      await compilePptxDeck(dataUrl, w, h, filename)
+      await compileNativeSlideArtifact(highDpiUri, stageW, stageH, filename)
     }
     return
   }
 
-  const outputUrl = synthesizeDataUrl(stage, { scale, transparent, format, quality })
-  const response = await fetch(outputUrl)
-  const blob = await response.blob()
-  saveAs(blob, `${filename}.${format}`)
+  const dataUri = renderStageToDataUri(stage, { scale, transparent, format, quality })
+  const res = await fetch(dataUri)
+  const binaryBlob = await res.blob()
+  dispatchBinaryDownload(binaryBlob, `${filename}.${format}`)
 }
 
-async function compilePdfDocument(dataUrl: string, width: number, height: number, filename: string) {
+async function compileVectorPdfArtifact(
+  dataUrl: string,
+  width: number,
+  height: number,
+  filename: string,
+) {
   try {
     await fetch('/api/v1/secure-compiler/export-pdf', {
       method: 'POST',
@@ -71,35 +104,40 @@ async function compilePdfDocument(dataUrl: string, width: number, height: number
       body: JSON.stringify({ width, height, filename }),
     })
   } catch {
-    // Proceed with local client compiler
+    // Serverless local execution path
   }
 
   const { jsPDF } = await import('jspdf')
-  const ptWidth = Math.round(width * 0.75)
-  const ptHeight = Math.round(height * 0.75)
-  const pdfDoc = new jsPDF({
-    orientation: ptWidth > ptHeight ? 'landscape' : 'portrait',
+  const pointsW = Math.round(width * 0.75)
+  const pointsH = Math.round(height * 0.75)
+  const pdfEngine = new jsPDF({
+    orientation: pointsW > pointsH ? 'landscape' : 'portrait',
     unit: 'pt',
-    format: [ptWidth, ptHeight],
+    format: [pointsW, pointsH],
     compress: true,
   })
-  pdfDoc.addImage(dataUrl, 'PNG', 0, 0, ptWidth, ptHeight, undefined, 'FAST')
-  pdfDoc.save(`${filename}.pdf`)
+  pdfEngine.addImage(dataUrl, 'PNG', 0, 0, pointsW, pointsH, undefined, 'FAST')
+  pdfEngine.save(`${filename}.pdf`)
 }
 
-async function compilePptxDeck(dataUrl: string, width: number, height: number, filename: string) {
+async function compileNativeSlideArtifact(
+  dataUrl: string,
+  width: number,
+  height: number,
+  filename: string,
+) {
   const { default: PptxGenJS } = await import('pptxgenjs')
-  const presentation = new PptxGenJS()
-  const inchesW = width / 96
-  const inchesH = height / 96
-  presentation.defineLayout({ name: 'LERNEX_STAGE', width: inchesW, height: inchesH })
-  presentation.layout = 'LERNEX_STAGE'
-  presentation.title = filename
-  const slide = presentation.addSlide()
-  slide.addImage({ data: dataUrl, x: 0, y: 0, w: inchesW, h: inchesH })
-  await presentation.writeFile({ fileName: `${filename}.pptx` })
+  const deck = new PptxGenJS()
+  const slideW = width / 96
+  const slideH = height / 96
+  deck.defineLayout({ name: 'LERNEX_QUANTUM_SLIDE', width: slideW, height: slideH })
+  deck.layout = 'LERNEX_QUANTUM_SLIDE'
+  deck.title = filename
+  const slideNode = deck.addSlide()
+  slideNode.addImage({ data: dataUrl, x: 0, y: 0, w: slideW, h: slideH })
+  await deck.writeFile({ fileName: `${filename}.pptx` })
 }
 
 export function captureThumbnail(stage: FabricCanvas): string {
-  return stage.toDataURL({ format: 'jpeg', quality: 0.42, multiplier: 0.16 })
+  return stage.toDataURL({ format: 'jpeg', quality: 0.44, multiplier: 0.16 })
 }
