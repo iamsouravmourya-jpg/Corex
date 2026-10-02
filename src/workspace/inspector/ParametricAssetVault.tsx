@@ -3,9 +3,11 @@
  * Zero inner border lines, soft rounded-2xl tonal cards, and pure vector synthesis.
  */
 import { useState } from 'react'
-import { Shapes, Box, Compass, QrCode, Sparkles } from 'lucide-react'
+import { Shapes, Box, Compass, QrCode, Sparkles, Image as ImageIcon } from 'lucide-react'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { useEditorStore } from '@/store/editorStore'
+import { COREX_ASSET_VAULT } from '@/data/corexAssetVault'
+import { addImageFromDataUrl } from '@/lib/shapes'
 import {
   addStarPolygon,
   addRegularPolygon,
@@ -74,6 +76,58 @@ export function StickerPanel() {
         padding: '14px 16px 28px',
       }}
     >
+      {/* 0. Pre-Bundled Corex Media, 3D Cutout & Mockup Vault */}
+      <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <ImageIcon size={13} color="#22D3EE" /> Built-in Media & 3D Cutout Vault
+          </div>
+          <span style={{ fontSize: 9.5, fontFamily: 'var(--font-mono)', color: '#10B981', fontWeight: 700 }}>
+            0ms OFFLINE READY
+          </span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {COREX_ASSET_VAULT.map((asset) => (
+            <button
+              key={asset.id}
+              onClick={async () => {
+                if (!stage) return
+                await addImageFromDataUrl(stage, asset.localDataUri)
+                setActiveFloatingWindow(null)
+              }}
+              style={{
+                padding: '10px',
+                borderRadius: 14,
+                background: '#1B2032',
+                border: 'none',
+                color: '#F8FAFC',
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                textAlign: 'left',
+              }}
+            >
+              <img
+                src={asset.localDataUri}
+                alt={asset.name}
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
+                  objectFit: 'contain',
+                  background: '#0C0E16',
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{ lineHeight: 1.25 }}>{asset.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* 1. Parametric Polygons & 3D Isometric Cube */}
       <div style={{ padding: 14, borderRadius: 18, background: '#141826', display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: 6 }}>

@@ -34,7 +34,7 @@
 6. [Design System Specification (`Borderless Deep Ink & Electric Cyan`)](#6-design-system-specification-borderless-deep-ink--electric-cyan)
 7. [Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar](#7-pro-studio-keyboard-command-matrix--k-omnibar)
 8. [Installation, Environment Configuration & Production Build](#8-installation-environment-configuration--production-build)
-9. [Upcoming Roadmap: Autonomous Corex Bot & Agentic Canvas Orchestrator (`🚧 Under Construction`)](#9-upcoming-roadmap-autonomous-corex-bot--agentic-canvas-orchestrator--under-construction)
+9. [Autonomous Corex Bot & Hybrid Asset Matrix (60FPS Agentic Canvas Orchestrator)](#9-autonomous-corex-bot--hybrid-asset-matrix-60fps-agentic-canvas-orchestrator)
 10. [Intellectual Property, Sole Ownership & Proprietary License](#10-intellectual-property-sole-ownership--proprietary-license)
 
 ---
@@ -285,7 +285,9 @@ Legacy design tools suffer from two structural flaws:
     │   ├── dock/
     │   │   └── VectorToolRail.tsx               # 68px Primary Rail + 256px Hierarchy Sidebar + Floating Glass Windows
     │   ├── stage/
-    │   │   └── QuantumStageCanvas.tsx           # 60FPS Stage matrix, focal zoom, CRDT sync, laser guides & Floating HUD
+    │   │   └── QuantumStageCanvas.tsx           # 60FPS Stage matrix, focal zoom, CRDT sync, laser guides & Bot Overlay
+    │   ├── bot/
+    │   │   └── CorexBotSequencer.tsx            # 60FPS Autonomous Corex Bot, Radial Cursor Drift & Live Typewriter Engine
     │   ├── compiler/
     │   │   └── ArtifactCompilerDialog.tsx       # 10-Pipeline Compiler (8K PNG, JPEG, SVG, PDF, PPTX, TSX, JSON, HTML5, GLSL, CSS)
     │   ├── telemetry/
@@ -314,7 +316,8 @@ Legacy design tools suffer from two structural flaws:
     │       ├── Tooltip.tsx                      # Borderless rounded-xl tooltip with shortcut badge
     │       └── QuantumColorSpectrum.tsx         # 24-swatch rounded matrix + Full HSV Hardware Spectrum Picker
     │
-    ├── lib/                                     # 18 Core Mathematical, GPU Shader, Crypto & Compiler Engines
+    ├── lib/                                     # Core Mathematical, Agentic Bot, GPU Shader, Crypto & Compiler Engines
+    │   ├── agenticPlanner.ts                    # Interactive To-Do Blueprint Planner & ~2KB Safe-Zone Clamped JSON Compiler
     │   ├── glslShaderEngine.ts                  # Hardware WebGL2 GLSL ES 3.00 (#version 300 es) GPU Fragment Engine
     │   ├── storageEngine.ts                     # W3C OPFS (.cxbin) + DEFLATE + SHA-256 Binary Storage Engine
     │   ├── quantumEngine.ts                     # 8K WebGPU, Path Text, CSS AST, CSG Booleans, 3D Extruder, TSX/HTML5/CSS
@@ -340,6 +343,7 @@ Legacy design tools suffer from two structural flaws:
     │   ├── useStudioKeybindings.ts              # Pro-Studio keyboard matrix (V/R/O/L/T/B/F, Alt+S/P, Shift+G/M/O/H/I/Q)
     │   └── useProjects.ts                       # Reactive W3C OPFS / Binary Vault hooks & telemetry
     ├── data/
+    │   ├── corexAssetVault.ts                   # Pre-Bundled Zero-CORS SVG Cutouts, Hybrid Photos & 6 Domain Archetypes
     │   └── fontList.ts                          # 36 Curated Google Fonts catalog & dynamic loader
     └── types/
         └── index.ts                             # Strict TypeScript interfaces & 15 studio artboard presets
@@ -411,11 +415,11 @@ npm run build
 
 ---
 
-## 9. Upcoming Roadmap: Autonomous Corex Bot & Agentic Canvas Orchestrator (`🚧 Under Construction`)
+## 9. Autonomous Corex Bot & Hybrid Asset Matrix (60FPS Agentic Canvas Orchestrator)
 
-> **Status**: `🚧 UNDER ACTIVE ENGINEERING & CONSTRUCTION` — Next-Generation Zero-Cost Client-Side Agentic Design Pipeline by **LernexAI (Sourav Maurya)**.
+> **Status**: `✅ LIVE IN PRODUCTION (v1.0.0)` — Zero-Server-Cost Client-Side Agentic Design Pipeline engineered by **LernexAI (Sourav Maurya)**.
 
-Instead of generating flat, uneditable raster images on expensive cloud GPUs, **Corex Quantum Studio** is pioneering the **Autonomous Corex Offline Bot**—an interactive, human-in-the-loop agentic workflow where the AI acts as an **Architectural Planner** (producing an interactive **To-Do Execution Blueprint** and a tiny `~2KB` JSON layout matrix), and the user's browser acts as a **60FPS Autonomous Robotic Artist** that visibly constructs every vector layer, WebGL2 shader, image mask, and editable typography node live on screen at **0% external rendering server cost**.
+Instead of generating flat, uneditable raster images on expensive cloud GPUs, **Corex Quantum Studio** introduces the **Autonomous Corex Offline Bot**—a human-in-the-loop agentic canvas orchestrator where the AI acts as an **Architectural Planner** (synthesizing an interactive **4-Step To-Do Execution Blueprint** and a lightweight `~1.8 KB` JSON layout matrix), and the user's browser acts as a **60FPS Autonomous Robotic Artist** (`src/workspace/bot/CorexBotSequencer.tsx`) that physically glides across the stage and constructs every WebGL2 shader, vector pod, alpha-masked cutout, and live-typed typography layer at **`$0.00` external server rendering cost**.
 
 ### 9.1 End-to-End Agentic Execution Topology
 
@@ -424,66 +428,81 @@ Instead of generating flat, uneditable raster images on expensive cloud GPUs, **
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. GEMINI HYBRID CORE / SERVERLESS PLANNER (Intent & To-Do Blueprint Stage) │
-│    • Parses user's prompt & platform target (YouTube, Instagram, Poster).   │
-│    • Generates an Interactive To-Do Checklist for user confirmation/edits.  │
-│    • Resolves royalty-free vector/raster asset links (0% heavy GPU render). │
-│    • Outputs a lightweight architectural map (Strict ~2KB JSON Matrix).     │
+│ 1. AGENTIC TO-DO BLUEPRINT PLANNER (src/lib/agenticPlanner.ts)              │
+│    • Parses user's prompt, domain archetype & target artboard dimensions.   │
+│    • Generates an Interactive 4-Step To-Do Checklist in the AI Studio Pod.  │
+│    • User can toggle steps, swap accent colors, pick Vault Assets, or edit  │
+│      headline/badge copy directly inside the checklist before execution.    │
+│    • Compiles a safe-zone clamped architectural map (~1.8 KB JSON Matrix).  │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
-                                      ▼  [ User Clicks "Approve & Build" -> ~2KB JSON ]
+                                      ▼  [ User Clicks "Approve To-Do & Launch Bot" ]
                                       │
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. THE ZUSTAND BRIDGE (Deterministic Client-Side Task Queue Manager)        │
-│    • Receives the validated JSON layout array inside the user's browser.    │
-│    • Compiles nodes into an ordered, fault-tolerant sequential task queue.  │
-│    • Binds live task telemetry (Pending -> Drawing -> Completed) to UI.     │
+│ 2. THE ZUSTAND BRIDGE (src/store/editorStore.ts)                            │
+│    • Receives the validated BotRenderTask[] array in browser memory.        │
+│    • Suppresses intermediate undo frames (_isRestoring = true) for atomic   │
+│      post-completion ZLIB binary snapshot commit.                           │
+│    • Streams real-time cursor coordinates (x, y) & step status to the UI.   │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3. COREX OFFLINE BOT (100% Client-Side 60FPS Autonomous Painting Engine)    │
+│ 3. COREX OFFLINE BOT (src/workspace/bot/CorexBotSequencer.tsx)              │
 │    • Runs 100% locally on the user's device (0% external server cost/load). │
-│    • Fires up a requestAnimationFrame loop with a visible AI Bot Cursor.    │
+│    • Fires up a 60FPS requestAnimationFrame loop with glowing Bot Cursor.   │
 │                                                                             │
 │    [ AUTOMATED PAINTING LOOP — VISIBLE RADIAL CURSOR DRIFT ]                │
-│    ├─ Step A: Inject Background ──► [ ⬛ Renders Dark Obsidian / GLSL ]     │
+│    ├─ Step A: Inject Background ──► [ ⬛ Renders Obsidian + WebGL2 Shader ] │
 │    ├─ Step B: Draw Geometry     ──► [ 📐 Drops Glassmorphic Vector Pods ]   │
-│    ├─ Step C: Stream Assets     ──► [ 🖼️ Places Alpha-Masked Tech Image ]  │
-│    └─ Step D: Render Typography ──► [ ✍️ Live-Types Scalable Vector Text ]  │
+│    ├─ Step C: Stream Assets     ──► [ 🖼️ Places Pre-Bundled Vault Cutout ]  │
+│    └─ Step D: Render Typography ──► [ ✍️ Character-by-Character Live Type ] │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ 4. THE LIVE SOVEREIGN STAGE (100% Editable Multi-Layer Master Output)       │
 │    • ZERO static flat pixels. Every single element is an isolated layer.    │
-│    • User can double-click to rewrite text, move shapes, or swap assets.    │
-│    • 100% ready to compile into 8K PNG, SVG, PDF, PPTX, or React (.tsx).    │
+│    • Commits 1 atomic ZLIB binary snapshot (single ⌘Z undo rollback).       │
+│    • 100% ready to edit or compile into 8K PNG, SVG, PDF, PPTX, or .tsx.    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 9.2 Pre-Bundled Built-in Media & Asset Matrix (`Corex Asset Vault`)
+### 9.2 Mathematical & Systems Engineering Foundations
 
-To guarantee **zero CORS failures, instant 0ms asset streaming, and 100% offline capability**, Corex Quantum Studio integrates a pre-indexed **Built-in Media & Design Asset Matrix** directly into the local application runtime:
+1. **60FPS Cubic-Bezier & Sinusoidal Radial Cursor Drift (`glideBotCursor`)**:
+   To prevent robotic linear snapping, the virtual bot cursor interpolates between consecutive task targets $\mathbf{P}_0 = (x_0, y_0)$ and $\mathbf{P}_1 = (x_1, y_1)$ over normalized time $t \in [0, 1]$ using a piecewise cubic ease-in-out function $E(t)$ coupled with a sinusoidal radial drift offset $R(t)$:
+   $$E(t) = \begin{cases} 4t^3 & t < 0.5 \\ 1 - \frac{(-2t + 2)^3}{2} & t \ge 0.5 \end{cases}, \quad R(t) = \min\left(64, \, 0.18 \cdot \|\mathbf{P}_1 - \mathbf{P}_0\|_2\right) \cdot \sin(\pi t)$$
+   $$\mathbf{C}(t) = \mathbf{P}_0 + (\mathbf{P}_1 - \mathbf{P}_0) \cdot E(t) + \begin{pmatrix} -0.35 \cdot R(t) \\ 0.65 \cdot R(t) \end{pmatrix}$$
 
-* **Dual-Utility Architecture**:
-  1. **Manual User Discovery**: Users can browse and 1-click insert high-fidelity 3D avatars, device mockups, transparent cutouts, gradient orbs, and tech graphics directly from the *Parametric Vector Lab & Floating Pods*.
-  2. **Autonomous Bot Semantic Resolver**: When the **Corex Bot** plans a layout, it semantically queries the local catalog tags (`category: 'tech'`, `theme: 'cyberpunk'`, `mask: 'transparent-png'`, `aspect: '16:9'`) to instantly inject pre-validated local assets without pinging external stock photo APIs or incurring bandwidth fees.
-* **Asset Domains Included**:
-  - **3D Tech & Futuristic Elements**: Floating glass prisms, holographic cylinders, isometric server nodes.
-  - **Transparent Studio Portraits & Cutouts**: Alpha-masked human creators for viral YouTube thumbnails and speaker banners.
-  - **Device & SaaS UI Mockups**: Dark-mode browser frames, mobile viewports, and glassmorphic dashboard cards.
-  - **Organic Ambient Gradients & Orbs**: Pre-rendered lossless WebP textures + real-time WebGL2 procedural shaders.
-  - **Vector Icon & Badge Suite**: 100+ mathematical SVG icons, verification pills, and social crests.
+2. **Spatial Safe-Zone Bounding Clamper (`clampTaskToSafeZone`)**:
+   Every generated geometry pod and typography node is mathematically constrained inside a 4% perimeter margin $m = 0.04 \cdot \min(W, H)$ so no element ever overflows the artboard:
+   $$w' = \min(w, \, W - 2m), \quad x' = \max\big(m, \, \min(x, \, W - w' - m)\big)$$
 
-### 9.3 Four-Phase Engineering Roadmap (`Under Construction`)
+3. **Zero-CORS Hybrid Asset Race Protocol (`loadVaultImageWithFallback`)**:
+   When streaming an asset from `src/data/corexAssetVault.ts`, the engine races the high-resolution CORS-safe CDN stream against a strict $\tau = 2400\text{ ms}$ deadline:
+   $$\text{AssetStream} = \text{Race}\Big(\text{CDN}_{\text{anonymous}}, \, \text{Timeout}(\tau)\Big) \xrightarrow{\text{on Fallback}} \text{DataURI}_{\text{local SVG}} \text{ (0 ms)}$$
 
-| Phase | Subsystem Module | Engineering Specification | Status |
+### 9.3 Pre-Bundled Media & Hybrid Asset Matrix (`src/data/corexAssetVault.ts`)
+
+| Vault Asset ID | Built-in Visual / Cutout Name | Semantic Category | Offline Data-URI | Hybrid CDN Stream |
+| :--- | :--- | :--- | :--- | :--- |
+| `vault-ai-quantum-core` | **3D Quantum AI Neural Core** | `tech-ai` | ✅ `0ms` Vector SVG | ✅ Unsplash HD |
+| `vault-saas-dashboard-mockup` | **Glassmorphic SaaS Analytics Card** | `device-mockup` | ✅ `0ms` Vector SVG | ✅ Built-in UI |
+| `vault-creator-portrait-cutout`| **Tech Creator Studio Cutout Badge** | `creator-cutout` | ✅ `0ms` Vector SVG | ✅ Unsplash HD |
+| `vault-ecommerce-luxury-pod` | **Luxury Sale & VIP Offer Emblem** | `ecommerce-sale` | ✅ `0ms` Vector SVG | ✅ Unsplash HD |
+| `vault-podcast-sonic-wave` | **Studio Podcast Sonic Emblem** | `podcast-music` | ✅ `0ms` Vector SVG | ✅ Built-in Vector |
+| `vault-fitness-power-crest` | **High-Voltage Performance Crest** | `fitness-sport` | ✅ `0ms` Vector SVG | ✅ Built-in Vector |
+| `vault-ambient-cyan-orb` | **Electric Cyan Ambient Sphere** | `gradient-orb` | ✅ `0ms` Vector SVG | ✅ Built-in Shader |
+
+### 9.4 Four-Phase Production Architecture Matrix
+
+| Phase | Subsystem Module | Implementation File | Status |
 | :--- | :--- | :--- | :--- |
-| **Phase 1** | **Interactive To-Do Blueprint Planner** | Converts natural language briefs (*"Instagram carousel for AI startup"*, *"Tech YT Thumbnail"*) into an interactive, user-editable step-by-step **To-Do Checklist** (Canvas Dimensions, Color Palette, Background Shader, Geometry Pods, Asset Slots, Typography Hierarchy) before drawing begins. | 🚧 *In Progress* |
-| **Phase 2** | **Pre-Bundled Asset Matrix & Zero-Cost JSON Resolver** | Embeds categorized, zero-CORS local design assets and wires a strict schema parser that maps user intent directly to pre-bundled vectors, cutouts, and WebGL2 shader presets with $0.00 server cost. | 🚧 *In Progress* |
-| **Phase 3** | **60FPS `CorexBotCursor` & `requestAnimationFrame` Sequencer** | Implements a spring-physics virtual cursor (`cubic-bezier` radial drift) that physically glides across the `QuantumStageCanvas`, drawing shapes with scale-in springs, streaming alpha-masked images from the local vault, and character-by-character live-typing `IText` nodes while checking off each To-Do item in real time. | 🚧 *Under Construction* |
-| **Phase 4** | **Atomic Rollback & Sovereign Post-Edit Handoff** | Commits a single ZLIB-compressed binary undo snapshot upon bot completion and unlocks all generated layers for instant manual drag, text editing, color swapping, and 10-target 8K/React `.tsx` compilation. | 📋 *Scheduled* |
+| **Phase 1** | **Pre-Bundled Media & 6 Domain Archetype Vault** | `src/data/corexAssetVault.ts` & `ParametricAssetVault.tsx` | ✅ **Live in v1.0** |
+| **Phase 2** | **Interactive To-Do Blueprint Planner (`~1.8KB JSON`)** | `src/lib/agenticPlanner.ts` & `AiChatPanel.tsx` | ✅ **Live in v1.0** |
+| **Phase 3** | **60FPS `CorexBotStageOverlay` & Radial Drift Sequencer**| `src/workspace/bot/CorexBotSequencer.tsx` | ✅ **Live in v1.0** |
+| **Phase 4** | **Atomic ZLIB Rollback & Sovereign Post-Edit Handoff** | `src/store/editorStore.ts` & `CommandPalette.tsx` | ✅ **Live in v1.0** |
 
 ---
 

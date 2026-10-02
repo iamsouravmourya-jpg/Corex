@@ -4,6 +4,7 @@ import type { Canvas as FabricCanvas } from 'fabric'
 import type { ToolType, CanvasSize, LayerItem } from '@/types'
 import { CANVAS_PRESETS } from '@/types'
 import { encodeSceneTransaction, decodeSceneTransaction } from '@/lib/commandLedger'
+import type { AgenticBlueprintPlan, AgenticTodoStep } from '@/lib/agenticPlanner'
 
 const MAX_LEDGER_FRAMES = 64
 
@@ -83,6 +84,21 @@ interface EditorState {
   setCurrentProjectName: (name: string) => void
   setIsAiModeOpen: (open: boolean) => void
   toggleAiMode: () => void
+
+  /** Autonomous Corex Bot — Zustand Bridge State */
+  activeBlueprintPlan: AgenticBlueprintPlan | null
+  isBotRunning: boolean
+  botCursorPos: { x: number; y: number } | null
+  activeBotTaskLabel: string | null
+  botProgressPercent: number
+  setBlueprintPlan: (plan: AgenticBlueprintPlan | null) => void
+  updateTodoStep: (stepId: string, patch: Partial<AgenticTodoStep>) => void
+  setBotTelemetry: (patch: {
+    isBotRunning?: boolean
+    botCursorPos?: { x: number; y: number } | null
+    activeBotTaskLabel?: string | null
+    botProgressPercent?: number
+  }) => void
 }
 
 function resolveNodeLabel(type: string, index: number): string {
@@ -297,5 +313,35 @@ export const useEditorStore = create<EditorState>()(
           activeFloatingWindow: nextOpen ? 'ai' : null,
         }
       }),
+
+    activeBlueprintPlan: null,
+    isBotRunning: false,
+    botCursorPos: null,
+    activeBotTaskLabel: null,
+    botProgressPercent: 0,
+
+    setBlueprintPlan: (plan) => set({ activeBlueprintPlan: plan }),
+
+    updateTodoStep: (stepId, patch) =>
+      set((s) => {
+        if (!s.activeBlueprintPlan) return s
+        return {
+          activeBlueprintPlan: {
+            ...s.activeBlueprintPlan,
+            todoSteps: s.activeBlueprintPlan.todoSteps.map((step) =>
+              step.id === stepId ? { ...step, ...patch } : step,
+            ),
+          },
+        }
+      }),
+
+    setBotTelemetry: (patch) =>
+      set((s) => ({
+        isBotRunning: patch.isBotRunning ?? s.isBotRunning,
+        botCursorPos: patch.botCursorPos !== undefined ? patch.botCursorPos : s.botCursorPos,
+        activeBotTaskLabel:
+          patch.activeBotTaskLabel !== undefined ? patch.activeBotTaskLabel : s.activeBotTaskLabel,
+        botProgressPercent: patch.botProgressPercent ?? s.botProgressPercent,
+      })),
   }))
 )

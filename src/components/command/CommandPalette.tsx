@@ -41,6 +41,8 @@ import {
   extrudeActiveNode3D,
   compileCanvasToStandaloneHtml,
 } from '@/lib/quantumEngine'
+import { createAgenticBlueprintPlan } from '@/lib/agenticPlanner'
+import { runCorexBotSequence } from '@/workspace/bot/CorexBotSequencer'
 import { exportCanvas, dispatchBinaryDownload } from '@/lib/export'
 
 interface CommandPaletteProps {
@@ -89,6 +91,23 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
   const commands: StudioCommand[] = useMemo(
     () => [
+      {
+        id: 'corex-bot-autopaint',
+        category: 'Image & AI',
+        title: 'Launch 60FPS Autonomous Corex Bot (Auto-Paint Stage)',
+        subtitle: 'Live robotic cursor draws GLSL shader, bento pods, vault cutout & typewriter text',
+        icon: <Sparkles size={15} color="#22D3EE" />,
+        run: () => {
+          const store = useEditorStore.getState()
+          const plan = createAgenticBlueprintPlan(
+            'Create a viral tech YT Thumbnail with a dark ink vibe',
+            store.canvasSize,
+            false,
+          )
+          store.setBlueprintPlan(plan)
+          void runCorexBotSequence(plan, { clearExistingCanvas: true })
+        },
+      },
       {
         id: 'glsl-aurora',
         category: 'GLSL & CSG',

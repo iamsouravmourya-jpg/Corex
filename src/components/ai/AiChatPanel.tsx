@@ -16,6 +16,10 @@ import {
   Layers,
   ArrowRight,
   Image as ImageIcon,
+  Zap,
+  CheckSquare,
+  Square,
+  Play,
 } from 'lucide-react'
 import { useEditorStore } from '@/store/editorStore'
 import {
@@ -24,6 +28,9 @@ import {
   generateServerlessCritique,
   generateServerlessCopilotReply,
 } from '@/lib/serverlessAi'
+import { createAgenticBlueprintPlan } from '@/lib/agenticPlanner'
+import { COREX_ASSET_VAULT } from '@/data/corexAssetVault'
+import { runCorexBotSequence } from '@/workspace/bot/CorexBotSequencer'
 import { useFabricCanvas } from '@/hooks/useFabricCanvas'
 import { addIText, addRect, addCircle, addTriangle, addImageFromDataUrl } from '@/lib/shapes'
 import { Rect, Circle, Triangle, IText } from 'fabric'
@@ -37,13 +44,26 @@ interface ChatMessage {
   timestamp: string
 }
 
-type AiTab = 'chat' | 'generate' | 'image' | 'critique'
+type AiTab = 'bot' | 'chat' | 'generate' | 'image' | 'critique'
 
 export function AiChatPanel() {
-  const { setIsAiModeOpen, canvasSize, snapshot, bumpBgNonce, syncLayersFromCanvas } = useEditorStore()
+  const {
+    setIsAiModeOpen,
+    setActiveFloatingWindow,
+    canvasSize,
+    snapshot,
+    bumpBgNonce,
+    syncLayersFromCanvas,
+    activeBlueprintPlan,
+    setBlueprintPlan,
+    updateTodoStep,
+    isBotRunning,
+  } = useEditorStore()
   const canvas = useFabricCanvas()
 
-  const [activeTab, setActiveTab] = useState<AiTab>('chat')
+  const [activeTab, setActiveTab] = useState<AiTab>('bot')
+  const [botPrompt, setBotPrompt] = useState('Create a viral tech YT Thumbnail with a dark ink vibe')
+  const [autoResizeArtboard, setAutoResizeArtboard] = useState(false)
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [designPrompt, setDesignPrompt] = useState('')
@@ -409,6 +429,7 @@ export function AiChatPanel() {
       >
         {(
           [
+            { id: 'bot', label: 'Corex Bot ⚡', icon: <Zap size={12} /> },
             { id: 'chat', label: 'Copilot', icon: <MessageSquare size={12} /> },
             { id: 'generate', label: 'Layout', icon: <Wand2 size={12} /> },
             { id: 'image', label: 'Image AI', icon: <ImageIcon size={12} /> },
@@ -463,6 +484,358 @@ export function AiChatPanel() {
         >
           <CheckCircle2 size={13} color="#06B6D4" />
           <span>{statusMessage}</span>
+        </div>
+      )}
+
+      {/* TAB 0: Autonomous Corex Bot (Interactive To-Do Blueprint -> 60FPS Live Stage Painting) */}
+      {activeTab === 'bot' && (
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '10px 14px 18px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+          }}
+        >
+          {/* Architecture Banner */}
+          <div
+            style={{
+              padding: '12px 14px',
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.14) 0%, rgba(16, 185, 129, 0.08) 100%)',
+              borderRadius: 16,
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              gap: 10,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, color: '#F8FAFC', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                <Zap size={13} color="#22D3EE" />
+                <span>Autonomous Corex Offline Bot (60FPS)</span>
+              </div>
+              <div style={{ fontSize: 11, color: '#94A3B8', lineHeight: 1.45 }}>
+                1. Enter brief ➔ 2. Review & customize To-Do checklist ➔ 3. Watch Corex Bot live-paint editable vector layers at 0% server cost.
+              </div>
+            </div>
+            <span
+              style={{
+                padding: '3px 8px',
+                borderRadius: 999,
+                background: '#0C0E16',
+                color: '#10B981',
+                fontSize: 9.5,
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              $0.00 LOCAL GPU
+            </span>
+          </div>
+
+          {/* Prompt Input + 1-Tap Brief Presets */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <textarea
+              value={botPrompt}
+              onChange={(e) => setBotPrompt(e.target.value)}
+              placeholder='e.g. "Create a viral tech YT Thumbnail with a dark ink vibe"'
+              className="input-base"
+              style={{ width: '100%', height: 64, resize: 'none', fontSize: 12, padding: 10 }}
+            />
+
+            {/* Quick Brief Chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {[
+                { label: 'YT Tech Thumbnail', prompt: 'Create a viral tech YT Thumbnail with a dark ink vibe' },
+                { label: 'IG SaaS Launch', prompt: 'Instagram SaaS product launch post with glass dashboard mockup' },
+                { label: 'VIP 60% Flash Sale', prompt: 'Black Friday luxury e-commerce 60% off flash sale drop' },
+                { label: 'Spotify Tech Podcast', prompt: 'Spotify deep tech founder podcast cover with sonic wave' },
+              ].map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => {
+                    setBotPrompt(preset.prompt)
+                    const nextPlan = createAgenticBlueprintPlan(preset.prompt, canvasSize, autoResizeArtboard)
+                    setBlueprintPlan(nextPlan)
+                  }}
+                  style={{
+                    padding: '5px 10px',
+                    borderRadius: 10,
+                    background: '#141826',
+                    border: 'none',
+                    color: '#CBD5E1',
+                    fontSize: 10.5,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  fontSize: 11,
+                  color: '#94A3B8',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={autoResizeArtboard}
+                  onChange={(e) => setAutoResizeArtboard(e.target.checked)}
+                  style={{ accentColor: '#06B6D4' }}
+                />
+                <span>Auto-match artboard dimensions (YouTube / IG / Poster)</span>
+              </label>
+
+              <button
+                onClick={() => {
+                  if (!botPrompt.trim()) return
+                  const plan = createAgenticBlueprintPlan(botPrompt, canvasSize, autoResizeArtboard)
+                  setBlueprintPlan(plan)
+                  showToast(`Blueprint ready (~${(plan.estimatedPayloadBytes / 1024).toFixed(1)} KB JSON)`)
+                }}
+                className="btn-secondary btn-base"
+                style={{
+                  height: 34,
+                  padding: '0 14px',
+                  borderRadius: 12,
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  color: '#22D3EE',
+                  background: '#141826',
+                  gap: 6,
+                }}
+              >
+                <Sparkles size={13} />
+                <span>Plan To-Do Blueprint</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive 4-Step To-Do Checklist */}
+          {activeBlueprintPlan && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                padding: 12,
+                borderRadius: 16,
+                background: '#0D101A',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#22D3EE', fontFamily: 'var(--font-mono)' }}>
+                  TO-DO EXECUTION MATRIX • {activeBlueprintPlan.archetype.name.toUpperCase()}
+                </span>
+                <span style={{ fontSize: 10, color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                  ~{(activeBlueprintPlan.estimatedPayloadBytes / 1024).toFixed(1)} KB JSON
+                </span>
+              </div>
+
+              {activeBlueprintPlan.todoSteps.map((step) => (
+                <div
+                  key={step.id}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: 12,
+                    background: step.enabled ? '#141826' : 'rgba(20, 24, 38, 0.45)',
+                    opacity: step.enabled ? 1 : 0.6,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                    <button
+                      onClick={() => updateTodoStep(step.id, { enabled: !step.enabled })}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        cursor: 'pointer',
+                        color: '#F8FAFC',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {step.enabled ? (
+                        <CheckSquare size={15} color="#06B6D4" />
+                      ) : (
+                        <Square size={15} color="#64748B" />
+                      )}
+                      <div>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontFamily: 'var(--font-mono)',
+                            color: '#22D3EE',
+                            fontWeight: 700,
+                            marginRight: 6,
+                          }}
+                        >
+                          {step.stepCode}
+                        </span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#F8FAFC' }}>
+                          {step.title}
+                        </span>
+                      </div>
+                    </button>
+
+                    <span
+                      style={{
+                        fontSize: 9.5,
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        padding: '2px 7px',
+                        borderRadius: 999,
+                        background:
+                          step.status === 'completed'
+                            ? 'rgba(16, 185, 129, 0.18)'
+                            : step.status === 'running'
+                              ? 'rgba(6, 182, 212, 0.2)'
+                              : '#0C0E16',
+                        color:
+                          step.status === 'completed'
+                            ? '#10B981'
+                            : step.status === 'running'
+                              ? '#22D3EE'
+                              : '#94A3B8',
+                      }}
+                    >
+                      {step.status.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div style={{ fontSize: 11, color: '#94A3B8', paddingLeft: 23 }}>
+                    {step.description}
+                  </div>
+
+                  {/* Step B Inline Color Swatches */}
+                  {step.enabled && step.phase === 'geometry' && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingLeft: 23 }}>
+                      <span style={{ fontSize: 10, color: '#64748B' }}>Accent:</span>
+                      {['#06B6D4', '#10B981', '#F59E0B', '#F43F5E', '#8B5CF6', '#3B82F6'].map((hex) => (
+                        <button
+                          key={hex}
+                          onClick={() => updateTodoStep(step.id, { editablePrimaryColor: hex })}
+                          style={{
+                            width: 18,
+                            height: 18,
+                            borderRadius: 6,
+                            background: hex,
+                            border:
+                              step.editablePrimaryColor === hex
+                                ? '2px solid #F8FAFC'
+                                : '1px solid rgba(255,255,255,0.15)',
+                            cursor: 'pointer',
+                          }}
+                          title={`Set geometry accent to ${hex}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Step C Inline Built-in Vault Asset Selector */}
+                  {step.enabled && step.phase === 'assets' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 23 }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {COREX_ASSET_VAULT.map((asset) => {
+                          const selected = step.selectedVaultAssetId === asset.id
+                          return (
+                            <button
+                              key={asset.id}
+                              onClick={() =>
+                                updateTodoStep(step.id, {
+                                  selectedVaultAssetId: asset.id,
+                                  title: `Stream Asset: ${asset.name}`,
+                                })
+                              }
+                              style={{
+                                padding: '4px 8px',
+                                borderRadius: 8,
+                                background: selected ? 'rgba(6, 182, 212, 0.22)' : '#0C0E16',
+                                border: selected ? '1px solid #06B6D4' : '1px solid transparent',
+                                color: selected ? '#22D3EE' : '#CBD5E1',
+                                fontSize: 10,
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {asset.name}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#94A3B8', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={Boolean(step.useHybridPhoto)}
+                          onChange={(e) => updateTodoStep(step.id, { useHybridPhoto: e.target.checked })}
+                          style={{ accentColor: '#06B6D4' }}
+                        />
+                        <span>Use Hybrid High-Res Online Photo (falls back to 0ms local SVG offline)</span>
+                      </label>
+                    </div>
+                  )}
+
+                  {/* Step D Inline Editable Headline & Badge */}
+                  {step.enabled && step.phase === 'typography' && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, paddingLeft: 23 }}>
+                      <input
+                        value={step.editableHeadline || ''}
+                        onChange={(e) => updateTodoStep(step.id, { editableHeadline: e.target.value })}
+                        placeholder="Headline text..."
+                        className="input-base"
+                        style={{ height: 30, fontSize: 11, padding: '0 8px' }}
+                      />
+                      <input
+                        value={step.editableBadge || ''}
+                        onChange={(e) => updateTodoStep(step.id, { editableBadge: e.target.value })}
+                        placeholder="Badge kicker..."
+                        className="input-base"
+                        style={{ height: 30, fontSize: 11, padding: '0 8px' }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Launch 60FPS Corex Bot CTA */}
+              <button
+                onClick={() => {
+                  setActiveFloatingWindow(null)
+                  setIsAiModeOpen(false)
+                  runCorexBotSequence(activeBlueprintPlan, { clearExistingCanvas: true })
+                }}
+                disabled={isBotRunning}
+                className="btn-primary btn-base"
+                style={{
+                  height: 42,
+                  borderRadius: 14,
+                  fontWeight: 800,
+                  fontSize: 13,
+                  gap: 8,
+                  marginTop: 4,
+                }}
+              >
+                <Play size={14} />
+                <span>Approve To-Do & Launch 60FPS Corex Bot</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 

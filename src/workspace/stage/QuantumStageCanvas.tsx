@@ -6,6 +6,7 @@ import { addImageFromDataUrl } from '@/lib/shapes'
 import { attachAlignmentGuides } from '@/lib/snapping'
 import { crdtMesh } from '@/lib/crdtSync'
 import { optimizeStageGeometry, auditAndHealCanvasContrast } from '@/lib/quantumEngine'
+import { CorexBotStageOverlay } from '@/workspace/bot/CorexBotSequencer'
 import { ZoomIn, ZoomOut, Maximize2, Grid3x3, Wand2, Eye } from 'lucide-react'
 
 const STAGE_MARGIN_PX = 80
@@ -288,6 +289,7 @@ export function CanvasBoard() {
           ref={magneticOverlayRef}
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
         />
+        <CorexBotStageOverlay displayScale={1} />
       </div>
 
       {/* ── Floating Stage Quick-Action HUD ── */}
