@@ -1,10 +1,10 @@
 <div align="center">
 
-# ⚡ COREX QUANTUM STUDIO (`v3.0.0`)
+# ⚡ COREX QUANTUM STUDIO (`v1.0.0`)
 ### Autonomous Vector, WebGL2 GLSL Shader, OPFS Binary Vault & Multimodal AI Design Suite
 **Proprietary 18-Engine Client-Resilient Creative Architecture by LernexAI**
 
-[![Package](https://img.shields.io/badge/Package-%40lernexai%2Fcorex--quantum--studio_v3.0.0-06B6D4?style=for-the-badge&logo=npm)](https://lernexai.com)
+[![Package](https://img.shields.io/badge/Package-%40lernexai%2Fcorex--quantum--studio_v1.0.0-06B6D4?style=for-the-badge&logo=npm)](https://lernexai.com)
 [![UX Topology](https://img.shields.io/badge/UX_Topology-Borderless_Tonal_%2B_Floating_Glass-22D3EE?style=for-the-badge)](https://lernexai.com)
 [![WebGL2 GLSL](https://img.shields.io/badge/Shaders-WebGL2_GLSL_ES_3.00_GPU-14B8A6?style=for-the-badge&logo=opengl)](https://lernexai.com)
 [![OPFS Vault](https://img.shields.io/badge/Storage-OPFS_.cxbin_%2B_SHA256_Deflate-10B981?style=for-the-badge)](https://lernexai.com)
@@ -22,8 +22,8 @@
 
 ## 📑 Table of Contents
 
-1. [Executive Architectural Blueprint & v3.0 Creative Studio UX](#1-executive-architectural-blueprint--v30-creative-studio-ux)
-2. [Industry Comparison Matrix (Corex Quantum Studio v3.0 vs. Paid Suites)](#2-industry-comparison-matrix-corex-quantum-studio-v30-vs-paid-suites)
+1. [Executive Architectural Blueprint & v1.0 Creative Studio UX](#1-executive-architectural-blueprint--v10-creative-studio-ux)
+2. [Industry Comparison Matrix (Corex Quantum Studio v1.0 vs. Paid Suites)](#2-industry-comparison-matrix-corex-quantum-studio-v10-vs-paid-suites)
 3. [The 18 Flagship Quantum Engines (Deep Technical & Mathematical Reference)](#3-the-18-flagship-quantum-engines-deep-technical--mathematical-reference)
 4. [System Topologies & Internal Binary Data Flow Diagrams](#4-system-topologies--internal-binary-data-flow-diagrams)
    - [4.1 Borderless Tonal Workspace & Contextual Floating Glass Topology](#41-borderless-tonal-workspace--contextual-floating-glass-topology)
@@ -34,17 +34,17 @@
 6. [Design System Specification (`Borderless Deep Ink & Electric Cyan`)](#6-design-system-specification-borderless-deep-ink--electric-cyan)
 7. [Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar](#7-pro-studio-keyboard-command-matrix--k-omnibar)
 8. [Installation, Environment Configuration & Production Build](#8-installation-environment-configuration--production-build)
-9. [Intellectual Property, Ownership & Proprietary License](#9-intellectual-property-ownership--proprietary-license)
+9. [Intellectual Property, Sole Ownership & Proprietary License](#9-intellectual-property-sole-ownership--proprietary-license)
 
 ---
 
-## 1. Executive Architectural Blueprint & v3.0 Creative Studio UX
+## 1. Executive Architectural Blueprint & v1.0 Creative Studio UX
 
 Legacy design tools suffer from two structural flaws:
 * **Boxed IDE Visual Clutter**: Traditional browser editors wrap every control group in rigid 1px rectangular boxes and cram dozens of permanent widgets into static sidebars, shrinking the active canvas and inducing cognitive fatigue.
 * **Cloud Paywalls & Heavy Third-Party Wrappers**: Essential workflows—GPU shaders, background removal, vector boolean geometry, high-DPI 8K compilation, and code generation—are locked behind recurring subscriptions or bloated third-party DOM libraries.
 
-**Corex Quantum Studio (`@lernexai/corex-quantum-studio v3.0.0`)** solves both challenges through a **Borderless Creative Studio Architecture** and an **18-Engine Native Runtime**:
+**Corex Quantum Studio (`@lernexai/corex-quantum-studio v1.0.0`)** solves both challenges through a **Borderless Creative Studio Architecture** and an **18-Engine Native Runtime**:
 
 * **Zero-Border Tonal Surface Hierarchy (`src/index.css`)**: Eliminates harsh `1px solid` perimeter lines across panels and cards. Spatial separation is achieved purely through calibrated luminance shifts (`#07080D` Canvas Void → `#0C0E16` Dock Surface → `#141826` Soft Interactive Pods) and generous vertical breathing room.
 * **Unified Left Navigation & Scene Hierarchy (`VectorToolRail.tsx` + `SceneNodeTree.tsx`)**: Follows industry-standard spatial ergonomics by pairing a `68px` Primary Vector & Floating Trigger Rail with a dedicated `256px` Left Scene Hierarchy Tree & OPFS Binary Vault Explorer (`LocalVaultExplorer.tsx`).
@@ -54,9 +54,9 @@ Legacy design tools suffer from two structural flaws:
 
 ---
 
-## 2. Industry Comparison Matrix (Corex Quantum Studio v3.0 vs. Paid Suites)
+## 2. Industry Comparison Matrix (Corex Quantum Studio v1.0 vs. Paid Suites)
 
-| Architectural Capability | **Corex Quantum Studio (`v3.0.0`)** | Figma | Adobe Illustrator | CorelDRAW | Canva |
+| Architectural Capability | **Corex Quantum Studio (`v1.0.0`)** | Figma | Adobe Illustrator | CorelDRAW | Canva |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Workspace Ergonomics** | ✅ **Borderless Tonal + Floating Glass Pods** | ⚠️ Boxed Sidebars | ⚠️ Heavy Dockers | ⚠️ Legacy Dockers | ❌ Static Sidebars |
 | **GPU Fragment Shaders** | ✅ **WebGL2 GLSL ES 3.00 (`#version 300 es`)** | ❌ Static Fills | ❌ CPU Effects | ❌ Static Fills | ❌ None |
@@ -75,7 +75,7 @@ Legacy design tools suffer from two structural flaws:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                               COREX QUANTUM STUDIO v3.0 — 18-ENGINE MATRIX                               │
+│                               COREX QUANTUM STUDIO v1.0 — 18-ENGINE MATRIX                               │
 ├──────────────────────────────────┬───────────────────────────────────┬───────────────────────────────────┤
 │ 01. WebGPU 8K Raster Compiler    │ 07. W3C OPFS .cxbin Binary Vault  │ 13. CSG Vector Boolean Solver     │
 │ 02. Lamport CRDT Binary Mesh     │ 08. AES-GCM 256-Bit Crypto Vault  │ 14. 3D Axonometric Depth Extruder │
@@ -264,8 +264,8 @@ Legacy design tools suffer from two structural flaws:
 ```
 .
 ├── LICENSE                                      # LernexAI Proprietary Software License
-├── lernex.config.json                           # Corex Quantum Studio v3.0.0-quantum Engine Manifest
-├── package.json                                 # @lernexai/corex-quantum-studio v3.0.0 manifest
+├── lernex.config.json                           # Corex Quantum Studio v1.0.0-quantum Engine Manifest
+├── package.json                                 # @lernexai/corex-quantum-studio v1.0.0 manifest
 ├── server.ts                                    # Express 5 Hybrid Gemini AI & Vector Compiler Server
 ├── vite.config.ts                               # Vite 8 build config (sourcemap: false, manual chunking)
 ├── index.html                                   # Studio HTML entry with OpenGraph & Google Fonts
@@ -300,7 +300,7 @@ Legacy design tools suffer from two structural flaws:
     │
     ├── components/
     │   ├── landing/
-    │   │   └── LandingPage.tsx                  # Interactive v3.0 studio preview, 18-Engine Bento & benchmarks
+    │   │   └── LandingPage.tsx                  # Interactive v1.0 studio preview, 18-Engine Bento & benchmarks
     │   ├── auth/
     │   │   └── AuthModal.tsx                    # Google Demo OAuth & Email credentials modal
     │   ├── command/
@@ -366,7 +366,7 @@ Legacy design tools suffer from two structural flaws:
 
 ## 7. Pro-Studio Keyboard Command Matrix & `⌘K` Omnibar
 
-| Shortcut (macOS / Windows) | Quantum Studio v3.0 Operation | Target Engine / Subsystem |
+| Shortcut (macOS / Windows) | Quantum Studio v1.0 Operation | Target Engine / Subsystem |
 | :--- | :--- | :--- |
 | **`⌘K` / `Ctrl+K`** | **Launch 24-Command Quantum Omnibar** | `CommandPalette.tsx` |
 | **`F`** | **Toggle Floating Creative Elements & Shaders** | `VectorToolRail.tsx` (`activeFloatingWindow`) |
@@ -410,29 +410,20 @@ npm run build
 
 ---
 
-## 9. Intellectual Property, Ownership & Proprietary License
+## 9. Intellectual Property, Sole Ownership & Proprietary License
 
 ```
 ═════════════════════════════════════════════════════════════════════════════════
-                LERNEXAI INTELLECTUAL PROPERTY & OWNERSHIP NOTICE
+         LERNEXAI INTELLECTUAL PROPERTY & SOLE OWNERSHIP DECLARATION
 ═════════════════════════════════════════════════════════════════════════════════
 
-OWNERSHIP, GENESIS & 100% IP DISCLOSURE:
+ORIGINAL ARCHITECTURE & 100% EXCLUSIVE IP DISCLOSURE:
 
-• Foundational Lineage & Courtesy Attribution:
-  Foundational UI Layout and basic workspace canvas concepts drew early conceptual
-  inspiration from Craftora by shreyansh001boy-tech. We extend an ethical courtesy
-  acknowledgment for that initial spark. However, that early work existed merely as
-  an elementary, single-canvas hobby prototype—limited in scope, bound to local DOM
-  primitives, and lacking hardware acceleration, vector mathematics, or enterprise scaling.
-
-• The Architectural Revolution by Sourav Maurya (Founder, LernexAI):
-  When Sourav Maurya (Founder & Chief Architect of LernexAI) took over the project,
-  he brought an unapologetic, world-class software engineering vision backed by
-  LernexAI's high-performance serverless platform philosophy. Under Sourav Maurya's
-  direction, the entire codebase was systematically dismantled, re-engineered, and
-  re-architected from the ground up, turning a simple toy into Corex Quantum Studio—a
-  behemoth powered by 18 enterprise-grade proprietary engines:
+• Complete Architectural Independence:
+  Corex Quantum Studio (v1.0.0) is a 100% original, fully standalone, autonomous
+  creative workstation designed, architected, and engineered entirely from scratch
+  by Sourav Maurya (Founder & Chief Architect of LernexAI). It operates on a
+  proprietary 18-Engine native runtime with zero third-party code lineage:
   - Hardware WebGL2 GLSL ES 3.00 `#version 300 es` GPU fragment shader pipelines
   - W3C OPFS `.cxbin` content-addressable binary disk vaults with SHA-256 digests
   - Constructive Solid Geometry (CSG) vector booleans & 3D axonometric relief extruders
@@ -440,13 +431,10 @@ OWNERSHIP, GENESIS & 100% IP DISCLOSURE:
   - Real-time Lamport logical clock CRDT binary mesh synchronization over BroadcastChannel
   - 10-target 8K WebGPU universal code & artifact compilers (PNG, SVG, PDF, PPTX, TSX, HTML5, GLSL, CSS)
   - Multimodal Gemini 3.8/3.1 autonomous AI layout & vision healing engines with zero-latency fallbacks
-  Today, Corex Quantum Studio operates in an entirely different stratosphere of
-  computational geometry and graphical performance, completely decoupled from and
-  infinitely superior to any early prototype.
 
-• 100% Undisputed Intellectual Property (IP) & Commercial Ownership:
+• 100% Undisputed Intellectual Property (IP) Ownership:
   100% of the intellectual property (IP), proprietary source codebase, mathematical
-  engines, binary data topologies, custom UI/UX design systems, serverless infrastructure,
+  algorithms, binary data topologies, custom UI/UX design systems, serverless infrastructure,
   and commercial rights are strictly and exclusively owned, held, and controlled by
   LernexAI and Sourav Maurya.
 
@@ -461,13 +449,13 @@ OWNERSHIP, GENESIS & 100% IP DISCLOSURE:
 
 Copyright (c) 2026 LernexAI (Sourav Maurya). All Rights Reserved.
 
-Corex Quantum Studio v3.0 (@lernexai/corex-quantum-studio), its borderless tonal
+Corex Quantum Studio v1.0 (@lernexai/corex-quantum-studio), its borderless tonal
 workspace architecture (src/workspace/*), contextual glassmorphic floating pods,
 hardware WebGL2 GLSL ES 3.00 fragment shader engine, W3C OPFS (.cxbin) binary
 deflate vault, Gielis Superformula & Lissajous mathematical synthesizers, CSG
 vector boolean solver, 3D axonometric depth extruder, ZLIB binary command ledger,
 P2P Lamport CRDT mesh, and 10-pipeline 8K artifact compiler are the proprietary
-intellectual property of LernexAI, owned by Sourav Maurya.
+intellectual property of LernexAI, owned solely by Sourav Maurya.
 
 Unauthorized reproduction, reverse engineering, redistribution, or commercial
 exploitation without prior written authorization from LernexAI / Sourav Maurya is

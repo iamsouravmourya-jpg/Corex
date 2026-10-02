@@ -28,7 +28,7 @@ function generateLocalDesign(prompt: string, canvasSize: { width: number; height
   let secondaryColor = '#14B8A6'
   let title = 'DESIGN BEYOND BOUNDARIES'
   let subtitle = '18-Engine Quantum Vector & Shader Studio'
-  let badgeText = 'COREX QUANTUM v3.0'
+  let badgeText = 'COREX QUANTUM v1.0'
 
   if (p.includes('sale') || p.includes('discount') || p.includes('black friday')) {
     bg = '#08090E'

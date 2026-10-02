@@ -230,7 +230,7 @@ export function LandingPage() {
             marginBottom: 20,
           }}
         >
-          COREX QUANTUM STUDIO v3.0 &nbsp;·&nbsp; 18-ENGINE LERNEXAI CORE &nbsp;·&nbsp; WEBGL2 GLSL + OPFS VAULT
+          COREX QUANTUM STUDIO v1.0 &nbsp;·&nbsp; 18-ENGINE LERNEXAI CORE &nbsp;·&nbsp; WEBGL2 GLSL + OPFS VAULT
         </motion.div>
 
         {/* Display Headline Combining Plus Jakarta Sans + Playfair Display */}
@@ -721,7 +721,7 @@ export function LandingPage() {
             PERFORMANCE BENCHMARK
           </div>
           <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#F8FAFC', marginBottom: 18 }}>
-            Why Creators Switch to Corex Quantum v3.0
+            Why Creators Switch to Corex Quantum v1.0
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
